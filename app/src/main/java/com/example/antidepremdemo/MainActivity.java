@@ -8,10 +8,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +27,12 @@ public class MainActivity extends AppCompatActivity {
     private int currentAcceleration;
     private int prevAcceleration;
     private int changeInAcceleration;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
+    private SeekBar seekSensitivity, seekVolume;
+    private Button btnReset;
+    private int sensitivityCutoff = 1; //the lower value the more sensitive
+//    private AudioManager audioManager;
+    private AudioManager audioManager = null;
 
     private SensorEventListener sensorEventListener;
 
@@ -33,12 +41,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnActivate = findViewById(R.id.btn_activate);
-        btnStop = findViewById(R.id.btn_stop);
+        btnActivate = findViewById(R.id.btn_on);
+        btnStop = findViewById(R.id.btn_off);
         txtStatus = findViewById(R.id.txt_status);
+        seekSensitivity = findViewById(R.id.seek_sensitivity);
+        seekVolume = findViewById(R.id.seek_volume);
+        btnReset = findViewById(R.id.btn_reset);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         sensorEventListener = new SensorEventListener() {
             @Override
@@ -47,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-            }
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
         btnActivate.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +77,38 @@ public class MainActivity extends AppCompatActivity {
                 mStop();
             }
         });
+
+        //seekSensitivity
+        seekSensitivity.setProgress(2);
+        seekSensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                sensitivityCutoff = 3 - i;
+                Toast.makeText(MainActivity.this, i  + " " + sensitivityCutoff, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        //seekVolume
+        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+
+        seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
     }//onCreate
 
     protected void onResume() {
@@ -88,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         }
         prevAcceleration = currentAcceleration;
 
-        if (changeInAcceleration > 2) {
+        if (changeInAcceleration > sensitivityCutoff) {
             if (mediaPlayer != null) {
                 Toast.makeText(MainActivity.this, "shaking", Toast.LENGTH_SHORT).show();
                 mediaPlayer.start();
@@ -99,7 +144,10 @@ public class MainActivity extends AppCompatActivity {
     private void mActivate() {
         if (mediaPlayer == null) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
+//            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
+            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+            //todo
+//            audioManager.requestAudioFocus(new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN));
             txtStatus.setText("Active");
             txtStatus.setTypeface(Typeface.SERIF);
         }
@@ -118,5 +166,8 @@ public class MainActivity extends AppCompatActivity {
 
 }//MainActivity
 
+//TODO: sync seekVolume with the device's original one.
+//TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //TODO: MediaPlayer.setWakeMode().
-//todo: check on the MediaPlayer code in 1MAC's and Edraak's project.
+//TODO: use a template fot the design
+//TODO: feature: feedback and email
