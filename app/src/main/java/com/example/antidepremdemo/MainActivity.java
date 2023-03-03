@@ -3,6 +3,7 @@ package com.example.antidepremdemo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,6 +13,7 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private SeekBar seekSensitivity, seekVolume;
     private Button btnReset;
-    private int sensitivityCutoff = 1; //the lower value the more sensitive
+    private int sensitivityCutoff = 0; //the lower value the more sensitive
 //    private AudioManager audioManager;
     private AudioManager audioManager = null;
 
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+//        setVolumeControlStream(AudioManager.STREAM_SYSTEM);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         sensorEventListener = new SensorEventListener() {
@@ -83,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
         seekSensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                sensitivityCutoff = 3 - i;
-                Toast.makeText(MainActivity.this, i  + " " + sensitivityCutoff, Toast.LENGTH_SHORT).show();
+                sensitivityCutoff = (9 - (i * 4)) / 2;
+                Toast.makeText(MainActivity.this, i  + " " + "sensitivityCutoff" + sensitivityCutoff, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -94,13 +96,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekVolume
-        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
+        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
 
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, i, 0);
             }
 
             @Override
@@ -108,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
+
 
     }//onCreate
 
@@ -120,6 +124,19 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         mStop();
     }//onPause
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+//            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
+            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN){
+//            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
+            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }//onKeyDown
 
 
     private void mSensorChanged(SensorEvent event) {
@@ -148,8 +165,10 @@ public class MainActivity extends AppCompatActivity {
             mediaPlayer = MediaPlayer.create(this, R.raw.soft);
             //todo
 //            audioManager.requestAudioFocus(new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN));
+//            audioManager.requestAudioFocus();
             txtStatus.setText("Active");
-            txtStatus.setTypeface(Typeface.SERIF);
+            txtStatus.setTextSize(84);
+            txtStatus.setAllCaps(true);
         }
     }//mActivate
 
@@ -158,16 +177,26 @@ public class MainActivity extends AppCompatActivity {
             sensorManager.unregisterListener(sensorEventListener);
             mediaPlayer.release();
             mediaPlayer = null;
-            txtStatus.setText("Inactive");
-            txtStatus.setTypeface(Typeface.DEFAULT);
+//            txtStatus.setText("Inactive");
+            txtStatus.setText("inactive");
+            txtStatus.setTextSize(72);
+            txtStatus.setAllCaps(false);
         }
     }//mStop
 
 
 }//MainActivity
 
-//TODO: sync seekVolume with the device's original one.
+
+//Todo: seekVolume is not controlling the volume as STREAM_SYSTEM
 //TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //TODO: MediaPlayer.setWakeMode().
+//TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
 //TODO: feature: feedback and email
+
+// Done:
+//TODO: sync seekVolume with the device's original one.
+
+//Notes:
+//Nougat 7 (API / SDK 24)

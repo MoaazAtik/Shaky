@@ -10,11 +10,12 @@
         android:id="@+id/txt_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
         android:text="Active"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:layout_marginTop="48dp"
         android:textSize="96sp"
+        android:typeface="serif"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,11 +26,10 @@
         android:layout_height="wrap_content"
         android:text="On"
         android:textAlignment="center"
-        android:layout_marginTop="24dp"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_status" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom" />
 
     <Button
         android:id="@+id/btn_off"
@@ -56,12 +56,12 @@
 
     <SeekBar
         android:id="@+id/seek_sensitivity"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:max="2"
         app:layout_constraintBottom_toTopOf="@id/txt_volume"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,6 +99,13 @@
         android:text="Reset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_status_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="175dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
