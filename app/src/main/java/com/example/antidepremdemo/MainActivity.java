@@ -3,8 +3,6 @@ package com.example.antidepremdemo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +10,7 @@ import android.hardware.SensorManager;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,7 +21,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnActivate, btnStop;
+    private Button btnOn, btnOff;
     private TextView txtStatus;
     private SensorManager sensorManager;
     private Sensor mAccelerometer;
@@ -33,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekSensitivity, seekVolume;
     private Button btnReset;
     private int sensitivityCutoff = 0; //the lower value the more sensitive
-//    private AudioManager audioManager;
-    private AudioManager audioManager = null;
+    private AudioManager audioManager;
+//    private AudioManager audioManager = null;
 
     private SensorEventListener sensorEventListener;
 
@@ -43,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnActivate = findViewById(R.id.btn_on);
-        btnStop = findViewById(R.id.btn_off);
+        btnOn = findViewById(R.id.btn_on);
+        btnOff = findViewById(R.id.btn_off);
         txtStatus = findViewById(R.id.txt_status);
         seekSensitivity = findViewById(R.id.seek_sensitivity);
         seekVolume = findViewById(R.id.seek_volume);
@@ -66,14 +65,16 @@ public class MainActivity extends AppCompatActivity {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
-        btnActivate.setOnClickListener(new View.OnClickListener() {
+        //btnActivate
+        btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActivate();
             }
         });
 
-        btnStop.setOnClickListener(new View.OnClickListener() {
+        //btnOff
+        btnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mStop();
@@ -129,10 +130,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
-            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
         }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN){
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
-            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
         }
 
         return super.onKeyDown(keyCode, event);
@@ -153,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         if (changeInAcceleration > sensitivityCutoff) {
             if (mediaPlayer != null) {
                 Toast.makeText(MainActivity.this, "shaking", Toast.LENGTH_SHORT).show();
-                mediaPlayer.start();
+                playAudio();
             }
         }
     }//mSensorChanged
@@ -163,21 +166,96 @@ public class MainActivity extends AppCompatActivity {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 //            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
             mediaPlayer = MediaPlayer.create(this, R.raw.soft);
-            //todo
-//            audioManager.requestAudioFocus(new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN));
-//            audioManager.requestAudioFocus();
             txtStatus.setText("Active");
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
         }
     }//mActivate
 
+
+    private void playAudio() {
+
+        AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                    mediaPlayer.start();
+                }
+            }
+        };
+
+        int result = 0;
+        AudioFocusRequest focusRequest = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            //for Android 8.0 (API level 26) through Android 11 (API level 30), and Android 12 (API level 31) or later
+            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE).build();
+            result = audioManager.requestAudioFocus(focusRequest);
+        } else {
+            //for Android 7.1 (API level 25) and lower
+//            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_SYSTEM, AudioManager.AUDIOFOCUS_GAIN);
+        }
+
+        AudioFocusRequest finalFocusRequest = focusRequest;
+        MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
+                } else {
+                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+                }
+            }
+        };
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(mCompletionListener);
+        }
+
+    }//playAudio
+
+//    int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+//
+//    if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+//
+//        Word word = words.get(position);
+//        mMediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getAudioFile());
+//        mMediaPlayer.start();
+//        mMediaPlayer.setOnCompletionListener(mCompletionListener);
+//    }
+//
+//AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+//    @Override
+//    public void onAudioFocusChange(int focusChange) {
+//        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+//            mMediaPlayer.pause();
+//            mMediaPlayer.seekTo(0);
+//        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+//            mMediaPlayer.start();
+//        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+//            releaseMediaPlayer();
+//        }
+//    }
+//};
+//
+//
+//    //4.17
+//    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+//        @Override
+//        public void onCompletion(MediaPlayer mp) {
+//            releaseMediaPlayer();
+//        }
+//    };
+
+//        mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+
+
     private void mStop() {
         if (mediaPlayer != null) {
             sensorManager.unregisterListener(sensorEventListener);
             mediaPlayer.release();
             mediaPlayer = null;
-//            txtStatus.setText("Inactive");
             txtStatus.setText("inactive");
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
@@ -188,8 +266,7 @@ public class MainActivity extends AppCompatActivity {
 }//MainActivity
 
 
-//Todo: seekVolume is not controlling the volume as STREAM_SYSTEM
-//TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
+//Todo: the audio is not playing as STREAM_SYSTEM, while seekVolume is controlling the volume as STREAM_SYSTEM properly
 //TODO: MediaPlayer.setWakeMode().
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
@@ -197,6 +274,8 @@ public class MainActivity extends AppCompatActivity {
 
 // Done:
 //TODO: sync seekVolume with the device's original one.
+//TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
+//todo: requestAudioFocus
 
 //Notes:
 //Nougat 7 (API / SDK 24)
