@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -184,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //Attr
+//        AudioAttributes
+
         int result = 0;
         AudioFocusRequest focusRequest = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -278,4 +282,4 @@ public class MainActivity extends AppCompatActivity {
 //todo: requestAudioFocus
 
 //Notes:
-//Nougat 7 (API / SDK 24)
+//Galaxy J7 Prime. 5.5" 1080x1920. Nougat 7 (API / SDK 24)
