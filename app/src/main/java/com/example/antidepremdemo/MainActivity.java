@@ -269,9 +269,12 @@ public class MainActivity extends AppCompatActivity {
 
 }//MainActivity
 
+//todo:  MediaSessionCompat, MediaControllerCompat.  PlaybackStateCompat    PlaybackStateCompat.Builder
+//MediaSessionCompat.Callback
+
 
 //Todo: the audio is not playing as STREAM_SYSTEM, while seekVolume is controlling the volume as STREAM_SYSTEM properly
-//TODO: MediaPlayer.setWakeMode().
+//TODO: Manage device awake state. MediaPlayer.setWakeMode().
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
 //TODO: feature: feedback and email
