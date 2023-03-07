@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -167,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 //            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
             mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+            //to enable playing in the background. the MediaPlayer holds the
+            // specified lock (in this case, the CPU remains awake)
+            // while playing and releases the lock when paused or stopped.
+//            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+            //todo: don't forget to add the Wake Lock Permission.
             txtStatus.setText("Active");
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
