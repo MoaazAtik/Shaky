@@ -1,5 +1,6 @@
 package com.example.antidepremdemo;
 
+import android.app.Service;
 import android.media.MediaPlayer;
 
 public class MediaAndAudio {
@@ -12,7 +13,7 @@ public class MediaAndAudio {
 
 }
 
-//Running asynchronously
+////Running asynchronously
 //public class MyService extends Service implements MediaPlayer.OnPreparedListener {
 //    private static final String ACTION_PLAY = "com.example.action.PLAY";
 //    MediaPlayer mediaPlayer = null;

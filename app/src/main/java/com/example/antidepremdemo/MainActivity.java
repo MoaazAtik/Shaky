@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private int sensitivityCutoff = 0; //the lower value the more sensitive
     private AudioManager audioManager;
 //    private AudioManager audioManager = null;
+//    private AudioAttributes audioAttributes;
 
     private SensorEventListener sensorEventListener;
 
@@ -54,8 +55,13 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-//        setVolumeControlStream(AudioManager.STREAM_SYSTEM);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+//        audioAttributes = new AudioAttributes.Builder()
+//                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+//                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+//                .build();
 
         sensorEventListener = new SensorEventListener() {
             @Override
@@ -99,13 +105,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekVolume
-        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
-        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, i, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
             }
 
             @Override
@@ -132,12 +138,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
-//            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN){
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
-//            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
 
         return super.onKeyDown(keyCode, event);
@@ -168,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 //            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
             mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+//            mediaPlayer.setAudioAttributes(audioAttributes);
             //to enable playing in the background. the MediaPlayer holds the
             // specified lock (in this case, the CPU remains awake)
             // while playing and releases the lock when paused or stopped.
@@ -185,14 +190,11 @@ public class MainActivity extends AppCompatActivity {
         AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
-                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+//                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                     mediaPlayer.start();
-                }
+//                }
             }
         };
-
-        //Attr
-//        AudioAttributes
 
         int result = 0;
         AudioFocusRequest focusRequest = null;
@@ -202,8 +204,7 @@ public class MainActivity extends AppCompatActivity {
             result = audioManager.requestAudioFocus(focusRequest);
         } else {
             //for Android 7.1 (API level 25) and lower
-//            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_SYSTEM, AudioManager.AUDIOFOCUS_GAIN);
+            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
         }
 
         AudioFocusRequest finalFocusRequest = focusRequest;
@@ -218,10 +219,10 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+//        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(mCompletionListener);
-        }
+//        }
 
     }//playAudio
 
@@ -279,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
 //MediaSessionCompat.Callback
 
 
-//Todo: the audio is not playing as STREAM_SYSTEM, while seekVolume is controlling the volume as STREAM_SYSTEM properly
+//todo: should I invoke abandonAudioFocus in onPause() mStop()?
 //TODO: Manage device awake state. MediaPlayer.setWakeMode().
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
@@ -289,6 +290,9 @@ public class MainActivity extends AppCompatActivity {
 //TODO: sync seekVolume with the device's original one.
 //TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //todo: requestAudioFocus
+//Todo: the audio is not playing as STREAM_SYSTEM, while seekVolume is controlling the volume as STREAM_SYSTEM properly.
+// couldn't be done because Samsung has restricted the use of STREAM_SYSTEM audio stream type on some of its devices, including the Samsung Galaxy J7 Prime.
+
 
 //Notes:
 //Galaxy J7 Prime. 5.5" 1080x1920. Nougat 7 (API / SDK 24)
