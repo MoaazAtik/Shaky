@@ -13,7 +13,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -34,11 +33,12 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekSensitivity, seekVolume;
     private Button btnReset;
     private int sensitivityCutoff = 0; //the lower value the more sensitive
+    private SensorEventListener sensorEventListener;
     private AudioManager audioManager;
 //    private AudioManager audioManager = null;
-//    private AudioAttributes audioAttributes;
+    private AudioAttributes audioAttributes;
+    float volumeBeforeDucking;
 
-    private SensorEventListener sensorEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +58,12 @@ public class MainActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-//        audioAttributes = new AudioAttributes.Builder()
-//                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-//                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-//                .build();
+        audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build();
+
+        volumeBeforeDucking = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         sensorEventListener = new SensorEventListener() {
             @Override
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActivate();
+                mOn();
             }
         });
 
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         btnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStop();
+                mOff();
             }
         });
 
@@ -126,20 +128,20 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        mActivate();
+        mOn();
     }//onResume
 
     protected void onPause() {
         super.onPause();
-        mStop();
+        mOff();
     }//onPause
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
             seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-        }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN){
+        } else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN) {
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
             seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
@@ -167,12 +169,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }//mSensorChanged
 
-    private void mActivate() {
+    private void mOn() {
         if (mediaPlayer == null) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 //            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
             mediaPlayer = MediaPlayer.create(this, R.raw.soft);
-//            mediaPlayer.setAudioAttributes(audioAttributes);
+            mediaPlayer.setAudioAttributes(audioAttributes);
             //to enable playing in the background. the MediaPlayer holds the
             // specified lock (in this case, the CPU remains awake)
             // while playing and releases the lock when paused or stopped.
@@ -190,8 +192,17 @@ public class MainActivity extends AppCompatActivity {
         AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
+                if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//                    mediaPlayer.setVolume(0.1f,0.1f);
+                } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+                } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                    mediaPlayer.stop();
+                }
 //                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                    mediaPlayer.start();
+//                if (mediaPlayer != null)
+//                    mediaPlayer.start();
 //                }
             }
         };
@@ -262,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 //        mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
 
 
-    private void mStop() {
+    private void mOff() {
         if (mediaPlayer != null) {
             sensorManager.unregisterListener(sensorEventListener);
             mediaPlayer.release();
@@ -276,15 +287,13 @@ public class MainActivity extends AppCompatActivity {
 
 }//MainActivity
 
-//todo:  MediaSessionCompat, MediaControllerCompat.  PlaybackStateCompat    PlaybackStateCompat.Builder
-//MediaSessionCompat.Callback
 
 
-//todo: should I invoke abandonAudioFocus in onPause() mStop()?
 //TODO: Manage device awake state. MediaPlayer.setWakeMode().
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
 //TODO: feature: feedback and email
+//todo: should I invoke abandonAudioFocus in onPause() mStop()?
 
 // Done:
 //TODO: sync seekVolume with the device's original one.
