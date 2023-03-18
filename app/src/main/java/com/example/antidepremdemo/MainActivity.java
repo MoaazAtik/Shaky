@@ -1,8 +1,10 @@
 package com.example.antidepremdemo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -29,16 +31,17 @@ public class MainActivity extends AppCompatActivity {
     private int currentAcceleration;
     private int prevAcceleration;
     private int changeInAcceleration;
-    private MediaPlayer mediaPlayer;
+//    private MediaPlayer mediaPlayer;
     private SeekBar seekSensitivity, seekVolume;
     private Button btnReset;
     private int sensitivityCutoff = 0; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
-    private AudioManager audioManager;
+//    private AudioManager audioManager;
 //    private AudioManager audioManager = null;
-    private AudioAttributes audioAttributes;
-    float volumeBeforeDucking;
+//    private AudioAttributes audioAttributes;
+//    float volumeBeforeDucking;
 
+    MediaService mediaService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +58,18 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        mediaService = new MediaService();
+        mOn();
+
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build();
+//        audioAttributes = new AudioAttributes.Builder()
+//                .setUsage(AudioAttributes.USAGE_MEDIA)
+//                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+//                .build();
 
-        volumeBeforeDucking = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//        volumeBeforeDucking = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         sensorEventListener = new SensorEventListener() {
             @Override
@@ -107,13 +113,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekVolume
-        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+//        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setMax(mediaService.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+//        seekVolume.setMax(mediaService.volumeMax());
+//        seekVolume.setProgress(mediaService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+//                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                mediaService.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
             }
 
             @Override
@@ -133,17 +143,22 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onPause() {
         super.onPause();
-        mOff();
+//        mOff();
     }//onPause
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
-            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ?
+                    seekVolume.getMax() :
+                    mediaService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         } else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN) {
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
-            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+            seekVolume.setProgress((seekVolume.getProgress()-1<0) ?
+                    0 : mediaService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
 
         return super.onKeyDown(keyCode, event);
@@ -162,24 +177,31 @@ public class MainActivity extends AppCompatActivity {
         prevAcceleration = currentAcceleration;
 
         if (changeInAcceleration > sensitivityCutoff) {
-            if (mediaPlayer != null) {
+//            if (mediaPlayer != null) {
+            if (mediaService.mediaPlayer != null) {
                 Toast.makeText(MainActivity.this, "shaking", Toast.LENGTH_SHORT).show();
-                playAudio();
+                mediaService.playAudio();
             }
         }
     }//mSensorChanged
 
     private void mOn() {
-        if (mediaPlayer == null) {
-            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-//            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
-            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
-            mediaPlayer.setAudioAttributes(audioAttributes);
-            //to enable playing in the background. the MediaPlayer holds the
-            // specified lock (in this case, the CPU remains awake)
-            // while playing and releases the lock when paused or stopped.
-//            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-            //todo: don't forget to add the Wake Lock Permission.
+
+        Intent serviceIntent = new Intent(this, MediaService.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
+//        bindService(serviceIntent, null, 0);
+
+//        if (mediaPlayer == null) {
+        if (mediaService.mediaPlayer == null) {
+//            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+////            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
+//            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+//            mediaPlayer.setAudioAttributes(audioAttributes);
+//            //to enable playing in the background. the MediaPlayer holds the
+//            // specified lock (in this case, the CPU remains awake)
+//            // while playing and releases the lock when paused or stopped.
+////            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+//            //todo: don't forget to add the Wake Lock Permission.
             txtStatus.setText("Active");
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
@@ -187,55 +209,58 @@ public class MainActivity extends AppCompatActivity {
     }//mActivate
 
 
-    private void playAudio() {
-
-        AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-            @Override
-            public void onAudioFocusChange(int focusChange) {
-                if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//                    mediaPlayer.setVolume(0.1f,0.1f);
-                } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
-                } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                    mediaPlayer.stop();
-                }
-//                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-//                if (mediaPlayer != null)
-//                    mediaPlayer.start();
+//    private void playAudio() {
+//
+//        AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+//            @Override
+//            public void onAudioFocusChange(int focusChange) {
+//                if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+//                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+////                    mediaPlayer.setVolume(0.1f,0.1f);
+//                } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+//                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+//                } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+//                    mediaPlayer.stop();
 //                }
-            }
-        };
-
-        int result = 0;
-        AudioFocusRequest focusRequest = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            //for Android 8.0 (API level 26) through Android 11 (API level 30), and Android 12 (API level 31) or later
-            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE).build();
-            result = audioManager.requestAudioFocus(focusRequest);
-        } else {
-            //for Android 7.1 (API level 25) and lower
-            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
-        }
-
-        AudioFocusRequest finalFocusRequest = focusRequest;
-        MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
-                } else {
-                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-                }
-            }
-        };
-
-//        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(mCompletionListener);
+////                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+////                if (mediaPlayer != null)
+////                    mediaPlayer.start();
+////                }
+//            }
+//        };
+//
+//        int result = 0;
+//        AudioFocusRequest focusRequest = null;
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            //for Android 8.0 (API level 26) through Android 11 (API level 30), and Android 12 (API level 31) or later
+//            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+//                    .build();
+//            result = audioManager.requestAudioFocus(focusRequest);
+//        } else {
+//            //for Android 7.1 (API level 25) and lower
+//            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+//                    AudioManager.STREAM_MUSIC,
+//                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
 //        }
-
-    }//playAudio
+//
+//        AudioFocusRequest finalFocusRequest = focusRequest;
+//        MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
+//                } else {
+//                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+//                }
+//            }
+//        };
+//
+////        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+//            mediaPlayer.start();
+//            mediaPlayer.setOnCompletionListener(mCompletionListener);
+////        }
+//
+//    }//playAudio
 
 //    int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 //
@@ -273,11 +298,15 @@ public class MainActivity extends AppCompatActivity {
 //        mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
 
 
-    private void mOff() {
-        if (mediaPlayer != null) {
-            sensorManager.unregisterListener(sensorEventListener);
-            mediaPlayer.release();
-            mediaPlayer = null;
+     void mOff() {
+
+        Intent serviceIntent = new Intent(this, MediaService.class);
+        stopService(serviceIntent);
+
+        if (mediaService.mediaPlayer != null) {
+//            sensorManager.unregisterListener(sensorEventListener);
+//            mediaPlayer.release();
+//            mediaPlayer = null;
             txtStatus.setText("inactive");
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
