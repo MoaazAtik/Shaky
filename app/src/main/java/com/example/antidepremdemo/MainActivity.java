@@ -3,8 +3,10 @@ package com.example.antidepremdemo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,6 +17,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
     private TextView txtStatus;
     private SensorManager sensorManager;
@@ -41,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
 //    private AudioAttributes audioAttributes;
 //    float volumeBeforeDucking;
 
-    MediaService mediaService;
+//    MediaService mediaService;
+
+    MediaService mService;
+    Boolean mIsBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        mediaService = new MediaService();
+//        mediaService = new MediaService();
         mOn();
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -71,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        volumeBeforeDucking = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
+        //sensorEventListener
         sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
-        //btnActivate
+        //btnOn
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,15 +124,15 @@ public class MainActivity extends AppCompatActivity {
         //seekVolume
 //        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 //        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-        seekVolume.setMax(mediaService.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-//        seekVolume.setMax(mediaService.volumeMax());
-//        seekVolume.setProgress(mediaService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        MediaService sService = mService;//why is sService and mService null?
+        seekVolume.setMax(mService.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setProgress(mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 //                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
-                mediaService.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                mService.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
             }
 
             @Override
@@ -136,15 +145,36 @@ public class MainActivity extends AppCompatActivity {
 
     }//onCreate
 
+    @Override
     protected void onResume() {
         super.onResume();
+//        startService();
         mOn();
+        Log.d(TAG, "onResume: " + mIsBound);
     }//onResume
 
+    @Override
     protected void onPause() {
         super.onPause();
 //        mOff();
+//        if (mIsBound) {
+//            unbindService(serviceConnection);
+//            mIsBound = false;
+            mOff();
+            Log.d(TAG, "onPause: " + mIsBound);
+//        }
     }//onPause
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        if (mIsBound) {
+////            unbindService(serviceConnection);
+////            mIsBound = false;
+//            mOff();
+//        }
+        Log.d(TAG, "onDestroy: " + mIsBound);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -153,12 +183,12 @@ public class MainActivity extends AppCompatActivity {
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
             seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ?
                     seekVolume.getMax() :
-                    mediaService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                    mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         } else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN) {
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
             seekVolume.setProgress((seekVolume.getProgress()-1<0) ?
-                    0 : mediaService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                    0 : mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
 
         return super.onKeyDown(keyCode, event);
@@ -178,30 +208,28 @@ public class MainActivity extends AppCompatActivity {
 
         if (changeInAcceleration > sensitivityCutoff) {
 //            if (mediaPlayer != null) {
-            if (mediaService.mediaPlayer != null) {
+//            if (mediaService.mediaPlayer != null) {
+            if (mIsBound) {
                 Toast.makeText(MainActivity.this, "shaking", Toast.LENGTH_SHORT).show();
-                mediaService.playAudio();
+                mService.playAudio();
+//                mediaService.playAudio();
             }
         }
     }//mSensorChanged
 
     private void mOn() {
 
-        Intent serviceIntent = new Intent(this, MediaService.class);
-        ContextCompat.startForegroundService(this, serviceIntent);
-//        bindService(serviceIntent, null, 0);
+//        Intent serviceIntent = new Intent(this, MediaService.class);
+//        ContextCompat.startForegroundService(this, serviceIntent);
 
 //        if (mediaPlayer == null) {
-        if (mediaService.mediaPlayer == null) {
-//            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+//        if (mediaService.mediaPlayer == null) {
+        if (!mIsBound) {
+            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 ////            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
 //            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
 //            mediaPlayer.setAudioAttributes(audioAttributes);
-//            //to enable playing in the background. the MediaPlayer holds the
-//            // specified lock (in this case, the CPU remains awake)
-//            // while playing and releases the lock when paused or stopped.
-////            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-//            //todo: don't forget to add the Wake Lock Permission.
+            startService();
             txtStatus.setText("Active");
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
@@ -262,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //    }//playAudio
 
+
 //    int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 //
 //    if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -298,20 +327,60 @@ public class MainActivity extends AppCompatActivity {
 //        mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
 
 
-     void mOff() {
+    private void mOff() {
 
-        Intent serviceIntent = new Intent(this, MediaService.class);
-        stopService(serviceIntent);
+//        Intent serviceIntent = new Intent(this, MediaService.class);
+//        stopService(serviceIntent);
 
-        if (mediaService.mediaPlayer != null) {
-//            sensorManager.unregisterListener(sensorEventListener);
+//        if (mediaService.mediaPlayer != null) {
+        if (mIsBound) {
+
+            //I may need these 2 lines I got from above
+//            Intent serviceIntent = new Intent(this, MediaService.class);
+//            stopService(serviceIntent);
+
+            sensorManager.unregisterListener(sensorEventListener);
 //            mediaPlayer.release();
 //            mediaPlayer = null;
+            unbindService(serviceConnection);
+            mIsBound = false;
             txtStatus.setText("inactive");
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
         }
     }//mStop
+
+    private void startService() {
+        Intent serviceIntent = new Intent(this, MediaService.class);
+//        startService(serviceIntent);
+        ContextCompat.startForegroundService(this, serviceIntent);
+
+        bindService();
+    }
+    private void bindService() {
+        Intent serviceBindIntent = new Intent(this, MediaService.class);
+        bindService(serviceBindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(TAG, "onServiceConnected: connected to service.");
+
+//            MediaService.MyBinder binder = (MediaService.MyBinder) service;
+//            mService = binder.getService();
+            mService = ((MediaService.MyBinder) service).getService();
+
+            mIsBound = true;
+//            getRandomNumberFromService(); // return a random number from the service
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d(TAG, "onServiceDisconnected: disconnected from service.");
+            mIsBound = false;
+        }
+    };
 
 
 }//MainActivity

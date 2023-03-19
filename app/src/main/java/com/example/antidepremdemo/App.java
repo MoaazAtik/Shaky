@@ -3,6 +3,7 @@ package com.example.antidepremdemo;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 
 public class App extends Application {
 
@@ -12,7 +13,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        createNotificationChannel();
+//        createNotificationChannel();
     }
 
     private void createNotificationChannel() {
@@ -22,6 +23,10 @@ public class App extends Application {
                     "Media Service Chennel",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
+
+            //do I really need this line?
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(serviceChannel);
+
         }
     }
 
