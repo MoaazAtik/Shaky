@@ -8,11 +8,13 @@ import android.content.Context;
 public class App extends Application {
 
     public static final String CHANNEL_ID = "mediaServiceChannel";
+    private static Context contex;
+    public static Context getContex(){return contex;}
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        contex=getApplicationContext();
 //        createNotificationChannel();
     }
 

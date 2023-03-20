@@ -25,6 +25,8 @@ import androidx.core.app.NotificationCompat;
 
 public class MediaService extends Service {
 
+    private static final String TAG = "MediaService";
+
     private final IBinder mBinder = new MyBinder();
 
     public static final String CHANNEL_ID = "mediaServiceChannel";
@@ -34,7 +36,9 @@ public class MediaService extends Service {
     AudioManager audioManager;
     float volumeBeforeDucking;
 
-    private static final String TAG = "MediaService";
+    public MediaService() {
+        audioManager = (AudioManager) MainActivity.getContex().getSystemService(Context.AUDIO_SERVICE);
+    }
 
     @Override
     public void onCreate() {
@@ -50,7 +54,7 @@ public class MediaService extends Service {
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
 
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        audioManager = (AudioManager) MainActivity.getContex().getSystemService(Context.AUDIO_SERVICE);
 //        volumeBeforeDucking = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
 //        if (mediaPlayer == null) {
@@ -189,6 +193,10 @@ public class MediaService extends Service {
 
 //todo CodingWithMitch video: make this service a bound service to
 // fix calling null audioManger issue
+///todo: the problem is mOn() in MainActivity's onCreate is not being called
+// so the service is not being created. NO***. it is being called but
+// I didn't get an onServiceConnected() callback from serviceConnection
+// aka. there is no connection between MainActivity and MediaService yet.
 //todo: revise the role of pendingIntent
 //todo: create a Tag on github of the main branch (where the app was working
 // fine before using a Service)

@@ -51,11 +51,13 @@ public class MainActivity extends AppCompatActivity {
     MediaService mService;
     Boolean mIsBound = false;
 
+private static Context contex;
+public static Context getContex(){return contex;}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+contex=getApplicationContext();
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
         txtStatus = findViewById(R.id.txt_status);
@@ -66,8 +68,12 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-//        mediaService = new MediaService();
         mOn();
+        Log.d(TAG, "onCreate: "+mIsBound);
+        startService();
+        Log.d(TAG, "onCreate: "+mIsBound);
+        mService = new MediaService();
+        Log.d(TAG, "onCreate: "+mIsBound+mService.audioManager);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -126,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 //        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         MediaService sService = mService;//why is sService and mService null?
         seekVolume.setMax(mService.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        seekVolume.setProgress(mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//        seekVolume.setProgress(mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -150,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 //        startService();
         mOn();
-        Log.d(TAG, "onResume: " + mIsBound);
+        Log.d(TAG, "onResume: " + mIsBound + mService);
     }//onResume
 
     @Override
@@ -161,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 //            unbindService(serviceConnection);
 //            mIsBound = false;
             mOff();
-            Log.d(TAG, "onPause: " + mIsBound);
+            Log.d(TAG, "onPause: " + mIsBound + mService);
 //        }
     }//onPause
 
@@ -173,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
 ////            mIsBound = false;
 //            mOff();
 //        }
-        Log.d(TAG, "onDestroy: " + mIsBound);
+        Log.d(TAG, "onDestroy: " + mIsBound + mService);
     }
 
     @Override
@@ -354,31 +360,35 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, MediaService.class);
 //        startService(serviceIntent);
         ContextCompat.startForegroundService(this, serviceIntent);
-
+        Log.d(TAG, "startService: "+mIsBound);
         bindService();
     }
     private void bindService() {
         Intent serviceBindIntent = new Intent(this, MediaService.class);
         bindService(serviceBindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, "bindService: "+mIsBound);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "onServiceConnected: connected to service.");
+            Log.d(TAG, "onServiceConnected: connected to service." + mService);
 
-//            MediaService.MyBinder binder = (MediaService.MyBinder) service;
-//            mService = binder.getService();
-            mService = ((MediaService.MyBinder) service).getService();
-
+            MediaService.MyBinder binder = (MediaService.MyBinder) service;
+            mService = binder.getService();
+//            mService = ((MediaService.MyBinder) service).getService();
+            Log.d(TAG, "onServiceConnected: "+mIsBound + mService);
             mIsBound = true;
+            Log.d(TAG, "onServiceConnected: "+mIsBound + mService);
 //            getRandomNumberFromService(); // return a random number from the service
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "onServiceDisconnected: disconnected from service.");
+            Log.d(TAG, "onServiceDisconnected: disconnected from service." + mService);
             mIsBound = false;
+
+//            mService = null;
         }
     };
 
