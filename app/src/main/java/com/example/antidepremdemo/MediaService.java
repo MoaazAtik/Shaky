@@ -67,7 +67,7 @@ public class MediaService extends Service {
 //            txtStatus.setAllCaps(true);
 //        }
 
-    }
+    }//onCreate
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -79,11 +79,14 @@ public class MediaService extends Service {
     @Override
     public void onDestroy() {
 //        super.onDestroy();
-
+        Log.d(TAG, "onDestroy: eeeeee "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
 //        if (mediaPlayer != null) {
 //            sensorManager.unregisterListener(sensorEventListener);
             mediaPlayer.release();
             mediaPlayer = null;
+            audioAttributes = null;
+            volumeBeforeDucking = 0;
+        Log.d(TAG, "onDestroy: nuuuuu "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
 //            txtStatus.setText("inactive");
 //            txtStatus.setTextSize(72);
 //            txtStatus.setAllCaps(false);
@@ -102,13 +105,17 @@ public class MediaService extends Service {
         AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
+                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking);
                 if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
                         focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                     volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    mediaPlayer.setVolume(0.1f,0.1f);
+//                    mediaPlayer.setVolume(0.5f,0.5f);
+                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+//                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
                 } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+//                    mediaPlayer.setVolume(1.0f,1.0f);
+                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
                     mediaPlayer.stop();
                 }
 //                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
@@ -191,14 +198,19 @@ public class MediaService extends Service {
 
 }//MediaService.class
 
-//todo CodingWithMitch video: make this service a bound service to
-// fix calling null audioManger issue
-///todo: the problem is mOn() in MainActivity's onCreate is not being called
-// so the service is not being created. NO***. it is being called but
-// I didn't get an onServiceConnected() callback from serviceConnection
-// aka. there is no connection between MainActivity and MediaService yet.
+//todo: Audio is not playing after AudioManager.AUDIOFOCUS_LOSS
+//todo: Cannot resolve method 'baseSetVolume' in 'MediaPlayer'
+// ducking mutes the volume of the app forever. mediaPlayer.setVolume().
 //todo: revise the role of pendingIntent
 //todo: create a Tag on github of the main branch (where the app was working
 // fine before using a Service)
 //todo try adding "android.permission.MODIFY_AUDIO_SETTINGS" to the manifest
 // to use STREAM_SYSTEM
+
+//done:
+//todo: CodingWithMitch video: make this service a bound service to
+// fix calling null audioManger issue
+//todo: the problem is mOn() in MainActivity's onCreate is not being called
+// so the service is not being created. NO***. it is being called but
+// I didn't get an onServiceConnected() callback from serviceConnection
+// aka. there is no connection between MainActivity and MediaService yet.

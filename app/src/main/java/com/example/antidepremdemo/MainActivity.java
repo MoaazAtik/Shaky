@@ -46,13 +46,12 @@ public class MainActivity extends AppCompatActivity {
 //    private AudioAttributes audioAttributes;
 //    float volumeBeforeDucking;
 
-//    MediaService mediaService;
-
     MediaService mService;
     Boolean mIsBound = false;
 
 private static Context contex;
 public static Context getContex(){return contex;}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +67,17 @@ contex=getApplicationContext();
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        mOn();
+//        mOn();
         Log.d(TAG, "onCreate: "+mIsBound);
-        startService();
-        Log.d(TAG, "onCreate: "+mIsBound);
-        mService = new MediaService();
-        Log.d(TAG, "onCreate: "+mIsBound+mService.audioManager);
+//        startService();
+//        Log.d(TAG, "onCreate: "+mIsBound);
 
+        mService = new MediaService();
+//        Log.d(TAG, "onCreate: "+mIsBound+mService.audioManager);
+//        Log.d(TAG, "onCreate: "+mIsBound+mService.getAudioManager());
+//        Log.d(TAG, "onCreate: "+mIsBound+MediaService.getAudioManager());
+//        Log.d(TAG, "onCreate: "+MediaService.audioManager);
+        Log.d(TAG, "onCreate: "+mService.audioManager+mService);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -130,9 +133,8 @@ contex=getApplicationContext();
         //seekVolume
 //        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 //        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-        MediaService sService = mService;//why is sService and mService null?
         seekVolume.setMax(mService.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-//        seekVolume.setProgress(mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setProgress(mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -146,7 +148,6 @@ contex=getApplicationContext();
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
-
 
 
     }//onCreate
@@ -166,7 +167,7 @@ contex=getApplicationContext();
 //        if (mIsBound) {
 //            unbindService(serviceConnection);
 //            mIsBound = false;
-            mOff();
+//            mOff();
             Log.d(TAG, "onPause: " + mIsBound + mService);
 //        }
     }//onPause
@@ -349,7 +350,13 @@ contex=getApplicationContext();
 //            mediaPlayer.release();
 //            mediaPlayer = null;
             unbindService(serviceConnection);
+            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
+            stopService(new Intent(this, MediaService.class));
+
             mIsBound = false;
+//            mService = null;
+            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
+
             txtStatus.setText("inactive");
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
@@ -388,7 +395,6 @@ contex=getApplicationContext();
             Log.d(TAG, "onServiceDisconnected: disconnected from service." + mService);
             mIsBound = false;
 
-//            mService = null;
         }
     };
 
