@@ -101,7 +101,7 @@ public class MediaService extends Service {
 
 
     public void playAudio() {
-
+        Toast.makeText(this, "playAudio()", Toast.LENGTH_SHORT).show();
         AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
@@ -112,11 +112,14 @@ public class MediaService extends Service {
 //                    mediaPlayer.setVolume(0.5f,0.5f);
                 Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                    Toast.makeText(MainActivity.getContex(), "Gain", Toast.LENGTH_SHORT).show();
+//                }
 //                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
                 } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-//                    mediaPlayer.setVolume(1.0f,1.0f);
-                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-                    mediaPlayer.stop();
+                    Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
+////                    mediaPlayer.setVolume(1.0f,1.0f);
+//                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//                    mediaPlayer.stop();//todo this is the BUG
                 }
 //                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
 //                if (mediaPlayer != null)
