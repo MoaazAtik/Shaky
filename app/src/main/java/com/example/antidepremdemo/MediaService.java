@@ -46,13 +46,15 @@ public class MediaService extends Service {
 
         mNotification();
 
-        Log.d(TAG, "onCreate: my MediaService");
-        Toast.makeText(this, "tossst", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onCreate:");
+        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
 
         audioAttributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
+
+        volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
 //        audioManager = (AudioManager) MainActivity.getContex().getSystemService(Context.AUDIO_SERVICE);
 //        volumeBeforeDucking = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -79,14 +81,14 @@ public class MediaService extends Service {
     @Override
     public void onDestroy() {
 //        super.onDestroy();
-        Log.d(TAG, "onDestroy: eeeeee "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
+            Log.d(TAG, "onDestroy: eeeeee "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
 //        if (mediaPlayer != null) {
 //            sensorManager.unregisterListener(sensorEventListener);
             mediaPlayer.release();
             mediaPlayer = null;
             audioAttributes = null;
             volumeBeforeDucking = 0;
-        Log.d(TAG, "onDestroy: nuuuuu "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
+            Log.d(TAG, "onDestroy: nuuuuu "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
 //            txtStatus.setText("inactive");
 //            txtStatus.setTextSize(72);
 //            txtStatus.setAllCaps(false);
@@ -101,25 +103,32 @@ public class MediaService extends Service {
 
 
     public void playAudio() {
+
         Toast.makeText(this, "playAudio()", Toast.LENGTH_SHORT).show();
+
         AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
+
                 Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking);
+
                 if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
                         focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                     volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//                    mediaPlayer.setVolume(0.5f,0.5f);
-                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                    mediaPlayer.setVolume(0.5f,0.5f);
+                    Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                     Toast.makeText(MainActivity.getContex(), "Gain", Toast.LENGTH_SHORT).show();
-//                }
-//                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+
                 } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                     Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
-////                    mediaPlayer.setVolume(1.0f,1.0f);
+//                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//                    mediaPlayer.setVolume(0.5f,0.5f);
 //                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-//                    mediaPlayer.stop();//todo this is the BUG
+                    mediaPlayer.stop(); //todo this is the BUG
+                    mediaPlayer.prepareAsync();
                 }
 //                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
 //                if (mediaPlayer != null)

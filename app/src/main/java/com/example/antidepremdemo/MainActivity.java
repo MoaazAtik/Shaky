@@ -188,13 +188,13 @@ contex=getApplicationContext();
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ?
+            seekVolume.setProgress((seekVolume.getProgress() + 1 > seekVolume.getMax()) ?
                     seekVolume.getMax() :
                     mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-        } else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN) {
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-            seekVolume.setProgress((seekVolume.getProgress()-1<0) ?
+            seekVolume.setProgress((seekVolume.getProgress() - 1 < 0) ?
                     0 : mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
 
