@@ -115,20 +115,24 @@ public class MediaService extends Service {
                 if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
                         focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                     volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    mediaPlayer.setVolume(0.5f,0.5f);
-                    Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                    Toast.makeText(MediaService.this, "Duck", Toast.LENGTH_SHORT).show();
+                    if (mediaPlayer != null) {
+                        Toast.makeText(MediaService.this, "Duck.. media not null", Toast.LENGTH_SHORT).show();
+                        mediaPlayer.setVolume(0.5f, 0.5f);
+                    }
+//                    Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                     Toast.makeText(MainActivity.getContex(), "Gain", Toast.LENGTH_SHORT).show();
-                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+//                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
 
                 } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                     Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
 //                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 //                    mediaPlayer.setVolume(0.5f,0.5f);
 //                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-                    mediaPlayer.stop(); //todo this is the BUG
-                    mediaPlayer.prepareAsync();
+                    //mediaPlayer.stop(); //todo this is the BUG
+                    //mediaPlayer.prepareAsync();
                 }
 //                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
 //                if (mediaPlayer != null)
@@ -210,7 +214,8 @@ public class MediaService extends Service {
 
 }//MediaService.class
 
-//todo: Audio is not playing after AudioManager.AUDIOFOCUS_LOSS
+//todo: the mediaPlayer.setVolume() crashes the app. rearrange the mediaPlayer methods (create, pause,...)
+// like the mediaPlayer in Miwok
 //todo: Cannot resolve method 'baseSetVolume' in 'MediaPlayer'
 // ducking mutes the volume of the app forever. mediaPlayer.setVolume().
 //todo: revise the role of pendingIntent
@@ -226,3 +231,4 @@ public class MediaService extends Service {
 // so the service is not being created. NO***. it is being called but
 // I didn't get an onServiceConnected() callback from serviceConnection
 // aka. there is no connection between MainActivity and MediaService yet.
+//todo: Audio is not playing after AudioManager.AUDIOFOCUS_LOSS
