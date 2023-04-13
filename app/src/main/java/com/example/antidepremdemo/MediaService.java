@@ -40,6 +40,64 @@ public class MediaService extends Service {
         audioManager = (AudioManager) MainActivity.getContex().getSystemService(Context.AUDIO_SERVICE);
     }
 
+    int result = 0;
+    AudioFocusRequest focusRequest = null;
+
+//    AudioFocusRequest finalFocusRequest = focusRequest;
+    MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            mReleaseMediaPlayer();
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
+//                } else {
+//                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+//                }
+        }
+    };
+
+    AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+
+            Log.d(TAG, "focusChange: "+focusChange+"  "+volumeBeforeDucking);
+
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+                    focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                Toast.makeText(MediaService.this, "Duck", Toast.LENGTH_SHORT).show();
+//                    if (mediaPlayer != null) {
+                Toast.makeText(MediaService.this, volumeBeforeDucking+"", Toast.LENGTH_SHORT).show();
+                mediaPlayer.setVolume(0.5f, 0.5f);
+                Toast.makeText(MediaService.this, volumeBeforeDucking+"", Toast.LENGTH_SHORT).show();
+//                    }
+//                Log.d(TAG, "focusChange: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                Toast.makeText(MainActivity.getContex(), "Gain "+volumeBeforeDucking, Toast.LENGTH_SHORT).show();
+                mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
+//                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//                    mediaPlayer.setVolume(0.5f,0.5f);
+//                Log.d(TAG, "focusChange: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//                mediaPlayer.getVolume(); //todo: the volume is ducking, but I can't get its value before and after ducking
+                Log.d(TAG, "focusChange: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+                //mediaPlayer.stop(); //todo this is the BUG
+                //mediaPlayer.prepareAsync();
+                volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setVolume(0.5f, 0.5f);
+                Log.d(TAG, "focusChange: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//                mReleaseMediaPlayer();
+            }
+//                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+//                if (mediaPlayer != null)
+//                    mediaPlayer.start();
+//                }
+        }
+    };
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -61,9 +119,9 @@ public class MediaService extends Service {
 
 //        if (mediaPlayer == null) {
 //            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-//            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
-            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
-            mediaPlayer.setAudioAttributes(audioAttributes);
+////            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
+//            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+//            mediaPlayer.setAudioAttributes(audioAttributes);
 //            txtStatus.setText("Active");
 //            txtStatus.setTextSize(84);
 //            txtStatus.setAllCaps(true);
@@ -84,10 +142,11 @@ public class MediaService extends Service {
             Log.d(TAG, "onDestroy: eeeeee "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
 //        if (mediaPlayer != null) {
 //            sensorManager.unregisterListener(sensorEventListener);
-            mediaPlayer.release();
-            mediaPlayer = null;
-            audioAttributes = null;
-            volumeBeforeDucking = 0;
+            //mediaPlayer.release();
+//            mediaPlayer = null;
+//            audioAttributes = null;
+//            volumeBeforeDucking = 0;
+        mReleaseMediaPlayer();
             Log.d(TAG, "onDestroy: nuuuuu "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
 //            txtStatus.setText("inactive");
 //            txtStatus.setTextSize(72);
@@ -104,75 +163,99 @@ public class MediaService extends Service {
 
     public void playAudio() {
 
-        Toast.makeText(this, "playAudio()", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "playAudio()", Toast.LENGTH_SHORT).show();
 
-        AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-            @Override
-            public void onAudioFocusChange(int focusChange) {
-
-                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking);
-
-                if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
-                        focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    Toast.makeText(MediaService.this, "Duck", Toast.LENGTH_SHORT).show();
-                    if (mediaPlayer != null) {
-                        Toast.makeText(MediaService.this, "Duck.. media not null", Toast.LENGTH_SHORT).show();
-                        mediaPlayer.setVolume(0.5f, 0.5f);
-                    }
-//                    Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-
-                } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                    Toast.makeText(MainActivity.getContex(), "Gain", Toast.LENGTH_SHORT).show();
-//                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
-
-                } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                    Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
+//        AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+//            @Override
+//            public void onAudioFocusChange(int focusChange) {
+//
+//                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking);
+//
+//                if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+//                        focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
 //                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//                    mediaPlayer.setVolume(0.5f,0.5f);
-//                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-                    //mediaPlayer.stop(); //todo this is the BUG
-                    //mediaPlayer.prepareAsync();
-                }
-//                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-//                if (mediaPlayer != null)
-//                    mediaPlayer.start();
+//                    Toast.makeText(MediaService.this, "Duck", Toast.LENGTH_SHORT).show();
+////                    if (mediaPlayer != null) {
+//                        Toast.makeText(MediaService.this, volumeBeforeDucking+"", Toast.LENGTH_SHORT).show();
+//                        mediaPlayer.setVolume(0.5f, 0.5f);
+//                        Toast.makeText(MediaService.this, volumeBeforeDucking+"", Toast.LENGTH_SHORT).show();
+////                    }
+////                    Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//
+//                } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+//                    Toast.makeText(MainActivity.getContex(), "Gain "+volumeBeforeDucking, Toast.LENGTH_SHORT).show();
+//                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+//
+//                } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+//                    Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
+////                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+////                    mediaPlayer.setVolume(0.5f,0.5f);
+////                Log.d(TAG, "playAudio: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//                    //mediaPlayer.stop(); //todo this is the BUG
+//                    //mediaPlayer.prepareAsync();
+//                    mReleaseMediaPlayer();
 //                }
-            }
-        };
+////                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+////                if (mediaPlayer != null)
+////                    mediaPlayer.start();
+////                }
+//            }
+//        };
 
-        int result = 0;
-        AudioFocusRequest focusRequest = null;
+//        int result = 0;
+//        AudioFocusRequest focusRequest = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             //for Android 8.0 (API level 26) through Android 11 (API level 30), and Android 12 (API level 31) or later
-            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+//            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setOnAudioFocusChangeListener(mOnAudioFocusChangeListener)
                     .build();
             result = audioManager.requestAudioFocus(focusRequest);
         } else {
             //for Android 7.1 (API level 25) and lower
             result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener,
                     AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
+//                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
+                    AudioManager.AUDIOFOCUS_GAIN);
         }
 
-        AudioFocusRequest finalFocusRequest = focusRequest;
-        MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
-                } else {
-                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-                }
-            }
-        };
+//        AudioFocusRequest finalFocusRequest = focusRequest;
+//        MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                mReleaseMediaPlayer();
+////                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+////                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
+////                } else {
+////                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+////                }
+//            }
+//        };
 
-//        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-        mediaPlayer.start();
-        mediaPlayer.setOnCompletionListener(mCompletionListener);
-//        }
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
+//            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+            mediaPlayer.setAudioAttributes(audioAttributes);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(mCompletionListener);
+        }
 
     }//playAudio
+
+    private void mReleaseMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+//            audioAttributes = null;
+            volumeBeforeDucking = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                audioManager.abandonAudioFocusRequest(finalFocusRequest);
+                audioManager.abandonAudioFocusRequest(focusRequest);
+            } else {
+                audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+            }
+        }
+    }
 
 
     //MyBinder class
@@ -214,8 +297,7 @@ public class MediaService extends Service {
 
 }//MediaService.class
 
-//todo: the mediaPlayer.setVolume() crashes the app. rearrange the mediaPlayer methods (create, pause,...)
-// like the mediaPlayer in Miwok
+
 //todo: Cannot resolve method 'baseSetVolume' in 'MediaPlayer'
 // ducking mutes the volume of the app forever. mediaPlayer.setVolume().
 //todo: revise the role of pendingIntent
@@ -225,7 +307,9 @@ public class MediaService extends Service {
 // to use STREAM_SYSTEM
 
 //done:
-//todo: CodingWithMitch video: make this service a bound service to
+//todo: the mediaPlayer.setVolume() crashes the app. rearrange the mediaPlayer methods (create, pause,...)
+// like the mediaPlayer in Miwok
+// todo: CodingWithMitch video: make this service a bound service to
 // fix calling null audioManger issue
 //todo: the problem is mOn() in MainActivity's onCreate is not being called
 // so the service is not being created. NO***. it is being called but

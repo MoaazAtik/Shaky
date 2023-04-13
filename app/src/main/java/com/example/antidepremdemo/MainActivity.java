@@ -217,7 +217,7 @@ contex=getApplicationContext();
 //            if (mediaPlayer != null) {
 //            if (mediaService.mediaPlayer != null) {
             if (mIsBound) {
-                Toast.makeText(MainActivity.this, "shaking", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "shaking", Toast.LENGTH_SHORT).show();
                 mService.playAudio();
 //                mediaService.playAudio();
             }
