@@ -14,12 +14,17 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 //import static com.example.antidepremdemo.App.CHANNEL_ID;
 
@@ -87,7 +92,7 @@ public class MediaService extends Service {
                 //mediaPlayer.stop(); //todo this is the BUG
                 //mediaPlayer.prepareAsync();
                 volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                mediaPlayer.setVolume(0.5f, 0.5f);
+                mediaPlayer.setVolume(0.1f, 0.1f);
                 Log.d(TAG, "focusChange: "+focusChange+"  "+volumeBeforeDucking+" "+(float)audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 //                mReleaseMediaPlayer();
             }
@@ -233,11 +238,25 @@ public class MediaService extends Service {
 //        };
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
-//            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
-            mediaPlayer.setAudioAttributes(audioAttributes);
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(mCompletionListener);
+            if (mediaPlayer == null) {
+//                mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
+                mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+                mediaPlayer.setAudioAttributes(audioAttributes);
+                mediaPlayer.setLooping(true);
+                mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(mCompletionListener);
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "handler of loop breaking");
+                        if (mediaPlayer != null)
+                            mediaPlayer.setLooping(false);
+                    }
+                };
+                handler.postDelayed(runnable, 5 * 1000);
+            }
         }
 
     }//playAudio
@@ -297,9 +316,10 @@ public class MediaService extends Service {
 
 }//MediaService.class
 
-
-//todo: Cannot resolve method 'baseSetVolume' in 'MediaPlayer'
-// ducking mutes the volume of the app forever. mediaPlayer.setVolume().
+//todo: remove volumeBeforeDucking because it's no longer needed,
+// and increase the volume of the mediaPlayer after regaining the focus
+//todo: loop the player,
+// and make the handler and the runnable = null
 //todo: revise the role of pendingIntent
 //todo: create a Tag on github of the main branch (where the app was working
 // fine before using a Service)
@@ -307,9 +327,11 @@ public class MediaService extends Service {
 // to use STREAM_SYSTEM
 
 //done:
+//todo: Cannot resolve method 'baseSetVolume' in 'MediaPlayer'
+// ducking mutes the volume of the app forever. mediaPlayer.setVolume().
 //todo: the mediaPlayer.setVolume() crashes the app. rearrange the mediaPlayer methods (create, pause,...)
 // like the mediaPlayer in Miwok
-// todo: CodingWithMitch video: make this service a bound service to
+//todo: CodingWithMitch video: make this service a bound service to
 // fix calling null audioManger issue
 //todo: the problem is mOn() in MainActivity's onCreate is not being called
 // so the service is not being created. NO***. it is being called but

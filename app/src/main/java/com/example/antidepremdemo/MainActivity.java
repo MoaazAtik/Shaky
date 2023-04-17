@@ -149,6 +149,14 @@ contex=getApplicationContext();
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
+        //btnReset
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mService.mediaPlayer.pause();
+            }
+        });
+
 
     }//onCreate
 
