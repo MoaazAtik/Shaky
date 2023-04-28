@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,10 +14,12 @@
         android:theme="@style/Theme.AntiDepremDemo"
         tools:targetApi="31"
 
-        android:name=".App"
         >
-        <service android:name=".MediaService"
-            android:stopWithTask="true">
+
+        <service
+            android:name=".MediaService"
+            android:foregroundServiceType="mediaPlayback">
+
         </service>
 
         <activity

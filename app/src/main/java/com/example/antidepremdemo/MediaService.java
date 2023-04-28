@@ -243,7 +243,7 @@ public class MediaService extends Service {
 
 }//MediaService.class
 
-//todo: revise the role of pendingIntent
+
 //todo: create a Tag on github of the main branch (where the app was working
 // fine before using a Service)
 //todo try adding "android.permission.MODIFY_AUDIO_SETTINGS" to the manifest
@@ -253,6 +253,8 @@ public class MediaService extends Service {
 //todo: complete the overview of Services on Notion
 
 //done:
+//todo: check the permissions and manifest attributes written in startForeground(1, notification); :
+//todo: revise the role of pendingIntent
 //todo: use switch instead of if in focusChangeListener
 //todo: loop the player,
 // and make the handler and the runnable = null

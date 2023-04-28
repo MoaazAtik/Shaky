@@ -153,10 +153,11 @@ contex=getApplicationContext();
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mService.mediaPlayer.pause();
+//                mService.mediaPlayer.pause();
             }
         });
 
+        mOn();
 
     }//onCreate
 
@@ -164,7 +165,7 @@ contex=getApplicationContext();
     protected void onResume() {
         super.onResume();
 //        startService();
-        mOn();
+        //mOn();
         Log.d(TAG, "onResume: " + mIsBound + mService);
     }//onResume
 
@@ -188,7 +189,9 @@ contex=getApplicationContext();
 ////            mIsBound = false;
 //            mOff();
 //        }
-        Log.d(TAG, "onDestroy: " + mIsBound + mService);
+        Log.d(TAG, "onDestroy:1 " + mIsBound + mService+" "+mService.audioManager);
+        mOff(); //especially for unregisterListener()
+        Log.d(TAG, "onDestroy: 2" + mIsBound + mService+" ");
     }
 
     @Override
@@ -358,12 +361,13 @@ contex=getApplicationContext();
 //            mediaPlayer.release();
 //            mediaPlayer = null;
             unbindService(serviceConnection);
-            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
+//            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
+            Log.d(TAG, "mOff: "+mService);
             stopService(new Intent(this, MediaService.class));
 
             mIsBound = false;
 //            mService = null;
-            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
+//            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
 
             txtStatus.setText("inactive");
             txtStatus.setTextSize(72);
@@ -412,6 +416,7 @@ contex=getApplicationContext();
 
 
 //TODO: Manage device awake state. MediaPlayer.setWakeMode().
+//todo do I need to add wake lock even if I'm using a foreground service?
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
 //TODO: feature: feedback and email
