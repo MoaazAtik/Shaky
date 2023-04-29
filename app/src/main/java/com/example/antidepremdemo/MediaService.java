@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,8 +41,6 @@ public class MediaService extends Service {
     AudioAttributes audioAttributes;
     AudioManager audioManager;
     float volumeBeforeDucking;
-    Handler handler;
-    Runnable runnable;
 
     public MediaService() {
         audioManager = (AudioManager) MainActivity.getContex().getSystemService(Context.AUDIO_SERVICE);
@@ -170,8 +169,7 @@ public class MediaService extends Service {
                 mediaPlayer.start();
                 mediaPlayer.setOnCompletionListener(mCompletionListener);
 
-                handler = new Handler(Looper.getMainLooper());
-                runnable = new Runnable() {
+                Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
                         Log.d(TAG, "handler of loop breaking");
@@ -179,8 +177,9 @@ public class MediaService extends Service {
                             mediaPlayer.setLooping(false);
                     }
                 };
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(runnable, 5000);
 //                handler.postDelayed(runnable, 2 * 60 * 1000);
-                handler.postDelayed(runnable, 5 * 1000);
             }
         }
 
@@ -192,8 +191,6 @@ public class MediaService extends Service {
             mediaPlayer = null;
 //            audioAttributes = null;
             volumeBeforeDucking = 0;
-            handler = null;
-            runnable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //                audioManager.abandonAudioFocusRequest(finalFocusRequest);
                 audioManager.abandonAudioFocusRequest(focusRequest);
