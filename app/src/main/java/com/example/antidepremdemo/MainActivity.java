@@ -68,7 +68,7 @@ contex=getApplicationContext();
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
 //        mOn();
-        Log.d(TAG, "onCreate: "+mIsBound);
+        Log.d(TAG, "onCreate: " + mIsBound);
 //        startService();
 //        Log.d(TAG, "onCreate: "+mIsBound);
 
@@ -77,7 +77,7 @@ contex=getApplicationContext();
 //        Log.d(TAG, "onCreate: "+mIsBound+mService.getAudioManager());
 //        Log.d(TAG, "onCreate: "+mIsBound+MediaService.getAudioManager());
 //        Log.d(TAG, "onCreate: "+MediaService.audioManager);
-        Log.d(TAG, "onCreate: "+mService.audioManager+mService);
+        Log.d(TAG, "onCreate: " + mIsBound+" "+mService);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -166,7 +166,7 @@ contex=getApplicationContext();
         super.onResume();
 //        startService();
         //mOn();
-        Log.d(TAG, "onResume: " + mIsBound + mService);
+        Log.d(TAG, "onResume: " + mIsBound+" "+mService);
     }//onResume
 
     @Override
@@ -177,7 +177,7 @@ contex=getApplicationContext();
 //            unbindService(serviceConnection);
 //            mIsBound = false;
 //            mOff();
-            Log.d(TAG, "onPause: " + mIsBound + mService);
+            Log.d(TAG, "onPause: " + mIsBound+" "+mService);
 //        }
     }//onPause
 
@@ -189,9 +189,9 @@ contex=getApplicationContext();
 ////            mIsBound = false;
 //            mOff();
 //        }
-        Log.d(TAG, "onDestroy:1 " + mIsBound + mService+" "+mService.audioManager);
+        Log.d(TAG, "onDestroy: " + mIsBound+" "+mService);
         mOff(); //especially for unregisterListener()
-        Log.d(TAG, "onDestroy: 2" + mIsBound + mService+" ");
+        Log.d(TAG, "onDestroy: mOff " + mIsBound+" "+mService);
     }
 
     @Override
@@ -362,8 +362,9 @@ contex=getApplicationContext();
 //            mediaPlayer = null;
             unbindService(serviceConnection);
 //            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
-            Log.d(TAG, "mOff: "+mService);
+            Log.d(TAG, "mOff: unbindService " + mIsBound+" "+mService);
             stopService(new Intent(this, MediaService.class));
+            Log.d(TAG, "mOff: stopService " + mIsBound+" "+mService);
 
             mIsBound = false;
 //            mService = null;
@@ -391,14 +392,14 @@ contex=getApplicationContext();
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "onServiceConnected: connected to service." + mService);
+            Log.d(TAG, "onServiceConnected: " + mService);
 
             MediaService.MyBinder binder = (MediaService.MyBinder) service;
             mService = binder.getService();
 //            mService = ((MediaService.MyBinder) service).getService();
-            Log.d(TAG, "onServiceConnected: "+mIsBound + mService);
+            Log.d(TAG, "onServiceConnected: "+mIsBound+" "+mService);
             mIsBound = true;
-            Log.d(TAG, "onServiceConnected: "+mIsBound + mService);
+            Log.d(TAG, "onServiceConnected: "+mIsBound+" "+mService);
 //            getRandomNumberFromService(); // return a random number from the service
         }
 

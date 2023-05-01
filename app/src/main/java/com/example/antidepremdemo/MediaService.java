@@ -93,12 +93,11 @@ public class MediaService extends Service {
 
     @Override
     public void onCreate() {
-        super.onCreate();
-
-        mNotification();
+//        super.onCreate();
 
         Log.d(TAG, "onCreate:");
-        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
+
+        startForeground(1, mNotification());
 
         audioAttributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -110,6 +109,7 @@ public class MediaService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 //        return super.onStartCommand(intent, flags, startId);
+        Log.d(TAG, "onStartCommand: ");
         return START_REDELIVER_INTENT;
     }
 
@@ -209,32 +209,38 @@ public class MediaService extends Service {
     }
 
     //mNotification()
-    private void mNotification() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    private Notification mNotification() {
 
-            Intent notificationIntent = new Intent(this, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(
-                    this, 0, notificationIntent, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
                     "Media Service Chennel",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_HIGH
             );
 
-            //do I really need this line?
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(serviceChannel);
-
-
-            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle("My App")
-                    .setContentText("My app is running... hurray!")
-                    .setSmallIcon(R.drawable.baseline_home_24)
-                    .setContentIntent(pendingIntent)
-                    .build();
-
-            startForeground(1, notification);
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+                    .createNotificationChannel(serviceChannel);
+//            ((NotificationManager) getSystemService(NotificationManager.class)).createNotificationChannel(serviceChannel);
         }
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, notificationIntent,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
+        Log.d(TAG, "mNotification: " + notificationIntent + "   " + pendingIntent);
+
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("My App is running... hurray!")
+//                    .setContentText("My app is running... hurray!")
+                .setSmallIcon(R.drawable.baseline_home_24)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .build();
+
+        return notification;
     }//mNotification()
 
 
@@ -248,6 +254,12 @@ public class MediaService extends Service {
 //todo: complete the overview of Services on Notion
 
 //done:
+//todo: use notification for foreground service for all api levels
+//todo: add “immutable” flag to pending intent for api above 31 because it is necessary
+//todo: add stopService() (mOff()) to MainActivity’s onDestroy and remove stopWithTask from AndroidManifest
+//todo: I might be able to remove bound service and use a started service instead
+//todo: try new Thread(new Runnable(…)).start   like in JobScheduler video.
+// or just new Handler with new Runnable, instead of handler =… for memory saving
 //todo: create a Tag on github of the main branch (where the app was working
 // fine before using a Service)
 //todo: check the permissions and manifest attributes written in startForeground(1, notification); :
