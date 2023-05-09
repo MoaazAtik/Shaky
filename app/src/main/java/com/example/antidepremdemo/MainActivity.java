@@ -1,5 +1,7 @@
 package com.example.antidepremdemo;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -25,6 +27,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.StringWriter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,12 +76,25 @@ contex=getApplicationContext();
 //        startService();
 //        Log.d(TAG, "onCreate: "+mIsBound);
 
-        mService = new MediaService();
+
+//        mService = new MediaService();
+////        if (mService == null) //to avoid reinitializing a new one when configurations change (e.g. screen rotation)
+//        if (savedInstanceState == null) {
+//            mService = new MediaService();
+//            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+mService+" "+mIsBound);
+//            mOn();
+//        } else {
+//            mIsBound = savedInstanceState.getBoolean("mIsBound");
+//            mService = (MediaService) getLastCustomNonConfigurationInstance();
+//            Log.d(TAG, "onCreate: 2" +" "+mService+" "+mIsBound);
+//            bindService();
+//            Log.d(TAG, "onCreate: 2" +" "+mService+" "+mIsBound);
+//        }
 //        Log.d(TAG, "onCreate: "+mIsBound+mService.audioManager);
 //        Log.d(TAG, "onCreate: "+mIsBound+mService.getAudioManager());
 //        Log.d(TAG, "onCreate: "+mIsBound+MediaService.getAudioManager());
 //        Log.d(TAG, "onCreate: "+MediaService.audioManager);
-        Log.d(TAG, "onCreate: " + mIsBound+" "+mService);
+//        Log.d(TAG, "onCreate: " + mIsBound+" "+c(mService));
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 //        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -99,11 +116,27 @@ contex=getApplicationContext();
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
+//        if (mService == null) //to avoid reinitializing a new one when configurations change (e.g. screen rotation)
+        if (savedInstanceState == null) {
+            mService = new MediaService();
+            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+mService+" "+mIsBound);
+            mOn(true);
+        } else if (savedInstanceState.getBoolean("mIsBound") == true) {
+//            mIsBound = savedInstanceState.getBoolean("mIsBound");
+            mService = (MediaService) getLastCustomNonConfigurationInstance();
+            mOn(false);
+            Log.d(TAG, "onCreate: 21" +" "+mService+" "+mIsBound);
+        } else { //savedInstanceState.getBoolean("mIsBound") == false
+            mService = (MediaService) getLastCustomNonConfigurationInstance();
+            Log.d(TAG, "onCreate: 22" +" "+mService+" "+mIsBound);
+        }
+        //todo: edit the placeholder attribute tools:text="Active"
+
         //btnOn
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOn();
+                mOn(true);
             }
         });
 
@@ -157,16 +190,31 @@ contex=getApplicationContext();
             }
         });
 
-        mOn();
+//        if (savedInstanceState == null)
+//            mOn();
 
     }//onCreate
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("mIsBound", mIsBound);
+    }
+
+
+    @Nullable
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+//        return super.onRetainCustomNonConfigurationInstance();
+        return mService;
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
 //        startService();
         //mOn();
-        Log.d(TAG, "onResume: " + mIsBound+" "+mService);
+        Log.d(TAG, "onResume: " + mIsBound+" "+c(mService));
     }//onResume
 
     @Override
@@ -177,7 +225,7 @@ contex=getApplicationContext();
 //            unbindService(serviceConnection);
 //            mIsBound = false;
 //            mOff();
-            Log.d(TAG, "onPause: " + mIsBound+" "+mService);
+            Log.d(TAG, "onPause: " + mIsBound+" "+c(mService));
 //        }
     }//onPause
 
@@ -189,9 +237,17 @@ contex=getApplicationContext();
 ////            mIsBound = false;
 //            mOff();
 //        }
-        Log.d(TAG, "onDestroy: " + mIsBound+" "+mService);
-        mOff(); //especially for unregisterListener()
-        Log.d(TAG, "onDestroy: mOff " + mIsBound+" "+mService);
+        Log.d(TAG, "onDestroy: " + mIsBound+" "+c(mService));
+        if (isFinishing()) {
+            mOff(); //especially for unregisterListener()
+            Log.d(TAG, "onDestroy: isFinishing " + c(mService));
+        }
+        Log.d(TAG, "onDestroy: " + mIsBound+" "+c(mService));
+
+        if (mIsBound) {
+            unbindService(serviceConnection);
+            mIsBound = false;
+        }
     }
 
     @Override
@@ -235,7 +291,7 @@ contex=getApplicationContext();
         }
     }//mSensorChanged
 
-    private void mOn() {
+    private void mOn(boolean firstStartingService) {
 
 //        Intent serviceIntent = new Intent(this, MediaService.class);
 //        ContextCompat.startForegroundService(this, serviceIntent);
@@ -247,7 +303,12 @@ contex=getApplicationContext();
 ////            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
 //            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
 //            mediaPlayer.setAudioAttributes(audioAttributes);
-            startService();
+            Log.d(TAG, "mOn: " + mIsBound+" "+c(mService));
+            if (firstStartingService) {
+                startService();
+            } else {
+                bindService();
+            }
             txtStatus.setText("Active");
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
@@ -362,9 +423,9 @@ contex=getApplicationContext();
 //            mediaPlayer = null;
             unbindService(serviceConnection);
 //            Log.d(TAG, "mOff: "+mService+ mService.audioManager);
-            Log.d(TAG, "mOff: unbindService " + mIsBound+" "+mService);
+            Log.d(TAG, "mOff: unbindService " + mIsBound+" "+c(mService));
             stopService(new Intent(this, MediaService.class));
-            Log.d(TAG, "mOff: stopService " + mIsBound+" "+mService);
+            Log.d(TAG, "mOff: stopService " + mIsBound+" "+c(mService));
 
             mIsBound = false;
 //            mService = null;
@@ -374,7 +435,7 @@ contex=getApplicationContext();
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
         }
-    }//mStop
+    }//mOff
 
     private void startService() {
         Intent serviceIntent = new Intent(this, MediaService.class);
@@ -392,38 +453,42 @@ contex=getApplicationContext();
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "onServiceConnected: " + mService);
+            Log.d(TAG, "onServiceConnected: " + c(mService));
 
             MediaService.MyBinder binder = (MediaService.MyBinder) service;
             mService = binder.getService();
 //            mService = ((MediaService.MyBinder) service).getService();
-            Log.d(TAG, "onServiceConnected: "+mIsBound+" "+mService);
+            Log.d(TAG, "onServiceConnected: "+mIsBound+" "+c(mService));
             mIsBound = true;
-            Log.d(TAG, "onServiceConnected: "+mIsBound+" "+mService);
+            Log.d(TAG, "onServiceConnected: "+mIsBound+" "+c(mService));
 //            getRandomNumberFromService(); // return a random number from the service
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "onServiceDisconnected: disconnected from service." + mService);
+            Log.d(TAG, "onServiceDisconnected: disconnected from service." + c(mService));
             mIsBound = false;
 
         }
     };
 
+    //helper method for cropping mService's name in the logs
+    public String c(Object objectName) {
+        return objectName.toString().replace("com.example.antidepremdemo.", "");
+    }
 
 }//MainActivity
 
 
 
-//TODO: Manage device awake state. MediaPlayer.setWakeMode().
-//todo do I need to add wake lock even if I'm using a foreground service?
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
 //TODO: feature: feedback and email
 //todo: should I invoke abandonAudioFocus in onPause() mStop()?
 
 // Done:
+//todo do I need to add wake lock even if I'm using a foreground service?
+//TODO: Manage device awake state (wake lock). MediaPlayer.setWakeMode().
 //TODO: sync seekVolume with the device's original one.
 //TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //todo: requestAudioFocus

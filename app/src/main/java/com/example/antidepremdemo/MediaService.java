@@ -228,7 +228,7 @@ public class MediaService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent,
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
-        Log.d(TAG, "mNotification: " + notificationIntent + "   " + pendingIntent);
+//        Log.d(TAG, "mNotification: " + notificationIntent + "   " + pendingIntent);
 
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)

@@ -10,13 +10,13 @@
         android:id="@+id/txt_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="20dp"
         tools:text="Active"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="96sp"
         android:typeface="serif"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_on"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,8 +28,8 @@
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom" />
+        app:layout_constraintStart_toEndOf="@id/txt_status"
+        app:layout_constraintTop_toTopOf="@id/txt_status" />
 
     <Button
         android:id="@+id/btn_off"
@@ -39,7 +39,7 @@
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/txt_status"
         app:layout_constraintTop_toBottomOf="@id/btn_on" />
 
     <TextView
