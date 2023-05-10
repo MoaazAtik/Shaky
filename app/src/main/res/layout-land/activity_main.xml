@@ -11,25 +11,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        tools:text="Active"
+        android:text="inactive"
         android:textAlignment="center"
+        android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="96sp"
+        android:textSize="72sp"
         android:typeface="serif"
         app:layout_constraintEnd_toStartOf="@+id/btn_on"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_status_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="448dp" />
 
     <Button
         android:id="@+id/btn_on"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="On"
+        android:layout_marginTop="24dp"
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/txt_status"
-        app:layout_constraintTop_toTopOf="@id/txt_status" />
+        app:layout_constraintStart_toEndOf="@id/guideline_status_end"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_off"
@@ -39,7 +48,7 @@
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/txt_status"
+        app:layout_constraintStart_toEndOf="@id/guideline_status_end"
         app:layout_constraintTop_toBottomOf="@id/btn_on" />
 
     <TextView
@@ -98,13 +107,5 @@
         android:text="Reset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_status_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="175dp" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.SensorManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -17,17 +16,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
-//import static com.example.antidepremdemo.App.CHANNEL_ID;
 
 public class MediaService extends Service {
 
@@ -49,16 +43,10 @@ public class MediaService extends Service {
     int result = 0;
     AudioFocusRequest focusRequest = null;
 
-//    AudioFocusRequest finalFocusRequest = focusRequest;
     MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
             mReleaseMediaPlayer();
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
-//                } else {
-//                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-//                }
         }
     };
 
@@ -85,7 +73,6 @@ public class MediaService extends Service {
                 case AudioManager.AUDIOFOCUS_LOSS:
                     Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
                     mediaPlayer.setVolume(0.1f, 0.1f);
-//                mReleaseMediaPlayer();
                     break;
             }
         }
@@ -93,7 +80,6 @@ public class MediaService extends Service {
 
     @Override
     public void onCreate() {
-//        super.onCreate();
 
         Log.d(TAG, "onCreate:");
 
@@ -103,22 +89,18 @@ public class MediaService extends Service {
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
-
     }//onCreate
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        return super.onStartCommand(intent, flags, startId);
         Log.d(TAG, "onStartCommand: ");
         return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
-//        super.onDestroy();
-//        Log.d(TAG, "onDestroy: eeeeee "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
         mReleaseMediaPlayer();
-//        Log.d(TAG, "onDestroy: nuuuuu "+mediaPlayer+audioManager+audioAttributes+volumeBeforeDucking);
+        Log.d(TAG, "onDestroy: ");
     }
 
     @Nullable
@@ -130,11 +112,8 @@ public class MediaService extends Service {
 
     public void playAudio() {
 
-//        int result = 0;
-//        AudioFocusRequest focusRequest = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             //for Android 8.0 (API level 26) through Android 11 (API level 30), and Android 12 (API level 31) or later
-//            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
             focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                     .setOnAudioFocusChangeListener(mOnAudioFocusChangeListener)
                     .build();
@@ -143,22 +122,9 @@ public class MediaService extends Service {
             //for Android 7.1 (API level 25) and lower
             result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener,
                     AudioManager.STREAM_MUSIC,
-//                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
                     AudioManager.AUDIOFOCUS_GAIN);
         }
 
-//        AudioFocusRequest finalFocusRequest = focusRequest;
-//        MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                mReleaseMediaPlayer();
-////                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-////                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
-////                } else {
-////                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-////                }
-//            }
-//        };
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (mediaPlayer == null) {
@@ -189,10 +155,8 @@ public class MediaService extends Service {
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
-//            audioAttributes = null;
             volumeBeforeDucking = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                audioManager.abandonAudioFocusRequest(finalFocusRequest);
                 audioManager.abandonAudioFocusRequest(focusRequest);
             } else {
                 audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
@@ -228,8 +192,6 @@ public class MediaService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent,
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
-//        Log.d(TAG, "mNotification: " + notificationIntent + "   " + pendingIntent);
-
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("My App is running... hurray!")
