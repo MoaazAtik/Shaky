@@ -1,18 +1,22 @@
 package com.example.antidepremdemo;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -20,8 +24,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
     private TextView txtStatus;
     private SensorManager sensorManager;
@@ -29,21 +35,24 @@ public class MainActivity extends AppCompatActivity {
     private int currentAcceleration;
     private int prevAcceleration;
     private int changeInAcceleration;
-    private MediaPlayer mediaPlayer;
     private SeekBar seekSensitivity, seekVolume;
     private Button btnReset;
     private int sensitivityCutoff = 0; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
-    private AudioManager audioManager;
-//    private AudioManager audioManager = null;
-    private AudioAttributes audioAttributes;
-    float volumeBeforeDucking;
 
+    MediaService mService;
+    Boolean mIsBound = false;
+
+    private static Context contex;
+    public static Context getContex() {
+        return contex; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        contex = getApplicationContext();
 
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
@@ -55,16 +64,12 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        Log.d(TAG, "onCreate: " + mIsBound);
+
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build();
 
-        volumeBeforeDucking = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-
+        //sensorEventListener
         sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -75,11 +80,25 @@ public class MainActivity extends AppCompatActivity {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
-        //btnActivate
+        //to avoid reinitializing a new service when configurations change (e.g. screen rotation)
+        if (savedInstanceState == null) {
+            mService = new MediaService();
+            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+mService+" "+mIsBound);
+            mOn(true);
+        } else if (savedInstanceState.getBoolean("mIsBound") == true) {
+            mService = (MediaService) getLastCustomNonConfigurationInstance();
+            mOn(false);
+            Log.d(TAG, "onCreate: 21" +" "+mService+" "+mIsBound);
+        } else { //savedInstanceState.getBoolean("mIsBound") == false
+            mService = (MediaService) getLastCustomNonConfigurationInstance();
+            Log.d(TAG, "onCreate: 22" +" "+mService+" "+mIsBound);
+        }
+
+        //btnOn
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOn();
+                mOn(true);
             }
         });
 
@@ -107,13 +126,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekVolume
-        seekVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        seekVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setMax(mService.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        seekVolume.setProgress(mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                mService.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
             }
 
             @Override
@@ -122,28 +141,71 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
+        //btnReset
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+
+//            mOn();
 
     }//onCreate
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("mIsBound", mIsBound);
+    }
+
+
+    @Nullable
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+//        return super.onRetainCustomNonConfigurationInstance();
+        return mService;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        mOn();
+        Log.d(TAG, "onResume: " + mIsBound+" "+c(mService));
     }//onResume
 
+    @Override
     protected void onPause() {
         super.onPause();
-        mOff();
+        Log.d(TAG, "onPause: " + mIsBound+" "+c(mService));
     }//onPause
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: " + mIsBound+" "+c(mService));
+        if (isFinishing()) {
+            mOff(); //especially for unregisterListener()
+            Log.d(TAG, "onDestroy: isFinishing " + c(mService));
+        }
+
+        if (mIsBound) {
+            unbindService(serviceConnection);
+            mIsBound = false;
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 //            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
-            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-        } else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN) {
+//            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+            seekVolume.setProgress((seekVolume.getProgress() + 1 > seekVolume.getMax()) ?
+                    seekVolume.getMax() : mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 //            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
-            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+//            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+            seekVolume.setProgress((seekVolume.getProgress() - 1 < 0) ?
+                    0 : mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
 
         return super.onKeyDown(keyCode, event);
@@ -162,24 +224,24 @@ public class MainActivity extends AppCompatActivity {
         prevAcceleration = currentAcceleration;
 
         if (changeInAcceleration > sensitivityCutoff) {
-            if (mediaPlayer != null) {
-                Toast.makeText(MainActivity.this, "shaking", Toast.LENGTH_SHORT).show();
-                playAudio();
+            if (mIsBound) {
+                mService.playAudio();
             }
         }
     }//mSensorChanged
 
-    private void mOn() {
-        if (mediaPlayer == null) {
+    private void mOn(boolean firstStartingService) {
+
+        if (!mIsBound) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-//            mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
-            mediaPlayer = MediaPlayer.create(this, R.raw.soft);
-            mediaPlayer.setAudioAttributes(audioAttributes);
-            //to enable playing in the background. the MediaPlayer holds the
-            // specified lock (in this case, the CPU remains awake)
-            // while playing and releases the lock when paused or stopped.
-//            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-            //todo: don't forget to add the Wake Lock Permission.
+
+            Log.d(TAG, "mOn: " + mIsBound+" "+c(mService));
+            if (firstStartingService) {
+                startService();
+            } else {
+                bindService();
+            }
+
             txtStatus.setText("Active");
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
@@ -187,115 +249,78 @@ public class MainActivity extends AppCompatActivity {
     }//mActivate
 
 
-    private void playAudio() {
-
-        AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-            @Override
-            public void onAudioFocusChange(int focusChange) {
-                if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                    volumeBeforeDucking = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//                    mediaPlayer.setVolume(0.1f,0.1f);
-                } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
-                } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                    mediaPlayer.stop();
-                }
-//                if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-//                if (mediaPlayer != null)
-//                    mediaPlayer.start();
-//                }
-            }
-        };
-
-        int result = 0;
-        AudioFocusRequest focusRequest = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            //for Android 8.0 (API level 26) through Android 11 (API level 30), and Android 12 (API level 31) or later
-            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE).build();
-            result = audioManager.requestAudioFocus(focusRequest);
-        } else {
-            //for Android 7.1 (API level 25) and lower
-            result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
-        }
-
-        AudioFocusRequest finalFocusRequest = focusRequest;
-        MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    audioManager.abandonAudioFocusRequest(finalFocusRequest);
-                } else {
-                    audioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-                }
-            }
-        };
-
-//        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(mCompletionListener);
-//        }
-
-    }//playAudio
-
-//    int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-//
-//    if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-//
-//        Word word = words.get(position);
-//        mMediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getAudioFile());
-//        mMediaPlayer.start();
-//        mMediaPlayer.setOnCompletionListener(mCompletionListener);
-//    }
-//
-//AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-//    @Override
-//    public void onAudioFocusChange(int focusChange) {
-//        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-//            mMediaPlayer.pause();
-//            mMediaPlayer.seekTo(0);
-//        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-//            mMediaPlayer.start();
-//        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-//            releaseMediaPlayer();
-//        }
-//    }
-//};
-//
-//
-//    //4.17
-//    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-//        @Override
-//        public void onCompletion(MediaPlayer mp) {
-//            releaseMediaPlayer();
-//        }
-//    };
-
-//        mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-
-
     private void mOff() {
-        if (mediaPlayer != null) {
+
+        if (mIsBound) {
+
             sensorManager.unregisterListener(sensorEventListener);
-            mediaPlayer.release();
-            mediaPlayer = null;
+
+            unbindService(serviceConnection);
+            Log.d(TAG, "mOff: after unbindService " + mIsBound+" "+c(mService));
+
+            stopService(new Intent(this, MediaService.class));
+            Log.d(TAG, "mOff: afterstopService " + mIsBound+" "+c(mService));
+
+            mIsBound = false;
+
             txtStatus.setText("inactive");
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
         }
-    }//mStop
+    }//mOff
 
+    private void startService() {
+        Intent serviceIntent = new Intent(this, MediaService.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
+        Log.d(TAG, "startService: " + mIsBound);
+        bindService();
+    }
+    private void bindService() {
+        Intent serviceBindIntent = new Intent(this, MediaService.class);
+        bindService(serviceBindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, "bindService: "+ mIsBound);
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(TAG, "onServiceConnected: " + c(mService));
+
+            MediaService.MyBinder binder = (MediaService.MyBinder) service;
+            mService = binder.getService();
+//            mService = ((MediaService.MyBinder) service).getService();
+            mIsBound = true;
+            Log.d(TAG, mIsBound + " mService = " + c(mService));
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d(TAG, "onServiceDisconnected: disconnected from service." + c(mService));
+            mIsBound = false;
+
+        }
+    };
+
+    //helper method for cropping mService's name in the logs
+    public String c(Object objectName) {
+        return objectName.toString().replace("com.example.antidepremdemo.", "");
+    }
 
 }//MainActivity
 
-
-
-//TODO: Manage device awake state. MediaPlayer.setWakeMode().
+//todo: turn btnReset into an edit icon with a context? menu that has a Change audio and send Email options
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
 //TODO: feature: feedback and email
 //todo: should I invoke abandonAudioFocus in onPause() mStop()?
 
 // Done:
+//todo: hide the title bar
+//todo: edit the placeholder attribute tools:text="Active"
+//todo: survive configuration changes
+//todo: add a landscape layout
+//todo: do I need to add wake lock even if I'm using a foreground service?
+// Manage device awake state (wake lock). MediaPlayer.setWakeMode().
 //TODO: sync seekVolume with the device's original one.
 //TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //todo: requestAudioFocus
