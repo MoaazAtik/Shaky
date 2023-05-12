@@ -320,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
 
 }//MainActivity
 
-//todo: fix buttons under MoreFragment's layout are still clickable
 //todo: Change audio option
 //todo: send Email option
 //TODO: txt_status text fill the TextView
@@ -329,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
 //todo: should I invoke abandonAudioFocus in onPause() mStop()?
 
 // Done:
+//todo: fix buttons under MoreFragment's layout are still clickable
 //todo: turn btnMore into an edit icon with a context? menu that has a Change audio and send Email options
 //todo: hide the title bar
 //todo: edit the placeholder attribute tools:text="Active"
