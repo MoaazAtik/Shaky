@@ -119,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekSensitivity
-        seekSensitivity.setProgress(2);
+//        seekSensitivity.setProgress(2);
+        seekSensitivity.setProgress(0);
         seekSensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

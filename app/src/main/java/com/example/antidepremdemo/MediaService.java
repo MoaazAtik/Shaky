@@ -7,15 +7,18 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -129,7 +132,8 @@ public class MediaService extends Service {
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (mediaPlayer == null) {
 //                mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
-                mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+//                mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+                mediaPlayer = MediaPlayer.create(this, selectedTone());
                 mediaPlayer.setAudioAttributes(audioAttributes);
                 mediaPlayer.setLooping(true);
                 mediaPlayer.start();
@@ -204,6 +208,13 @@ public class MediaService extends Service {
 
         return notification;
     }//mNotification()
+
+    public Uri selectedTone() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return Uri.parse(sharedPreferences.getString("alarm_tone", String.valueOf(R.raw.soft)));
+//        sharedPreferences.getString("alarm_tone", String.valueOf(R.raw.soft));
+//        int i = R.raw.soft;
+    }
 
 
 }//MediaService.class
