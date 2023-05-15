@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,6 +51,7 @@ public class MediaService extends Service {
         @Override
         public void onCompletion(MediaPlayer mp) {
             mReleaseMediaPlayer();
+            Log.d(TAG, "onCompletion: ");
         }
     };
 
@@ -143,8 +145,11 @@ public class MediaService extends Service {
                     @Override
                     public void run() {
                         Log.d(TAG, "handler of loop breaking");
-                        if (mediaPlayer != null)
-                            mediaPlayer.setLooping(false);
+                        if (mediaPlayer != null) {
+//                        mediaPlayer.setLooping(false);//doesn't affect the system's built-in alarm tones
+                            mediaPlayer.stop();
+                            mReleaseMediaPlayer();
+                        }
                     }
                 };
                 new Handler(Looper.getMainLooper())
@@ -159,6 +164,7 @@ public class MediaService extends Service {
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
+            Log.d(TAG, "mReleaseMediaPlayer: ");
             volumeBeforeDucking = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 audioManager.abandonAudioFocusRequest(focusRequest);
@@ -210,10 +216,15 @@ public class MediaService extends Service {
     }//mNotification()
 
     public Uri selectedTone() {
+        int rawResourceId = R.raw.soft;
+        String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                getResources().getResourcePackageName(rawResourceId) + '/' +
+                getResources().getResourceTypeName(rawResourceId) + '/' +
+                getResources().getResourceEntryName(rawResourceId);
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return Uri.parse(sharedPreferences.getString("alarm_tone", String.valueOf(R.raw.soft)));
-//        sharedPreferences.getString("alarm_tone", String.valueOf(R.raw.soft));
-//        int i = R.raw.soft;
+
+        return Uri.parse(sharedPreferences.getString("alarm_tone", rawResourceString));
     }
 
 
