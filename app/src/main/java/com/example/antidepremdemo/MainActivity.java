@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private int changeInAcceleration;
     private SeekBar seekSensitivity, seekVolume;
     private Button btnMore;
-    private int sensitivityCutoff = 0; //the lower value the more sensitive
+    private int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
     private FragmentContainerView fragmentContainerView;
 
-    MediaService mService;
-    Boolean mIsBound = false;
+    public static MediaService mService;
+    public Boolean mIsBound = false;
 
 
     private static Context contex;

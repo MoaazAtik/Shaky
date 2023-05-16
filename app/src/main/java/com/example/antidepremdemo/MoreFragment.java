@@ -1,6 +1,7 @@
 package com.example.antidepremdemo;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,16 +48,21 @@ public class MoreFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: btnTone");
 
-//                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tonee");
-//                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mGetAlarmToneUri());
+                int rawResourceId = R.raw.soft;
+                String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                        getResources().getResourcePackageName(rawResourceId) + '/' +
+                        getResources().getResourceTypeName(rawResourceId) + '/' +
+                        getResources().getResourceEntryName(rawResourceId);
+                Uri rawResourceUri = Uri.parse(rawResourceString);
+
 
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);//to choose from internal (ringtones) storage
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM | RingtoneManager.TYPE_NOTIFICATION);
 //                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
 //                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tonee");
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, rawResourceUri);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
 //                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI); //to choose from external storage
 
