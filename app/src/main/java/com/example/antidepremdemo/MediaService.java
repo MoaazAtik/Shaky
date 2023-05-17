@@ -235,7 +235,6 @@ public class MediaService extends Service {
 // to use STREAM_SYSTEM
 //todo: edit notification title ...
 //todo: edit handler.postDelayed() to 2 minutes
-//todo: complete the overview of Services on Notion
 
 //done:
 //todo: use notification for foreground service for all api levels
@@ -248,6 +247,7 @@ public class MediaService extends Service {
 // fine before using a Service)
 //todo: check the permissions and manifest attributes written in startForeground(1, notification); :
 //todo: revise the role of pendingIntent
+//todo: complete the overview of Services on Notion
 //todo: use switch instead of if in focusChangeListener
 //todo: loop the player,
 // and make the handler and the runnable = null

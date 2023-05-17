@@ -321,14 +321,12 @@ public class MainActivity extends AppCompatActivity {
 
 }//MainActivity
 
-//todo: Change audio option
-//todo: send Email option
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
-//TODO: feature: feedback and email
-//todo: should I invoke abandonAudioFocus in onPause() mStop()?
 
 // Done:
+//todo: "send Email" option
+//todo: "Change tone" option
 //todo: fix buttons under MoreFragment's layout are still clickable
 //todo: turn btnMore into an edit icon with a context? menu that has a Change audio and send Email options
 //todo: hide the title bar
@@ -337,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
 //todo: add a landscape layout
 //todo: do I need to add wake lock even if I'm using a foreground service?
 // Manage device awake state (wake lock). MediaPlayer.setWakeMode().
+//todo: should I invoke abandonAudioFocus in onPause() mStop()?
 //TODO: sync seekVolume with the device's original one.
 //TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //todo: requestAudioFocus
