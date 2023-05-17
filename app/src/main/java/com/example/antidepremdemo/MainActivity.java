@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,6 +23,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,12 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private int prevAcceleration;
     private int changeInAcceleration;
     private SeekBar seekSensitivity, seekVolume;
-    private Button btnReset;
-    private int sensitivityCutoff = 0; //the lower value the more sensitive
+    private Button btnMore;
+    private int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
+    private FragmentContainerView fragmentContainerView;
 
-    MediaService mService;
-    Boolean mIsBound = false;
+    public static MediaService mService;
+    public Boolean mIsBound = false;
+
 
     private static Context contex;
     public static Context getContex() {
@@ -59,10 +65,12 @@ public class MainActivity extends AppCompatActivity {
         txtStatus = findViewById(R.id.txt_status);
         seekSensitivity = findViewById(R.id.seek_sensitivity);
         seekVolume = findViewById(R.id.seek_volume);
-        btnReset = findViewById(R.id.btn_reset);
+        btnMore = findViewById(R.id.btn_more);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        fragmentContainerView = findViewById(R.id.fragmentContainerView);
 
         Log.d(TAG, "onCreate: " + mIsBound);
 
@@ -111,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekSensitivity
-        seekSensitivity.setProgress(2);
+//        seekSensitivity.setProgress(2);
+        seekSensitivity.setProgress(0);
         seekSensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -141,11 +150,15 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        //btnReset
-        btnReset.setOnClickListener(new View.OnClickListener() {
+        //btnMore
+        btnMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainerView, new MoreFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -308,19 +321,21 @@ public class MainActivity extends AppCompatActivity {
 
 }//MainActivity
 
-//todo: turn btnReset into an edit icon with a context? menu that has a Change audio and send Email options
 //TODO: txt_status text fill the TextView
 //TODO: use a template fot the design
-//TODO: feature: feedback and email
-//todo: should I invoke abandonAudioFocus in onPause() mStop()?
 
 // Done:
+//todo: "send Email" option
+//todo: "Change tone" option
+//todo: fix buttons under MoreFragment's layout are still clickable
+//todo: turn btnMore into an edit icon with a context? menu that has a Change audio and send Email options
 //todo: hide the title bar
 //todo: edit the placeholder attribute tools:text="Active"
 //todo: survive configuration changes
 //todo: add a landscape layout
 //todo: do I need to add wake lock even if I'm using a foreground service?
 // Manage device awake state (wake lock). MediaPlayer.setWakeMode().
+//todo: should I invoke abandonAudioFocus in onPause() mStop()?
 //TODO: sync seekVolume with the device's original one.
 //TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //todo: requestAudioFocus

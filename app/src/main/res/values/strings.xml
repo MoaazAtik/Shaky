@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Anti Deprem Demo</string>
+    <string name="recipient_email_address">info.thewhitewings@gmail.com</string>
+    <string name="email_subject">Feedback and Suggestions for Anti Deprem Demo</string>
+    <string name="email_body">
+        [You are welcome to share your Feedback, suggest Enhancements, report any bugs or usability Issues, and provide any additional Comments.]
+    </string>
+
 </resources>

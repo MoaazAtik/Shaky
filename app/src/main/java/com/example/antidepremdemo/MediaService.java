@@ -5,17 +5,21 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -47,6 +51,7 @@ public class MediaService extends Service {
         @Override
         public void onCompletion(MediaPlayer mp) {
             mReleaseMediaPlayer();
+            Log.d(TAG, "onCompletion: ");
         }
     };
 
@@ -129,7 +134,8 @@ public class MediaService extends Service {
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (mediaPlayer == null) {
 //                mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
-                mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+//                mediaPlayer = MediaPlayer.create(this, R.raw.soft);
+                mediaPlayer = MediaPlayer.create(this, selectedTone());
                 mediaPlayer.setAudioAttributes(audioAttributes);
                 mediaPlayer.setLooping(true);
                 mediaPlayer.start();
@@ -139,8 +145,11 @@ public class MediaService extends Service {
                     @Override
                     public void run() {
                         Log.d(TAG, "handler of loop breaking");
-                        if (mediaPlayer != null)
-                            mediaPlayer.setLooping(false);
+                        if (mediaPlayer != null) {
+//                        mediaPlayer.setLooping(false);//doesn't affect the system's built-in alarm tones
+                            mediaPlayer.stop();
+                            mReleaseMediaPlayer();
+                        }
                     }
                 };
                 new Handler(Looper.getMainLooper())
@@ -155,6 +164,7 @@ public class MediaService extends Service {
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
+            Log.d(TAG, "mReleaseMediaPlayer: ");
             volumeBeforeDucking = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 audioManager.abandonAudioFocusRequest(focusRequest);
@@ -205,6 +215,18 @@ public class MediaService extends Service {
         return notification;
     }//mNotification()
 
+    public Uri selectedTone() {
+        int rawResourceId = R.raw.soft;
+        String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                getResources().getResourcePackageName(rawResourceId) + '/' +
+                getResources().getResourceTypeName(rawResourceId) + '/' +
+                getResources().getResourceEntryName(rawResourceId);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return Uri.parse(sharedPreferences.getString("alarm_tone", rawResourceString));
+    }
+
 
 }//MediaService.class
 
@@ -213,7 +235,6 @@ public class MediaService extends Service {
 // to use STREAM_SYSTEM
 //todo: edit notification title ...
 //todo: edit handler.postDelayed() to 2 minutes
-//todo: complete the overview of Services on Notion
 
 //done:
 //todo: use notification for foreground service for all api levels
@@ -226,6 +247,7 @@ public class MediaService extends Service {
 // fine before using a Service)
 //todo: check the permissions and manifest attributes written in startForeground(1, notification); :
 //todo: revise the role of pendingIntent
+//todo: complete the overview of Services on Notion
 //todo: use switch instead of if in focusChangeListener
 //todo: loop the player,
 // and make the handler and the runnable = null
