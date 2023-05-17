@@ -339,6 +339,8 @@ public class MainActivity extends AppCompatActivity {
 //TODO: sync seekVolume with the device's original one.
 //TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
 //todo: requestAudioFocus
+//todo try adding "android.permission.MODIFY_AUDIO_SETTINGS" to the manifest to use STREAM_SYSTEM.
+// it didn't work.
 //Todo: the audio is not playing as STREAM_SYSTEM, while seekVolume is controlling the volume as STREAM_SYSTEM properly.
 // couldn't be done because Samsung has restricted the use of STREAM_SYSTEM audio stream type on some of its devices, including the Samsung Galaxy J7 Prime.
 

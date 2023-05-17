@@ -231,8 +231,6 @@ public class MediaService extends Service {
 }//MediaService.class
 
 
-//todo try adding "android.permission.MODIFY_AUDIO_SETTINGS" to the manifest
-// to use STREAM_SYSTEM
 //todo: edit notification title ...
 //todo: edit handler.postDelayed() to 2 minutes
 
