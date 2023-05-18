@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 bindService();
             }
 
-            txtStatus.setText("Active");
+            txtStatus.setText(R.string.status_active);
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
         }
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
             mIsBound = false;
 
-            txtStatus.setText("inactive");
+            txtStatus.setText(R.string.status_inactive);
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
         }

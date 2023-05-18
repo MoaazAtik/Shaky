@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">Anti Deprem Demo</string>
-    <string name="recipient_email_address">info.thewhitewings@gmail.com</string>
+    <string name="status_active">Active</string>
+    <string name="status_inactive">inactive</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="sensitivity">Sensitivity</string>
+    <string name="volume">Volume</string>
+
+    <string name="recipient_email_address" translatable="false">info.thewhitewings@gmail.com</string>
     <string name="email_subject">Feedback and Suggestions for Anti Deprem Demo</string>
     <string name="email_body">
-        [You are welcome to share your Feedback, suggest Enhancements, report any bugs or usability Issues, and provide any additional Comments.]
+        [You are welcome to share your Feedback, suggest Enhancements, report any bugs or usability Issues, and provide any additional Comments!]
     </string>
 
+    <string name="change_alarm_tone">Change alarm tone</string>
+    <string name="send_us_feedback">Send us feedback</string>
 </resources>
