@@ -1,7 +1,6 @@
 package com.example.antidepremdemo;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentContainerView;
@@ -12,6 +11,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,11 +19,11 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,15 +91,13 @@ public class MainActivity extends AppCompatActivity {
         //to avoid reinitializing a new service when configurations change (e.g. screen rotation)
         if (savedInstanceState == null) {
             mService = new MediaService();
-            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+mService+" "+mIsBound);
+            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+c(mService)+" "+mIsBound);
             mOn(true);
         } else if (savedInstanceState.getBoolean("mIsBound") == true) {
-            mService = (MediaService) getLastCustomNonConfigurationInstance();
             mOn(false);
-            Log.d(TAG, "onCreate: 21" +" "+mService+" "+mIsBound);
+            Log.d(TAG, "onCreate: 21" +" "+c(mService)+" "+mIsBound);
         } else { //savedInstanceState.getBoolean("mIsBound") == false
-            mService = (MediaService) getLastCustomNonConfigurationInstance();
-            Log.d(TAG, "onCreate: 22" +" "+mService+" "+mIsBound);
+            Log.d(TAG, "onCreate: 22" +" "+c(mService)+" "+mIsBound);
         }
 
         //btnOn
@@ -120,11 +118,21 @@ public class MainActivity extends AppCompatActivity {
 
         //seekSensitivity
 //        seekSensitivity.setProgress(2);
-        seekSensitivity.setProgress(0);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        seekSensitivity.setProgress(
+                seekSensitivity.getMax() - sharedPreferences.getInt("sensitivity_cutoff", 0) );
+        Log.d(TAG, "sensitivity cutoff after getInt = " + sharedPreferences.getInt("sensitivity_cutoff", 111));
+        Log.d(TAG, "max sensitivity is " + seekSensitivity.getMax());
+
         seekSensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                sensitivityCutoff = (9 - (i * 4)) / 2;
+//                sensitivityCutoff = (9 - (i * 4)) / 2;
+                sensitivityCutoff = seekSensitivity.getMax() - i;
+
+                sharedPreferences.edit().putInt("sensitivity_cutoff", sensitivityCutoff).apply();
+                Log.d(TAG, "sensitivity cutoff after putInt = " + sharedPreferences.getInt("sensitivity_cutoff", 111));
+
                 Toast.makeText(MainActivity.this, i  + " " + "sensitivityCutoff" + sensitivityCutoff, Toast.LENGTH_SHORT).show();
             }
 
@@ -162,8 +170,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//            mOn();
-
     }//onCreate
 
     @Override
@@ -172,13 +178,6 @@ public class MainActivity extends AppCompatActivity {
         outState.putBoolean("mIsBound", mIsBound);
     }
 
-
-    @Nullable
-    @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-//        return super.onRetainCustomNonConfigurationInstance();
-        return mService;
-    }
 
     @Override
     protected void onResume() {
@@ -255,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 bindService();
             }
 
-            txtStatus.setText("Active");
+            txtStatus.setText(R.string.status_active);
             txtStatus.setTextSize(84);
             txtStatus.setAllCaps(true);
         }
@@ -276,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
             mIsBound = false;
 
-            txtStatus.setText("inactive");
+            txtStatus.setText(R.string.status_inactive);
             txtStatus.setTextSize(72);
             txtStatus.setAllCaps(false);
         }
@@ -325,6 +324,10 @@ public class MainActivity extends AppCompatActivity {
 //TODO: use a template fot the design
 
 // Done:
+//todo: save preferences of sensitivity.
+//todo: increase the points of sensitivity seekbar
+//Todo: remove onRetainCustomNonConfigurationInstance() and mService = (MediaService) getLastCustomNonConfigurationInstance()
+// because there is no need to them.
 //todo: "send Email" option
 //todo: "Change tone" option
 //todo: fix buttons under MoreFragment's layout are still clickable

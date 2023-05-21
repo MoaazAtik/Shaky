@@ -133,8 +133,6 @@ public class MediaService extends Service {
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (mediaPlayer == null) {
-//                mediaPlayer = MediaPlayer.create(this, R.raw.breach_alarm);
-//                mediaPlayer = MediaPlayer.create(this, R.raw.soft);
                 mediaPlayer = MediaPlayer.create(this, selectedTone());
                 mediaPlayer.setAudioAttributes(audioAttributes);
                 mediaPlayer.setLooping(true);
@@ -204,7 +202,7 @@ public class MediaService extends Service {
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("My App is running... hurray!")
+                .setContentTitle("My App is running... hooray!")
 //                    .setContentText("My app is running... hurray!")
                 .setSmallIcon(R.drawable.baseline_home_24)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -217,6 +215,7 @@ public class MediaService extends Service {
 
     public Uri selectedTone() {
         int rawResourceId = R.raw.soft;
+//        int rawResourceId = R.raw.breach_alarm;
         String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 getResources().getResourcePackageName(rawResourceId) + '/' +
                 getResources().getResourceTypeName(rawResourceId) + '/' +

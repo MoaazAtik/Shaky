@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="2"
-        android:text="Change alarm tone"
+        android:text="@string/change_alarm_tone"
         android:textAllCaps="false"
         android:textSize="32sp"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="2"
-        android:text="Send us a feedback"
+        android:text="@string/send_us_feedback"
         android:textAllCaps="false"
         android:textSize="32sp"
         app:layout_constraintTop_toBottomOf="@id/btn_tone" />
