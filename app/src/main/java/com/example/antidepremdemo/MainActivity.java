@@ -2,10 +2,13 @@ package com.example.antidepremdemo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.motion.widget.MotionScene;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.TransitionManager;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -71,6 +74,23 @@ public class MainActivity extends AppCompatActivity {
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         fragmentContainerView = findViewById(R.id.fragmentContainerView);
+
+        MotionLayout motionLayout = findViewById(R.id.motion_layout);
+//        motionLayout.setTransition(R.id.transition_inactive_to_active);
+//        motionLayout.jumpToState(R.id.inactive);
+//        motionLayout.transitionToState(R.id.active);
+
+//        motionLayout.transitionToStart();
+//        motionLayout.transitionToEnd(); //worked alone
+
+//        TransitionManager.go(R.id.transition2, new ChangeBounds());
+//        TransitionManager.go(R.id.transition_inactive_to_active);
+
+//        MotionScene.Transition transition = motionLayout.getTransition(R.id.transition_inactive_to_active);
+//        transition.start();
+
+//        TransitionManager transitionManager = new TransitionManager();
+//        transitionManager.
 
         Log.d(TAG, "onCreate: " + mIsBound);
 

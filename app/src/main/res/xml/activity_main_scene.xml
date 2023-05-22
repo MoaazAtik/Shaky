@@ -4,6 +4,7 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
+        android:id="@+id/transition_inactive_to_active"
         motion:constraintSetEnd="@+id/active"
         motion:constraintSetStart="@id/inactive"
         motion:duration="2000">
@@ -13,6 +14,9 @@
                motion:framePosition="10"
                android:alpha="0.1" />
        </KeyFrameSet>
+
+<!--        <OnClick motion:targetId="@+id/btn_on" />-->
+
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
