@@ -4,20 +4,46 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        android:id="@+id/transition_inactive_to_active"
         motion:constraintSetEnd="@+id/active"
         motion:constraintSetStart="@id/inactive"
-        motion:duration="2000">
-       <KeyFrameSet>
-           <KeyAttribute
-               motion:motionTarget="@+id/txt_status"
-               motion:framePosition="10"
-               android:alpha="0.1" />
-       </KeyFrameSet>
+        motion:duration="3000">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0.1"
+                motion:framePosition="10"
+                motion:motionTarget="@+id/txt_status" />
+<!--            <KeyAttribute-->
+<!--                motion:framePosition="10"-->
+<!--                motion:motionTarget="@+id/txt_status">-->
+<!--                <CustomAttribute-->
+<!--                    motion:attributeName="text"-->
+<!--                    motion:customStringValue="@string/status_active" />-->
+<!--            </KeyAttribute>-->
+        </KeyFrameSet>
 
 <!--        <OnClick motion:targetId="@+id/btn_on" />-->
 
     </Transition>
+
+    <Transition
+        motion:constraintSetEnd="@+id/inactive"
+        motion:constraintSetStart="@id/active"
+        motion:duration="3000">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0.1"
+                motion:framePosition="10"
+                motion:motionTarget="@+id/txt_status" />
+<!--            <KeyAttribute-->
+<!--                motion:framePosition="10"-->
+<!--                motion:motionTarget="@+id/txt_status">-->
+<!--                <CustomAttribute-->
+<!--                    motion:attributeName="text"-->
+<!--                    motion:customStringValue="@string/status_inactive" />-->
+<!--            </KeyAttribute>-->
+        </KeyFrameSet>
+    </Transition>
+
 
     <ConstraintSet android:id="@+id/start">
 
@@ -87,7 +113,17 @@
             android:layout_marginTop="80dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="parent" />
+            motion:layout_constraintTop_toTopOf="parent">
+<!--            <CustomAttribute-->
+<!--                motion:attributeName="text"-->
+<!--                motion:customStringValue="@string/status_active" />-->
+            <CustomAttribute
+                motion:attributeName="textSize"
+                motion:customFloatValue="84" />
+            <CustomAttribute
+                motion:attributeName="allCaps"
+                motion:customBoolean="true" />
+        </Constraint>
         <Constraint
             android:id="@+id/btn_on"
             android:layout_width="wrap_content"
@@ -151,14 +187,48 @@
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/inactive">
+        <Constraint
+            android:id="@+id/btn_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/btn_off" />
+        <Constraint
+            android:id="@+id/btn_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.1"
+            android:scaleX="2"
+            android:scaleY="2"
+            motion:layout_constraintBottom_toTopOf="@+id/guideline_status_bottom"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/txt_status"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="80dp"
+            motion:transitionEasing="linear">
+<!--            <CustomAttribute-->
+<!--                motion:attributeName="text"-->
+<!--                motion:customStringValue="@string/status_inactive" />-->
+            <CustomAttribute
+                motion:attributeName="allCaps"
+                motion:customBoolean="false" />
+            <CustomAttribute
+                motion:attributeName="textSize"
+                motion:customFloatValue="72" />
+        </Constraint>
     </ConstraintSet>
 
-    <Transition
-        motion:constraintSetStart="@+id/start"
-        motion:constraintSetEnd="@+id/active"
-        motion:autoTransition="animateToEnd" />
-    <Transition
-        motion:constraintSetStart="@+id/active"
-        motion:constraintSetEnd="@+id/inactive" />
+<!--    <Transition-->
+<!--        motion:constraintSetStart="@+id/start"-->
+<!--        motion:constraintSetEnd="@+id/active"-->
+<!--        motion:autoTransition="animateToEnd" />-->
 
 </MotionScene>

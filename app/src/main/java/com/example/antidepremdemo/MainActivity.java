@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     public static MediaService mService;
     public Boolean mIsBound = false;
 
+    MotionLayout motionLayout;
+
 
     private static Context contex;
     public static Context getContex() {
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentContainerView = findViewById(R.id.fragmentContainerView);
 
-        MotionLayout motionLayout = findViewById(R.id.motion_layout);
+        motionLayout = findViewById(R.id.motion_layout);
 //        motionLayout.setTransition(R.id.transition_inactive_to_active);
 //        motionLayout.jumpToState(R.id.inactive);
 //        motionLayout.transitionToState(R.id.active);
@@ -91,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
 
 //        TransitionManager transitionManager = new TransitionManager();
 //        transitionManager.
+
+//        motionLayout.setTransition(R.id.transition_inactive_to_active);
+//        motionLayout.transitionToEnd();
+////        motionLayout.transitionToStart();
 
         Log.d(TAG, "onCreate: " + mIsBound);
 
@@ -264,6 +270,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void mOn(boolean firstStartingService) {
 
+        motionLayout.setTransition(R.id.inactive, R.id.active);
+        motionLayout.transitionToEnd();
+
         if (!mIsBound) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
@@ -274,14 +283,17 @@ public class MainActivity extends AppCompatActivity {
                 bindService();
             }
 
-            txtStatus.setText(R.string.status_active);
-            txtStatus.setTextSize(84);
-            txtStatus.setAllCaps(true);
+//            txtStatus.setText(R.string.status_active);
+//            txtStatus.setTextSize(84);
+//            txtStatus.setAllCaps(true);
         }
     }//mActivate
 
 
     private void mOff() {
+
+        motionLayout.setTransition(R.id.active, R.id.inactive);
+        motionLayout.transitionToEnd();
 
         if (mIsBound) {
 
@@ -295,9 +307,9 @@ public class MainActivity extends AppCompatActivity {
 
             mIsBound = false;
 
-            txtStatus.setText(R.string.status_inactive);
-            txtStatus.setTextSize(72);
-            txtStatus.setAllCaps(false);
+//            txtStatus.setText(R.string.status_inactive);
+//            txtStatus.setTextSize(72);
+//            txtStatus.setAllCaps(false);
         }
     }//mOff
 
