@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.transition.TransitionManager;
 
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +28,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -287,7 +291,22 @@ public class MainActivity extends AppCompatActivity {
 //            txtStatus.setTextSize(84);
 //            txtStatus.setAllCaps(true);
         }
-    }//mActivate
+
+//        ObjectAnimator animator = ObjectAnimator.ofObject(txtStatus, "text", new TypeEvaluator<String>() {
+//            @Override
+//            public String evaluate(float fraction, String startValue, String endValue) {
+//                // Interpolate the text value based on the fraction
+//                return null; // Calculate interpolated text based on fraction, startValue, and endValue
+//            }
+//        }, String.valueOf(R.string.status_inactive), "End Text");
+//        animator.setDuration(1000); // Animation duration in milliseconds
+//        animator.start();
+
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.text_animation);
+        txtStatus.startAnimation(animation);
+
+
+    }//mOn
 
 
     private void mOff() {
