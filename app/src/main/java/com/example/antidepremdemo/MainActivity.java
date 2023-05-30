@@ -3,20 +3,18 @@ package com.example.antidepremdemo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
-import androidx.constraintlayout.motion.widget.MotionScene;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.transition.TransitionManager;
 
-import android.animation.ObjectAnimator;
-import android.animation.TypeEvaluator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,15 +30,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
-    private TextView txtStatus;
+//    private TextView txtStatus;
     private SensorManager sensorManager;
     private Sensor mAccelerometer;
     private int currentAcceleration;
@@ -55,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
     public static MediaService mService;
     public Boolean mIsBound = false;
 
-    MotionLayout motionLayout;
+    private MotionLayout motionLayout;
+
+    private TextSwitcher textSwitcher;
 
 
     private static Context contex;
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
-        txtStatus = findViewById(R.id.txt_status);
+//        txtStatus = findViewById(R.id.txt_status);
         seekSensitivity = findViewById(R.id.seek_sensitivity);
         seekVolume = findViewById(R.id.seek_volume);
         btnMore = findViewById(R.id.btn_more);
@@ -81,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentContainerView = findViewById(R.id.fragmentContainerView);
 
+
         motionLayout = findViewById(R.id.motion_layout);
+
 //        motionLayout.setTransition(R.id.transition_inactive_to_active);
 //        motionLayout.jumpToState(R.id.inactive);
 //        motionLayout.transitionToState(R.id.active);
@@ -101,6 +105,19 @@ public class MainActivity extends AppCompatActivity {
 //        motionLayout.setTransition(R.id.transition_inactive_to_active);
 //        motionLayout.transitionToEnd();
 ////        motionLayout.transitionToStart();
+
+        textSwitcher = (TextSwitcher) findViewById(R.id.text_switcher);
+        textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(MainActivity.this);
+                textView.setTextColor(Color.BLACK);
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                textView.setTypeface(Typeface.SERIF);
+                return textView;
+            }
+        });
+        textSwitcher.setCurrentText(getString(R.string.status_inactive));
 
         Log.d(TAG, "onCreate: " + mIsBound);
 
@@ -274,9 +291,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void mOn(boolean firstStartingService) {
 
-        motionLayout.setTransition(R.id.inactive, R.id.active);
-        motionLayout.transitionToEnd();
-
         if (!mIsBound) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
@@ -286,6 +300,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 bindService();
             }
+
+            animate(true);
 
 //            txtStatus.setText(R.string.status_active);
 //            txtStatus.setTextSize(84);
@@ -302,17 +318,46 @@ public class MainActivity extends AppCompatActivity {
 //        animator.setDuration(1000); // Animation duration in milliseconds
 //        animator.start();
 
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.text_animation);
-        txtStatus.startAnimation(animation);
+//        motionLayout.setTransition(R.id.inactive, R.id.active);
+//        motionLayout.transitionToEnd();
 
+//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.text_animation);
+//        txtStatus.startAnimation(animation);
 
     }//mOn
 
+    private void animate(boolean toActiveState) {
+
+        Animation animationIn = AnimationUtils.loadAnimation(this, R.anim.animation_in);
+        Animation animationOut = AnimationUtils.loadAnimation(this, R.anim.animation_out);
+
+        textSwitcher.setInAnimation(animationIn);
+        textSwitcher.setOutAnimation(animationOut);
+
+        if (toActiveState) {
+
+            motionLayout.setTransition(R.id.inactive, R.id.active);
+            motionLayout.transitionToEnd();
+
+            textSwitcher.setText(getString(R.string.status_active));
+            TextView textView = (TextView) textSwitcher.getCurrentView();
+            textView.setTextSize(84);
+            textView.setAllCaps(true);
+        } else { //(toActiveState == 0)
+
+            motionLayout.setTransition(R.id.active, R.id.inactive);
+            motionLayout.transitionToEnd();
+
+            textSwitcher.setText(getString(R.string.status_inactive));
+            TextView textView = (TextView) textSwitcher.getCurrentView();
+            textView.setTextSize(72);
+            textView.setAllCaps(false);
+
+
+        }
+    }
 
     private void mOff() {
-
-        motionLayout.setTransition(R.id.active, R.id.inactive);
-        motionLayout.transitionToEnd();
 
         if (mIsBound) {
 
@@ -323,6 +368,8 @@ public class MainActivity extends AppCompatActivity {
 
             stopService(new Intent(this, MediaService.class));
             Log.d(TAG, "mOff: afterstopService " + mIsBound+" "+c(mService));
+
+            animate(false);
 
             mIsBound = false;
 
