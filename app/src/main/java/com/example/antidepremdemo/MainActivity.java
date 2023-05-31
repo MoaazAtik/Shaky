@@ -139,9 +139,9 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mService = new MediaService();
             Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+c(mService)+" "+mIsBound);
-            mOn(true);
+            mOn(true, 0);
         } else if (savedInstanceState.getBoolean("mIsBound") == true) {
-            mOn(false);
+            mOn(false, 0);
             Log.d(TAG, "onCreate: 21" +" "+c(mService)+" "+mIsBound);
         } else { //savedInstanceState.getBoolean("mIsBound") == false
             Log.d(TAG, "onCreate: 22" +" "+c(mService)+" "+mIsBound);
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOn(true);
+                mOn(true, 1);
             }
         });
 
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }//mSensorChanged
 
-    private void mOn(boolean firstStartingService) {
+    private void mOn(boolean firstStartingService, int transitionAnimation) {
 
         if (!mIsBound) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                 bindService();
             }
 
-            animate(true);
+            animate(transitionAnimation);
 
 //            txtStatus.setText(R.string.status_active);
 //            txtStatus.setTextSize(84);
@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
 
     }//mOn
 
-    private void animate(boolean toActiveState) {
+    private void animate(int transition) {
 
         Animation animationIn = AnimationUtils.loadAnimation(this, R.anim.animation_in);
         Animation animationOut = AnimationUtils.loadAnimation(this, R.anim.animation_out);
@@ -334,8 +334,16 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher.setInAnimation(animationIn);
         textSwitcher.setOutAnimation(animationOut);
 
-        if (toActiveState) {
+        if (transition == 0) { //app initiation (initial to active state)
+//            motionLayout.setTransition(R.id.initial, R.id.active);
+//            motionLayout.transitionToEnd();
 
+            textSwitcher.setText(getString(R.string.status_active));
+            TextView textView = (TextView) textSwitcher.getCurrentView();
+            textView.setTextSize(84);
+            textView.setAllCaps(true);
+
+        } else if (transition == 1) { //to active state (inactive to active state)
             motionLayout.setTransition(R.id.inactive, R.id.active);
             motionLayout.transitionToEnd();
 
@@ -343,8 +351,8 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(84);
             textView.setAllCaps(true);
-        } else { //(toActiveState == 0)
 
+        } else if (transition == 2) { //to inactive state (inactive to active state)
             motionLayout.setTransition(R.id.active, R.id.inactive);
             motionLayout.transitionToEnd();
 
@@ -352,10 +360,9 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(72);
             textView.setAllCaps(false);
-
-
         }
-    }
+
+    }//animate()
 
     private void mOff() {
 
@@ -369,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, MediaService.class));
             Log.d(TAG, "mOff: afterstopService " + mIsBound+" "+c(mService));
 
-            animate(false);
+            animate(2);
 
             mIsBound = false;
 

@@ -91,6 +91,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:max="6"
+        android:transformPivotX="0dp"
         app:layout_constraintBottom_toTopOf="@id/txt_volume"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -114,6 +115,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
+        android:transformPivotX="0dp"
         app:layout_constraintBottom_toTopOf="@id/btn_more"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

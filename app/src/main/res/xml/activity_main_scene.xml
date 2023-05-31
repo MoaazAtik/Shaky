@@ -4,132 +4,116 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetEnd="@+id/active"
+        motion:constraintSetStart="@+id/initial"
+        motion:duration="3000" >
+        <KeyFrameSet >
+            <KeyAttribute
+                motion:motionTarget="@+id/btn_on"
+                motion:framePosition="10"
+                android:alpha="0.5" />
+        </KeyFrameSet>
+    </Transition>
+
+    <Transition
         motion:constraintSetEnd="@id/active"
         motion:constraintSetStart="@id/inactive"
         motion:duration="3000">
-<!--        <KeyFrameSet>-->
-<!--            <KeyAttribute-->
-<!--                android:alpha="0.1"-->
-<!--                motion:framePosition="10"-->
-<!--                motion:motionTarget="@+id/txt_status" >-->
-<!--            </KeyAttribute>-->
-<!--&lt;!&ndash;                <KeyAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                    motion:framePosition="10"&ndash;&gt;-->
-<!--&lt;!&ndash;                    motion:motionTarget="@id/txt_status">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <CustomAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                        motion:attributeName="text"&ndash;&gt;-->
-<!--&lt;!&ndash;                        motion:customStringValue="@string/status_active" />&ndash;&gt;-->
-<!--&lt;!&ndash;                </KeyAttribute>&ndash;&gt;-->
-<!--        </KeyFrameSet>-->
-
-<!--        <OnClick motion:targetId="@+id/btn_on" />-->
-
     </Transition>
 
     <Transition
         motion:constraintSetEnd="@+id/inactive"
         motion:constraintSetStart="@id/active"
         motion:duration="3000">
-<!--        <KeyFrameSet>-->
-<!--            <KeyAttribute-->
-<!--                android:alpha="0.1"-->
-<!--                motion:framePosition="10"-->
-<!--                motion:motionTarget="@+id/txt_status" />-->
-<!--&lt;!&ndash;            <KeyAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:framePosition="10"&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:motionTarget="@+id/txt_status">&ndash;&gt;-->
-<!--&lt;!&ndash;                <CustomAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                    motion:attributeName="text"&ndash;&gt;-->
-<!--&lt;!&ndash;                    motion:customStringValue="@string/status_inactive" />&ndash;&gt;-->
-<!--&lt;!&ndash;            </KeyAttribute>&ndash;&gt;-->
-<!--        </KeyFrameSet>-->
     </Transition>
 
 
-<!--    <ConstraintSet android:id="@+id/start">-->
-
-<!--        <Constraint-->
-<!--            android:id="@+id/btn_on"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            motion:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom"-->
-<!--            motion:layout_constraintStart_toStartOf="parent" />-->
-<!--        <Constraint-->
-<!--            android:id="@+id/btn_off"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            motion:layout_constraintTop_toBottomOf="@id/btn_on"-->
-<!--            motion:layout_constraintStart_toStartOf="parent" />-->
-<!--        <Constraint-->
-<!--            android:id="@+id/txt_sensitivity"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="8dp"-->
-<!--            motion:layout_constraintBottom_toTopOf="@id/seek_sensitivity"-->
-<!--            motion:layout_constraintStart_toStartOf="parent" />-->
-<!--        <Constraint-->
-<!--            android:id="@+id/seek_sensitivity"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="8dp"-->
-<!--            motion:layout_constraintBottom_toTopOf="@id/txt_volume"-->
-<!--            android:layout_marginEnd="16dp"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            motion:layout_constraintStart_toStartOf="parent" />-->
-<!--        <Constraint-->
-<!--            android:id="@+id/txt_volume"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="8dp"-->
-<!--            motion:layout_constraintBottom_toTopOf="@id/seek_volume"-->
-<!--            motion:layout_constraintStart_toStartOf="parent" />-->
-<!--        <Constraint-->
-<!--            android:id="@+id/seek_volume"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="8dp"-->
-<!--            motion:layout_constraintBottom_toTopOf="@id/btn_more"-->
-<!--            android:layout_marginEnd="16dp"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            motion:layout_constraintStart_toStartOf="parent" />-->
-<!--        <Constraint-->
-<!--            android:id="@+id/btn_more"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="60dp"-->
-<!--            android:layout_height="60dp"-->
-<!--            motion:layout_constraintBottom_toBottomOf="parent" />-->
-<!--    </ConstraintSet>-->
+    <ConstraintSet android:id="@+id/initial">
+        <Constraint
+            android:id="@+id/btn_on"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="60dp"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/btn_off"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@id/btn_on"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:alpha="0"
+            android:scaleX="0.3"
+            android:scaleY="0.3" />
+        <Constraint
+            android:id="@+id/txt_sensitivity"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/seek_sensitivity"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/txt_volume"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:scaleX="0"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/txt_volume"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/seek_volume"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/seek_volume"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/btn_more"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:scaleX="0"
+            android:alpha="0" />
+        <Constraint
+            android:id="@+id/btn_more"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:scaleX="0.1"
+            android:scaleY="0.1"
+            android:alpha="0" />
+    </ConstraintSet>
 
     <ConstraintSet android:id="@+id/active">
-<!--        <Constraint-->
-<!--            android:id="@+id/txt_status"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="80dp"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            motion:layout_constraintStart_toStartOf="parent"-->
-<!--            motion:layout_constraintTop_toTopOf="parent">-->
-<!--&lt;!&ndash;            <CustomAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:attributeName="text"&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:customStringValue="@string/status_active" />&ndash;&gt;-->
-<!--&lt;!&ndash;            <CustomAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:attributeName="textSize"&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:customFloatValue="84" />&ndash;&gt;-->
-<!--&lt;!&ndash;            <CustomAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:attributeName="allCaps"&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:customBoolean="true" />&ndash;&gt;-->
-<!--        </Constraint>-->
         <Constraint
             android:id="@+id/btn_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.1"
+            android:alpha="0"
             android:scaleX="2"
             android:scaleY="2"
             motion:layout_constraintBottom_toTopOf="@+id/guideline_status_bottom"
@@ -139,7 +123,7 @@
             android:id="@+id/btn_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="50dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toBottomOf="@id/btn_on" />
@@ -188,30 +172,11 @@
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/inactive">
-<!--        <Constraint-->
-<!--            android:id="@+id/txt_status"-->
-<!--            motion:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            motion:layout_constraintTop_toTopOf="parent"-->
-<!--            motion:layout_constraintStart_toStartOf="parent"-->
-<!--            android:layout_marginTop="80dp"-->
-<!--            motion:transitionEasing="linear">-->
-<!--            &lt;!&ndash;            <CustomAttribute&ndash;&gt;-->
-<!--            &lt;!&ndash;                motion:attributeName="text"&ndash;&gt;-->
-<!--            &lt;!&ndash;                motion:customStringValue="@string/status_inactive" />&ndash;&gt;-->
-<!--&lt;!&ndash;            <CustomAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:attributeName="allCaps"&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:customBoolean="false" />&ndash;&gt;-->
-<!--&lt;!&ndash;            <CustomAttribute&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:attributeName="textSize"&ndash;&gt;-->
-<!--&lt;!&ndash;                motion:customFloatValue="72" />&ndash;&gt;-->
-<!--        </Constraint>-->
         <Constraint
             android:id="@+id/btn_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="50dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toBottomOf="@id/btn_off" />
@@ -219,16 +184,12 @@
             android:id="@+id/btn_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.1"
+            android:alpha="0"
             android:scaleX="2"
             android:scaleY="2"
             motion:layout_constraintBottom_toTopOf="@+id/guideline_status_bottom"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
-<!--    <Transition-->
-<!--        motion:constraintSetStart="@+id/start"-->
-<!--        motion:constraintSetEnd="@+id/active"-->
-<!--        motion:autoTransition="animateToEnd" />-->
 
 </MotionScene>
