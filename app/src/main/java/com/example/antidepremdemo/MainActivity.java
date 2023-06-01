@@ -35,12 +35,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
-//    private TextView txtStatus;
     private SensorManager sensorManager;
     private Sensor mAccelerometer;
     private int currentAcceleration;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private MotionLayout motionLayout;
 
     private TextSwitcher textSwitcher;
+
+    private LottieAnimationView lStarsActivation;
 
 
     private static Context contex;
@@ -85,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         motionLayout = findViewById(R.id.motion_layout);
+
+//        lStarsActivation = findViewById(R.id.sta);
 
 //        motionLayout.setTransition(R.id.transition_inactive_to_active);
 //        motionLayout.jumpToState(R.id.inactive);
