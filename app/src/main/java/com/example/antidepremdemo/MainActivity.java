@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View makeView() {
                 TextView textView = new TextView(MainActivity.this);
-                textView.setTextColor(Color.BLACK);
+                textView.setTextColor(getResources().getColor(R.color.my_primary_text));
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 textView.setTypeface(Typeface.SERIF);
                 return textView;

@@ -5,8 +5,10 @@
     android:id="@+id/motion_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     app:layoutDescription="@xml/activity_main_scene"
     tools:context=".MainActivity">
+<!--    android:background="#2D325E"-->
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lBackground"
@@ -15,7 +17,7 @@
         android:scaleType="centerCrop"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/background"
+        app:lottie_rawRes="@raw/stars_background"
         app:lottie_repeatMode="reverse" />
 
     <androidx.fragment.app.FragmentContainerView
@@ -71,6 +73,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/sensitivity"
         android:textAlignment="center"
+        android:textColor="@color/my_secondary_text"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,6 +100,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/volume"
         android:textAlignment="center"
+        android:textColor="@color/my_secondary_text"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_volume"
         app:layout_constraintEnd_toEndOf="parent"
