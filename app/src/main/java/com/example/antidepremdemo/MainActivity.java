@@ -13,11 +13,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -40,8 +38,6 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.airbnb.lottie.LottieAnimationView;
-
-import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -229,46 +225,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        TextView tvSensitivity = findViewById(R.id.txt_sensitivity);
-//        tvSensitivity.setTextColor(getResources().getColor(R.color.white));
-
-        setTextViewColor(tvSensitivity, 0,
-                getResources().getColor(R.color.teal_200),
-                getResources().getColor(R.color.purple_700),
-                getResources().getColor(R.color.teal_700),
-                getResources().getColor(R.color.purple_200));
-
-//        tvSensitivity.setBackground(getDrawable(R.drawable.gradient_text));
-
-//                getResources().getColor(R.color.premium_white1),
-//                getResources().getColor(R.color.premium_white2),
-//                getResources().getColor(R.color.premium_white3),
-//                getResources().getColor(R.color.premium_white4));
-
-//        GradientDrawable gradientDrawable = new GradientDrawable(
-//                GradientDrawable.Orientation.TOP_BOTTOM,
-//                new int[]{ContextCompat.getColor(this, R.color.premium_white1),
-//                ContextCompat.getColor(this, R.color.premium_white2),
-//                ContextCompat.getColor(this, R.color.purple_700),
-//                ContextCompat.getColor(this, R.color.teal_700)}
-//        );
-//        tvSensitivity.setBackground(gradientDrawable);
-//        tvSensitivity.setTextAppearance();TextColor(getResources().getColor(gradientDrawable));
+        TextView txtSensitivity = findViewById(R.id.txt_sensitivity);
+        TextView txtVolume = findViewById(R.id.txt_volume);
+        setTextGradientColor(txtSensitivity);
+        setTextGradientColor(txtVolume);
 
     }//onCreate
 
-    private void setTextViewColor(TextView textView, int... colors) {
-
-        TextPaint paint = textView.getPaint();
-        float width = paint.measureText(textView.getText().toString());
-
-        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
-
-        textView.getPaint().setShader(shader);
-        textView.setTextColor(getResources().getColor(R.color.white));
-//        textView.setTextColor(color[0]);
-    }
-    private void setTextViewColor(TextView textView) {
+//    private void setTextViewColor(TextView textView, int... colors) {
+//
+//        TextPaint paint = textView.getPaint();
+//        float width = paint.measureText(textView.getText().toString());
+//
+//        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
+//
+//        textView.getPaint().setShader(shader);
+//        textView.setTextColor(getResources().getColor(R.color.white));
+////        textView.setTextColor(color[0]);
+//    }
+    private void setTextGradientColor(TextView textView) {
 
         TextPaint paint = textView.getPaint();
         float width = paint.measureText(textView.getText().toString());
@@ -287,9 +262,9 @@ public class MainActivity extends AppCompatActivity {
 
         Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
 
-        textView.getPaint().setShader(shader);
-        textView.setTextColor(getResources().getColor(R.color.white));
-//        textView.setTextColor(color[0]);
+        textView.getPaint().setShader(shader); //sets the shader (color) of the text
+        textView.setTextColor(getResources().getColor(R.color.white)); //sets the color of the text initially or if the shader failed to render
+//        textView.setTextColor(colors[0]);
     }
 
 
@@ -416,11 +391,7 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(84);
             textView.setAllCaps(true);
-            setTextViewColor(textView, transition,
-                    getResources().getColor(R.color.teal_200),
-                    getResources().getColor(R.color.purple_700),
-                    getResources().getColor(R.color.teal_700),
-                    getResources().getColor(R.color.purple_200));
+            setTextGradientColor(textView);
 
         } else if (transition == 1) { //to active state (inactive to active state)
             motionLayout.setTransition(R.id.inactive, R.id.active);
@@ -430,12 +401,7 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(84);
             textView.setAllCaps(true);
-            setTextViewColor(textView, transition,
-                    getResources().getColor(R.color.teal_200),
-                    getResources().getColor(R.color.purple_700),
-                    getResources().getColor(R.color.teal_700),
-                    getResources().getColor(R.color.purple_200));
-
+            setTextGradientColor(textView);
 
         } else if (transition == 2) { //to inactive state (active to inactive state)
             motionLayout.setTransition(R.id.active, R.id.inactive);
@@ -445,12 +411,7 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(72);
             textView.setAllCaps(false);
-            setTextViewColor(textView, transition,
-                    getResources().getColor(R.color.teal_200),
-                    getResources().getColor(R.color.purple_700),
-                    getResources().getColor(R.color.teal_700),
-                    getResources().getColor(R.color.purple_200));
-
+            setTextGradientColor(textView);
         }
 
     }//animate()
