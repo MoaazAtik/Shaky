@@ -10,4 +10,9 @@
     
     <color name="my_primary_text">@android:color/primary_text_dark</color>
     <color name="my_secondary_text">@android:color/secondary_text_light</color>
+
+    <color name="premium_white1">#d5d4d0</color>
+    <color name="premium_white2">#eeeeec</color>
+    <color name="premium_white3">#efeeec</color>
+    <color name="premium_white4">#e9e9e7</color>
 </resources>

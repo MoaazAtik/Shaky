@@ -14,7 +14,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,6 +26,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,6 +40,8 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.airbnb.lottie.LottieAnimationView;
+
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -222,7 +228,70 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        TextView tvSensitivity = findViewById(R.id.txt_sensitivity);
+//        tvSensitivity.setTextColor(getResources().getColor(R.color.white));
+
+        setTextViewColor(tvSensitivity, 0,
+                getResources().getColor(R.color.teal_200),
+                getResources().getColor(R.color.purple_700),
+                getResources().getColor(R.color.teal_700),
+                getResources().getColor(R.color.purple_200));
+
+//        tvSensitivity.setBackground(getDrawable(R.drawable.gradient_text));
+
+//                getResources().getColor(R.color.premium_white1),
+//                getResources().getColor(R.color.premium_white2),
+//                getResources().getColor(R.color.premium_white3),
+//                getResources().getColor(R.color.premium_white4));
+
+//        GradientDrawable gradientDrawable = new GradientDrawable(
+//                GradientDrawable.Orientation.TOP_BOTTOM,
+//                new int[]{ContextCompat.getColor(this, R.color.premium_white1),
+//                ContextCompat.getColor(this, R.color.premium_white2),
+//                ContextCompat.getColor(this, R.color.purple_700),
+//                ContextCompat.getColor(this, R.color.teal_700)}
+//        );
+//        tvSensitivity.setBackground(gradientDrawable);
+//        tvSensitivity.setTextAppearance();TextColor(getResources().getColor(gradientDrawable));
+
     }//onCreate
+
+    private void setTextViewColor(TextView textView, int... colors) {
+
+        TextPaint paint = textView.getPaint();
+        float width = paint.measureText(textView.getText().toString());
+
+        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
+
+        textView.getPaint().setShader(shader);
+        textView.setTextColor(getResources().getColor(R.color.white));
+//        textView.setTextColor(color[0]);
+    }
+    private void setTextViewColor(TextView textView) {
+
+        TextPaint paint = textView.getPaint();
+        float width = paint.measureText(textView.getText().toString());
+        int colors[] = { getResources().getColor(R.color.teal_200),
+                getResources().getColor(R.color.purple_700),
+                getResources().getColor(R.color.teal_700),
+                getResources().getColor(R.color.purple_200) };
+//        int colors[] = { getResources().getColor(R.color.premium_white1),
+//                getResources().getColor(R.color.premium_white2),
+//                getResources().getColor(R.color.premium_white3),
+//                getResources().getColor(R.color.premium_white4) };
+//        int colors[] = { getResources().getColor(R.color.white),
+//                getResources().getColor(R.color.white),
+//                getResources().getColor(R.color.white),
+//                getResources().getColor(R.color.white)};
+
+        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
+
+        textView.getPaint().setShader(shader);
+        textView.setTextColor(getResources().getColor(R.color.white));
+//        textView.setTextColor(color[0]);
+    }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -347,6 +416,11 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(84);
             textView.setAllCaps(true);
+            setTextViewColor(textView, transition,
+                    getResources().getColor(R.color.teal_200),
+                    getResources().getColor(R.color.purple_700),
+                    getResources().getColor(R.color.teal_700),
+                    getResources().getColor(R.color.purple_200));
 
         } else if (transition == 1) { //to active state (inactive to active state)
             motionLayout.setTransition(R.id.inactive, R.id.active);
@@ -356,8 +430,14 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(84);
             textView.setAllCaps(true);
+            setTextViewColor(textView, transition,
+                    getResources().getColor(R.color.teal_200),
+                    getResources().getColor(R.color.purple_700),
+                    getResources().getColor(R.color.teal_700),
+                    getResources().getColor(R.color.purple_200));
 
-        } else if (transition == 2) { //to inactive state (inactive to active state)
+
+        } else if (transition == 2) { //to inactive state (active to inactive state)
             motionLayout.setTransition(R.id.active, R.id.inactive);
             motionLayout.transitionToEnd();
 
@@ -365,6 +445,12 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(72);
             textView.setAllCaps(false);
+            setTextViewColor(textView, transition,
+                    getResources().getColor(R.color.teal_200),
+                    getResources().getColor(R.color.purple_700),
+                    getResources().getColor(R.color.teal_700),
+                    getResources().getColor(R.color.purple_200));
+
         }
 
     }//animate()
