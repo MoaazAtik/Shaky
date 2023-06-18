@@ -77,6 +77,8 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textAllCaps="true"
+        android:fontFamily="@font/ontserrategular"
         app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
@@ -104,6 +106,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_volume"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textAllCaps="true"
         app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar

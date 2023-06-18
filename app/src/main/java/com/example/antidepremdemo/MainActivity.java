@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -118,13 +119,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View makeView() {
                 TextView textView = new TextView(MainActivity.this);
-                textView.setTextColor(getResources().getColor(R.color.my_primary_text));
+//                textView.setTextColor(getResources().getColor(R.color.my_primary_text));
+                setTextGradientColor(textView);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                textView.setTypeface(Typeface.SERIF);
+//                textView.setTypeface(Typeface.SERIF);
+                textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserrategular));
                 return textView;
             }
         });
         textSwitcher.setCurrentText(getString(R.string.status_inactive));
+
+        TextView txtSensitivity = findViewById(R.id.txt_sensitivity);
+        TextView txtVolume = findViewById(R.id.txt_volume);
+        setTextGradientColor(txtSensitivity);
+        setTextGradientColor(txtVolume);
 
         Log.d(TAG, "onCreate: " + mIsBound);
 
@@ -224,37 +232,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        TextView txtSensitivity = findViewById(R.id.txt_sensitivity);
-        TextView txtVolume = findViewById(R.id.txt_volume);
-        setTextGradientColor(txtSensitivity);
-        setTextGradientColor(txtVolume);
-
     }//onCreate
 
-//    private void setTextViewColor(TextView textView, int... colors) {
-//
-//        TextPaint paint = textView.getPaint();
-//        float width = paint.measureText(textView.getText().toString());
-//
-//        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
-//
-//        textView.getPaint().setShader(shader);
-//        textView.setTextColor(getResources().getColor(R.color.white));
-////        textView.setTextColor(color[0]);
-//    }
     private void setTextGradientColor(TextView textView) {
 
         TextPaint paint = textView.getPaint();
         float width = paint.measureText(textView.getText().toString());
-        int colors[] = { getResources().getColor(R.color.teal_200),
-                getResources().getColor(R.color.purple_700),
-                getResources().getColor(R.color.teal_700),
-                getResources().getColor(R.color.purple_200) };
-//        int colors[] = { getResources().getColor(R.color.premium_white1),
-//                getResources().getColor(R.color.premium_white2),
-//                getResources().getColor(R.color.premium_white3),
-//                getResources().getColor(R.color.premium_white4) };
+//        int colors[] = { getResources().getColor(R.color.teal_200),
+//                getResources().getColor(R.color.purple_700),
+//                getResources().getColor(R.color.teal_700),
+//                getResources().getColor(R.color.purple_200) };
+        int colors[] = { getResources().getColor(R.color.premium_white1),
+                getResources().getColor(R.color.premium_white2),
+                getResources().getColor(R.color.premium_white3),
+                getResources().getColor(R.color.premium_white4) };
 //        int colors[] = { getResources().getColor(R.color.white),
 //                getResources().getColor(R.color.white),
 //                getResources().getColor(R.color.white),
@@ -506,4 +497,4 @@ public class MainActivity extends AppCompatActivity {
 
 
 //Notes:
-//Galaxy J7 Prime. 5.5" 1080x1920. Nougat 7 (API / SDK 24)
+//Galaxy J7 Prime. 5.5" 1080x1920 (16:9 ratio) ~401 ppi density, ~xhdpi ~320dpi x2. Nougat 7 (API / SDK 24)
