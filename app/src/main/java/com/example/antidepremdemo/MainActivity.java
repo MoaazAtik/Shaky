@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 setTextGradientColor(textView);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 //                textView.setTypeface(Typeface.SERIF);
-                textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserrategular));
+                textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserratemiold));
                 return textView;
             }
         });
@@ -241,7 +242,14 @@ public class MainActivity extends AppCompatActivity {
 //        int colors[] = { getResources().getColor(R.color.teal_200),
 //                getResources().getColor(R.color.purple_700),
 //                getResources().getColor(R.color.teal_700),
-//                getResources().getColor(R.color.purple_200) };
+//                getResources().getColor(R.color.purple_200),
+//                Color.GREEN
+//        };
+//        int colors[] = {Color.parseColor("#FFFFFF"),
+//                Color.parseColor("#F8F8F8"),
+//                Color.parseColor("#F0F0F0")
+////                getResources().getColor(R.color.premium_white3)
+//        };
         int colors[] = { getResources().getColor(R.color.premium_white1),
                 getResources().getColor(R.color.premium_white2),
                 getResources().getColor(R.color.premium_white3),
@@ -251,7 +259,11 @@ public class MainActivity extends AppCompatActivity {
 //                getResources().getColor(R.color.white),
 //                getResources().getColor(R.color.white)};
 
-        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
+        float positions[] = {0, 0.31f, 0.75f, 1};
+
+//        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
+        Shader shader = new LinearGradient(0, textView.getTextSize(), 0, 0, colors,
+                positions, Shader.TileMode.CLAMP);
 
         textView.getPaint().setShader(shader); //sets the shader (color) of the text
         textView.setTextColor(getResources().getColor(R.color.white)); //sets the color of the text initially or if the shader failed to render
@@ -401,8 +413,10 @@ public class MainActivity extends AppCompatActivity {
             textSwitcher.setText(getString(R.string.status_inactive));
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(72);
-            textView.setAllCaps(false);
+//            textView.setAllCaps(false);
+            textView.setAllCaps(true);
             setTextGradientColor(textView);
+            textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserrategular));
         }
 
     }//animate()

@@ -48,6 +48,7 @@
         android:id="@+id/btn_on"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/ontserrategular"
         android:text="@string/on"
         android:textAlignment="center"
         android:textSize="36sp"
@@ -59,6 +60,7 @@
         android:id="@+id/btn_off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/ontserrategular"
         android:text="@string/off"
         android:textAlignment="center"
         android:textSize="36sp"
@@ -71,14 +73,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:fontFamily="@font/ontserrathin"
         android:text="@string/sensitivity"
         android:textAlignment="center"
-        android:textColor="@color/my_secondary_text"
+        android:textAllCaps="true"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textAllCaps="true"
-        android:fontFamily="@font/ontserrategular"
         app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
@@ -100,13 +101,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:fontFamily="@font/ontserrathin"
         android:text="@string/volume"
         android:textAlignment="center"
-        android:textColor="@color/my_secondary_text"
+        android:textAllCaps="true"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_volume"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textAllCaps="true"
         app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
