@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@android:id/secondaryProgress">
+        <shape android:shape="oval" >
+            <size
+                android:height="16dp"
+                android:width="320dp"/>
+
+<!--            <solid android:color="@color/white" />-->
+            <gradient
+                android:startColor="@color/white"
+                android:endColor="@color/black"
+                android:type="radial"
+                android:gradientRadius="200dp"
+                android:centerX="50%"
+                android:centerY="100%"
+                />
+
+            <corners android:radius="1dp" />
+        </shape>
+    </item>
+
+    <item android:id="@android:id/progress">
+        <clip android:drawable="@drawable/custom_seekbar_progress" />
+    </item>
+
+</layer-list>
