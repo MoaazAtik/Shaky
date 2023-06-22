@@ -172,7 +172,7 @@
         android:paddingVertical="2dp"
         android:progressDrawable="@drawable/custom_seekbar"
         android:thumb="@drawable/round_arrow_right"
-        android:splitTrack="true"
+        android:splitTrack="false"
         android:transformPivotX="0dp"
         app:layout_constraintBottom_toTopOf="@id/btn_more"
         app:layout_constraintEnd_toEndOf="parent"
