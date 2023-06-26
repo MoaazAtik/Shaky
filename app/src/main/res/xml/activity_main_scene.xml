@@ -120,6 +120,7 @@
             android:id="@+id/btn_more"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginEnd="30dp"
             android:alpha="0"
             android:scaleX="0.1"
             android:scaleY="0.1"
@@ -187,6 +188,8 @@
             android:id="@+id/btn_more"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="14dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>

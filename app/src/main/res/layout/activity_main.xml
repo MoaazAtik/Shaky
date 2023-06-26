@@ -68,7 +68,8 @@
         android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="3dp" />
+        android:elevation="3dp"
+        />
 
     <TextSwitcher
         android:id="@+id/text_switcher"
@@ -178,15 +179,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+<!--    <Button-->
+<!--        android:layout_margin="16dp"-->
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_more"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginEnd="30dp"
         android:background="@drawable/baseline_more_24"
-        android:backgroundTint="@color/purple_700"
-        android:foregroundTint="@color/teal_700"
-        android:drawableTint="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
