@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnMore;
     private int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
-    private FragmentContainerView fragmentContainerView;
+//    private FragmentContainerView fragmentContainerView;
 
     public static MediaService mService;
     public Boolean mIsBound = false;
@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        fragmentContainerView = findViewById(R.id.fragmentContainerView);
-
+//        fragmentContainerView = findViewById(R.id.fragmentContainerView);
 
         motionLayout = findViewById(R.id.motion_layout);
 
