@@ -2,7 +2,9 @@ package com.example.antidepremdemo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -12,6 +14,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,20 +26,26 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
-    private TextView txtStatus;
     private SensorManager sensorManager;
     private Sensor mAccelerometer;
     private int currentAcceleration;
@@ -43,10 +55,16 @@ public class MainActivity extends AppCompatActivity {
     private Button btnMore;
     private int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
-    private FragmentContainerView fragmentContainerView;
+//    private FragmentContainerView fragmentContainerView;
 
     public static MediaService mService;
     public Boolean mIsBound = false;
+
+    private MotionLayout motionLayout;
+
+    private TextSwitcher textSwitcher;
+
+    private LottieAnimationView lStarsActivation;
 
 
     private static Context contex;
@@ -62,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
-        txtStatus = findViewById(R.id.txt_status);
+//        txtStatus = findViewById(R.id.txt_status);
         seekSensitivity = findViewById(R.id.seek_sensitivity);
         seekVolume = findViewById(R.id.seek_volume);
         btnMore = findViewById(R.id.btn_more);
@@ -70,7 +88,51 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        fragmentContainerView = findViewById(R.id.fragmentContainerView);
+//        fragmentContainerView = findViewById(R.id.fragmentContainerView);
+
+        motionLayout = findViewById(R.id.motion_layout);
+
+//        lStarsActivation = findViewById(R.id.sta);
+
+//        motionLayout.setTransition(R.id.transition_inactive_to_active);
+//        motionLayout.jumpToState(R.id.inactive);
+//        motionLayout.transitionToState(R.id.active);
+
+//        motionLayout.transitionToStart();
+//        motionLayout.transitionToEnd(); //worked alone
+
+//        TransitionManager.go(R.id.transition2, new ChangeBounds());
+//        TransitionManager.go(R.id.transition_inactive_to_active);
+
+//        MotionScene.Transition transition = motionLayout.getTransition(R.id.transition_inactive_to_active);
+//        transition.start();
+
+//        TransitionManager transitionManager = new TransitionManager();
+//        transitionManager.
+
+//        motionLayout.setTransition(R.id.transition_inactive_to_active);
+//        motionLayout.transitionToEnd();
+////        motionLayout.transitionToStart();
+
+        textSwitcher = (TextSwitcher) findViewById(R.id.text_switcher);
+        textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(MainActivity.this);
+//                textView.setTextColor(getResources().getColor(R.color.my_primary_text));
+                setTextGradientColor(textView);
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//                textView.setTypeface(Typeface.SERIF);
+                textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserratemiold));
+                return textView;
+            }
+        });
+        textSwitcher.setCurrentText(getString(R.string.status_inactive));
+
+        TextView txtSensitivity = findViewById(R.id.txt_sensitivity);
+        TextView txtVolume = findViewById(R.id.txt_volume);
+        setTextGradientColor(txtSensitivity);
+        setTextGradientColor(txtVolume);
 
         Log.d(TAG, "onCreate: " + mIsBound);
 
@@ -92,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mService = new MediaService();
             Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+c(mService)+" "+mIsBound);
-            mOn(true);
+            mOn(true, 0);
         } else if (savedInstanceState.getBoolean("mIsBound") == true) {
-            mOn(false);
+            mOn(false, 0);
             Log.d(TAG, "onCreate: 21" +" "+c(mService)+" "+mIsBound);
         } else { //savedInstanceState.getBoolean("mIsBound") == false
             Log.d(TAG, "onCreate: 22" +" "+c(mService)+" "+mIsBound);
@@ -104,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOn(true);
+                mOn(true, 1);
             }
         });
 
@@ -133,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences.edit().putInt("sensitivity_cutoff", sensitivityCutoff).apply();
                 Log.d(TAG, "sensitivity cutoff after putInt = " + sharedPreferences.getInt("sensitivity_cutoff", 111));
 
-                Toast.makeText(MainActivity.this, i  + " " + "sensitivityCutoff" + sensitivityCutoff, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, i  + " " + "sensitivityCutoff" + sensitivityCutoff, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -171,6 +233,42 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }//onCreate
+
+    private void setTextGradientColor(TextView textView) {
+
+        TextPaint paint = textView.getPaint();
+        float width = paint.measureText(textView.getText().toString());
+//        int colors[] = { getResources().getColor(R.color.teal_200),
+//                getResources().getColor(R.color.purple_700),
+//                getResources().getColor(R.color.teal_700),
+//                getResources().getColor(R.color.purple_200),
+//                Color.GREEN
+//        };
+//        int colors[] = {Color.parseColor("#FFFFFF"),
+//                Color.parseColor("#F8F8F8"),
+//                Color.parseColor("#F0F0F0")
+////                getResources().getColor(R.color.premium_white3)
+//        };
+        int colors[] = { getResources().getColor(R.color.premium_white1),
+                getResources().getColor(R.color.premium_white2),
+                getResources().getColor(R.color.premium_white3),
+                getResources().getColor(R.color.premium_white4) };
+//        int colors[] = { getResources().getColor(R.color.white),
+//                getResources().getColor(R.color.white),
+//                getResources().getColor(R.color.white),
+//                getResources().getColor(R.color.white)};
+
+        float positions[] = {0, 0.31f, 0.75f, 1};
+
+//        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
+        Shader shader = new LinearGradient(0, textView.getTextSize(), 0, 0, colors,
+                positions, Shader.TileMode.CLAMP);
+
+        textView.getPaint().setShader(shader); //sets the shader (color) of the text
+        textView.setTextColor(getResources().getColor(R.color.white)); //sets the color of the text initially or if the shader failed to render
+//        textView.setTextColor(colors[0]);
+    }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -242,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }//mSensorChanged
 
-    private void mOn(boolean firstStartingService) {
+    private void mOn(boolean firstStartingService, int transitionAnimation) {
 
         if (!mIsBound) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -254,12 +352,73 @@ public class MainActivity extends AppCompatActivity {
                 bindService();
             }
 
-            txtStatus.setText(R.string.status_active);
-            txtStatus.setTextSize(84);
-            txtStatus.setAllCaps(true);
-        }
-    }//mActivate
+            animate(transitionAnimation);
 
+//            txtStatus.setText(R.string.status_active);
+//            txtStatus.setTextSize(84);
+//            txtStatus.setAllCaps(true);
+        }
+
+//        ObjectAnimator animator = ObjectAnimator.ofObject(txtStatus, "text", new TypeEvaluator<String>() {
+//            @Override
+//            public String evaluate(float fraction, String startValue, String endValue) {
+//                // Interpolate the text value based on the fraction
+//                return null; // Calculate interpolated text based on fraction, startValue, and endValue
+//            }
+//        }, String.valueOf(R.string.status_inactive), "End Text");
+//        animator.setDuration(1000); // Animation duration in milliseconds
+//        animator.start();
+
+//        motionLayout.setTransition(R.id.inactive, R.id.active);
+//        motionLayout.transitionToEnd();
+
+//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.text_animation);
+//        txtStatus.startAnimation(animation);
+
+    }//mOn
+
+    private void animate(int transition) {
+
+        Animation animationIn = AnimationUtils.loadAnimation(this, R.anim.animation_in);
+        Animation animationOut = AnimationUtils.loadAnimation(this, R.anim.animation_out);
+
+        textSwitcher.setInAnimation(animationIn);
+        textSwitcher.setOutAnimation(animationOut);
+
+        if (transition == 0) { //app initiation (initial to active state)
+//            motionLayout.setTransition(R.id.initial, R.id.active);
+//            motionLayout.transitionToEnd();
+
+            textSwitcher.setText(getString(R.string.status_active));
+            TextView textView = (TextView) textSwitcher.getCurrentView();
+            textView.setTextSize(84);
+            textView.setAllCaps(true);
+            setTextGradientColor(textView);
+
+        } else if (transition == 1) { //to active state (inactive to active state)
+            motionLayout.setTransition(R.id.inactive, R.id.active);
+            motionLayout.transitionToEnd();
+
+            textSwitcher.setText(getString(R.string.status_active));
+            TextView textView = (TextView) textSwitcher.getCurrentView();
+            textView.setTextSize(84);
+            textView.setAllCaps(true);
+            setTextGradientColor(textView);
+
+        } else if (transition == 2) { //to inactive state (active to inactive state)
+            motionLayout.setTransition(R.id.active, R.id.inactive);
+            motionLayout.transitionToEnd();
+
+            textSwitcher.setText(getString(R.string.status_inactive));
+            TextView textView = (TextView) textSwitcher.getCurrentView();
+            textView.setTextSize(72);
+//            textView.setAllCaps(false);
+            textView.setAllCaps(true);
+            setTextGradientColor(textView);
+            textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserrategular));
+        }
+
+    }//animate()
 
     private void mOff() {
 
@@ -273,11 +432,13 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, MediaService.class));
             Log.d(TAG, "mOff: afterstopService " + mIsBound+" "+c(mService));
 
+            animate(2);
+
             mIsBound = false;
 
-            txtStatus.setText(R.string.status_inactive);
-            txtStatus.setTextSize(72);
-            txtStatus.setAllCaps(false);
+//            txtStatus.setText(R.string.status_inactive);
+//            txtStatus.setTextSize(72);
+//            txtStatus.setAllCaps(false);
         }
     }//mOff
 
@@ -349,4 +510,4 @@ public class MainActivity extends AppCompatActivity {
 
 
 //Notes:
-//Galaxy J7 Prime. 5.5" 1080x1920. Nougat 7 (API / SDK 24)
+//Galaxy J7 Prime. 5.5" 1080x1920 (16:9 ratio) ~401 ppi density, ~xhdpi ~320dpi x2. Nougat 7 (API / SDK 24)

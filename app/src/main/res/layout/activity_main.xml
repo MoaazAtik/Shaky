@@ -1,22 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motion_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
+    app:layoutDescription="@xml/activity_main_scene"
     tools:context=".MainActivity">
+<!--    android:background="#2D325E"-->
 
-    <TextView
-        android:id="@+id/txt_status"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/stars_background"
+        app:lottie_repeatMode="reverse" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lStars1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="@string/status_inactive"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="72sp"
-        android:typeface="serif"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/stars1"
+        app:lottie_speed="0.5" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lBackgroundMeteor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/stars4"
+        app:lottie_speed="0.3" />
+
+<!--    <com.airbnb.lottie.LottieAnimationView-->
+<!--        android:id="@+id/lStarsActivate"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        app:layout_constraintStart_toEndOf="@id/btn_on"-->
+<!--        app:layout_constraintTop_toTopOf="@id/text_switcher"-->
+<!--        app:lottie_autoPlay="true"-->
+<!--        app:lottie_loop="true"-->
+<!--        app:lottie_rawRes="@raw/stars_activate"-->
+<!--        tools:layout_editor_absoluteY="25dp" />-->
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="3dp"
+        tools:layout="@layout/fragment_more"
+        tools:name="com.example.antidepremdemo.MoreFragment"
+        tools:visibility="gone" />
+
+    <TextSwitcher
+        android:id="@+id/text_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,10 +82,12 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="175dp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_on"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/btns_on_off"
+        android:fontFamily="@font/ontserrategular"
         android:text="@string/on"
         android:textAlignment="center"
         android:textSize="36sp"
@@ -39,10 +95,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/btns_on_off"
+        android:fontFamily="@font/ontserrategular"
         android:text="@string/off"
         android:textAlignment="center"
         android:textSize="36sp"
@@ -55,8 +113,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:fontFamily="@font/ontserrathin"
         android:text="@string/sensitivity"
         android:textAlignment="center"
+        android:textAllCaps="true"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,12 +125,18 @@
     <SeekBar
         android:id="@+id/seek_sensitivity"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="26dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:max="6"
+        android:paddingVertical="8dp"
+        android:progress="3"
+        android:progressDrawable="@drawable/custom_seekbar"
+        android:splitTrack="false"
+        android:thumb="@drawable/round_arrow_right"
+        android:transformPivotX="0dp"
         app:layout_constraintBottom_toTopOf="@id/txt_volume"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -80,8 +146,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:fontFamily="@font/ontserrathin"
         android:text="@string/volume"
         android:textAlignment="center"
+        android:textAllCaps="true"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/seek_volume"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,28 +157,34 @@
 
     <SeekBar
         android:id="@+id/seek_volume"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="26dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
+        android:paddingVertical="8dp"
+        android:progress="30"
+        android:progressDrawable="@drawable/custom_seekbar"
+        android:splitTrack="false"
+        android:thumb="@drawable/round_arrow_right"
+        android:transformPivotX="0dp"
         app:layout_constraintBottom_toTopOf="@id/btn_more"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+<!--    <Button-->
+<!--        android:layout_margin="16dp"-->
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_more"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginEnd="30dp"
+        android:contentDescription="@string/more_actions"
         android:background="@drawable/baseline_more_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="3dp" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

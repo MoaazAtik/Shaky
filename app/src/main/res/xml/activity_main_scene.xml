@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetEnd="@+id/active"
+        motion:constraintSetStart="@+id/initial"
+        motion:duration="3000">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0.5"
+                motion:framePosition="10"
+                motion:motionTarget="@+id/btn_on" />
+        </KeyFrameSet>
+    </Transition>
+
+    <Transition
+        motion:constraintSetEnd="@id/active"
+        motion:constraintSetStart="@id/inactive"
+        motion:duration="3000" >
+        <KeyFrameSet >
+            <KeyAttribute
+                motion:motionTarget="@+id/btn_off"
+                motion:framePosition="75"
+                android:alpha="0" />
+            <KeyAttribute
+                motion:motionTarget="@+id/btn_on"
+                motion:framePosition="92"
+                android:alpha="0" />
+        </KeyFrameSet>
+    </Transition>
+
+    <Transition
+        motion:constraintSetEnd="@+id/inactive"
+        motion:constraintSetStart="@id/active"
+        motion:duration="3000">
+        <KeyFrameSet >
+            <KeyAttribute
+                motion:motionTarget="@+id/btn_on"
+                motion:framePosition="75"
+                android:alpha="0" />
+            <KeyAttribute
+                motion:motionTarget="@+id/btn_off"
+                motion:framePosition="92"
+                android:alpha="0" />
+        </KeyFrameSet>
+    </Transition>
+
+
+    <ConstraintSet android:id="@+id/initial">
+        <Constraint
+            android:id="@+id/btn_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:alpha="0"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom" />
+        <Constraint
+            android:id="@+id/btn_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/btn_on" />
+        <Constraint
+            android:id="@+id/txt_sensitivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:alpha="0"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            motion:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/seek_sensitivity"
+            android:layout_width="320dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:alpha="0"
+            android:scaleX="0"
+            motion:layout_constraintBottom_toTopOf="@id/txt_volume"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/txt_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:alpha="0"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            motion:layout_constraintBottom_toTopOf="@id/seek_volume"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/seek_volume"
+            android:layout_width="320dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:alpha="0"
+            android:scaleX="0"
+            motion:layout_constraintBottom_toTopOf="@id/btn_more"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/btn_more"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="30dp"
+            android:alpha="0"
+            android:scaleX="0.1"
+            android:scaleY="0.1"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/active">
+        <Constraint
+            android:id="@+id/btn_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:scaleX="2"
+            android:scaleY="2"
+            motion:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+<!--            motion:layout_constraintBottom_toTopOf="@+id/guideline_status_bottom"-->
+        <Constraint
+            android:id="@+id/btn_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/btn_on" />
+        <Constraint
+            android:id="@+id/txt_sensitivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/seek_sensitivity"
+            android:layout_width="320dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/txt_volume"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/txt_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/seek_volume"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/seek_volume"
+            android:layout_width="320dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toTopOf="@id/btn_more"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/btn_more"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="14dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/inactive">
+        <Constraint
+            android:id="@+id/btn_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/btn_off" />
+        <Constraint
+            android:id="@+id/btn_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:scaleX="2"
+            android:scaleY="2"
+            motion:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+<!--            motion:layout_constraintBottom_toTopOf="@+id/guideline_status_bottom"-->
+    </ConstraintSet>
+
+</MotionScene>

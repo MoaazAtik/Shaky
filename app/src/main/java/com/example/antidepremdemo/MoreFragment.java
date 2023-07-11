@@ -54,7 +54,7 @@ public class MoreFragment extends Fragment {
 
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);//to choose from internal (ringtones) storage
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM | RingtoneManager.TYPE_NOTIFICATION);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tonee");
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, rawResourceUri);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
@@ -115,7 +115,7 @@ public class MoreFragment extends Fragment {
         emailIntent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
         if (emailIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(Intent.createChooser(emailIntent, "Send Feedbackk"));
+            startActivity(Intent.createChooser(emailIntent, "Send Feedback"));
         } else {
             Toast.makeText(getContext(), "No email app found", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Your feedback is welcome ", Toast.LENGTH_SHORT).show();
