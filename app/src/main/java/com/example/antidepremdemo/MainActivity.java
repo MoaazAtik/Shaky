@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences.edit().putInt("sensitivity_cutoff", sensitivityCutoff).apply();
                 Log.d(TAG, "sensitivity cutoff after putInt = " + sharedPreferences.getInt("sensitivity_cutoff", 111));
 
-                Toast.makeText(MainActivity.this, i  + " " + "sensitivityCutoff" + sensitivityCutoff, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, i  + " " + "sensitivityCutoff" + sensitivityCutoff, Toast.LENGTH_SHORT).show();
             }
 
             @Override
