@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -14,10 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -36,10 +33,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
-import com.airbnb.lottie.LottieAnimationView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btnMore;
     private int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
-//    private FragmentContainerView fragmentContainerView;
 
     public static MediaService mService;
     public Boolean mIsBound = false;
@@ -63,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private MotionLayout motionLayout;
 
     private TextSwitcher textSwitcher;
-
-    private LottieAnimationView lStarsActivation;
-
 
     private static Context contex;
     public static Context getContex() {
@@ -76,11 +66,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(TAG, "onCreate: ");
+
         contex = getApplicationContext();
 
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
-//        txtStatus = findViewById(R.id.txt_status);
         seekSensitivity = findViewById(R.id.seek_sensitivity);
         seekVolume = findViewById(R.id.seek_volume);
         btnMore = findViewById(R.id.btn_more);
@@ -88,42 +79,16 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-//        fragmentContainerView = findViewById(R.id.fragmentContainerView);
-
         motionLayout = findViewById(R.id.motion_layout);
-
-//        lStarsActivation = findViewById(R.id.sta);
-
-//        motionLayout.setTransition(R.id.transition_inactive_to_active);
-//        motionLayout.jumpToState(R.id.inactive);
-//        motionLayout.transitionToState(R.id.active);
-
-//        motionLayout.transitionToStart();
-//        motionLayout.transitionToEnd(); //worked alone
-
-//        TransitionManager.go(R.id.transition2, new ChangeBounds());
-//        TransitionManager.go(R.id.transition_inactive_to_active);
-
-//        MotionScene.Transition transition = motionLayout.getTransition(R.id.transition_inactive_to_active);
-//        transition.start();
-
-//        TransitionManager transitionManager = new TransitionManager();
-//        transitionManager.
-
-//        motionLayout.setTransition(R.id.transition_inactive_to_active);
-//        motionLayout.transitionToEnd();
-////        motionLayout.transitionToStart();
 
         textSwitcher = (TextSwitcher) findViewById(R.id.text_switcher);
         textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
                 TextView textView = new TextView(MainActivity.this);
-//                textView.setTextColor(getResources().getColor(R.color.my_primary_text));
                 setTextGradientColor(textView);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//                textView.setTypeface(Typeface.SERIF);
-                textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserratemiold));
+                textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.montserrat_semi_bold));
                 return textView;
             }
         });
@@ -133,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
         TextView txtVolume = findViewById(R.id.txt_volume);
         setTextGradientColor(txtSensitivity);
         setTextGradientColor(txtVolume);
-
-        Log.d(TAG, "onCreate: " + mIsBound);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -153,13 +116,13 @@ public class MainActivity extends AppCompatActivity {
         //to avoid reinitializing a new service when configurations change (e.g. screen rotation)
         if (savedInstanceState == null) {
             mService = new MediaService();
-            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+c(mService)+" "+mIsBound);
+//            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+c(mService)+" "+mIsBound);
             mOn(true, 0);
         } else if (savedInstanceState.getBoolean("mIsBound") == true) {
             mOn(false, 0);
-            Log.d(TAG, "onCreate: 21" +" "+c(mService)+" "+mIsBound);
+//            Log.d(TAG, "onCreate: 21" +" "+c(mService)+" "+mIsBound);
         } else { //savedInstanceState.getBoolean("mIsBound") == false
-            Log.d(TAG, "onCreate: 22" +" "+c(mService)+" "+mIsBound);
+//            Log.d(TAG, "onCreate: 22" +" "+c(mService)+" "+mIsBound);
         }
 
         //btnOn
@@ -179,12 +142,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekSensitivity
-//        seekSensitivity.setProgress(2);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         seekSensitivity.setProgress(
                 seekSensitivity.getMax() - sharedPreferences.getInt("sensitivity_cutoff", 0) );
-        Log.d(TAG, "sensitivity cutoff after getInt = " + sharedPreferences.getInt("sensitivity_cutoff", 111));
-        Log.d(TAG, "max sensitivity is " + seekSensitivity.getMax());
 
         seekSensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -193,9 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 sensitivityCutoff = seekSensitivity.getMax() - i;
 
                 sharedPreferences.edit().putInt("sensitivity_cutoff", sensitivityCutoff).apply();
-                Log.d(TAG, "sensitivity cutoff after putInt = " + sharedPreferences.getInt("sensitivity_cutoff", 111));
-
-//                Toast.makeText(MainActivity.this, i  + " " + "sensitivityCutoff" + sensitivityCutoff, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -238,35 +195,18 @@ public class MainActivity extends AppCompatActivity {
 
         TextPaint paint = textView.getPaint();
         float width = paint.measureText(textView.getText().toString());
-//        int colors[] = { getResources().getColor(R.color.teal_200),
-//                getResources().getColor(R.color.purple_700),
-//                getResources().getColor(R.color.teal_700),
-//                getResources().getColor(R.color.purple_200),
-//                Color.GREEN
-//        };
-//        int colors[] = {Color.parseColor("#FFFFFF"),
-//                Color.parseColor("#F8F8F8"),
-//                Color.parseColor("#F0F0F0")
-////                getResources().getColor(R.color.premium_white3)
-//        };
         int colors[] = { getResources().getColor(R.color.premium_white1),
                 getResources().getColor(R.color.premium_white2),
                 getResources().getColor(R.color.premium_white3),
                 getResources().getColor(R.color.premium_white4) };
-//        int colors[] = { getResources().getColor(R.color.white),
-//                getResources().getColor(R.color.white),
-//                getResources().getColor(R.color.white),
-//                getResources().getColor(R.color.white)};
 
         float positions[] = {0, 0.31f, 0.75f, 1};
 
-//        Shader shader = new LinearGradient(0, 0, width, textView.getTextSize(), colors, null, Shader.TileMode.CLAMP);
         Shader shader = new LinearGradient(0, textView.getTextSize(), 0, 0, colors,
                 positions, Shader.TileMode.CLAMP);
 
         textView.getPaint().setShader(shader); //sets the shader (color) of the text
         textView.setTextColor(getResources().getColor(R.color.white)); //sets the color of the text initially or if the shader failed to render
-//        textView.setTextColor(colors[0]);
     }
 
 
@@ -280,22 +220,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: " + mIsBound+" "+c(mService));
+//        Log.d(TAG, "onResume: " + mIsBound+" "+c(mService));
     }//onResume
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause: " + mIsBound+" "+c(mService));
+//        Log.d(TAG, "onPause: " + mIsBound+" "+c(mService));
     }//onPause
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy: " + mIsBound+" "+c(mService));
+        Log.d(TAG, "onDestroy: ");
+//        Log.d(TAG, "onDestroy: " + mIsBound+" "+c(mService));
         if (isFinishing()) {
             mOff(); //especially for unregisterListener()
-            Log.d(TAG, "onDestroy: isFinishing " + c(mService));
         }
 
         if (mIsBound) {
@@ -307,13 +247,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-//            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : seekVolume.getProgress()+1);
-//            seekVolume.setProgress((seekVolume.getProgress()+1>seekVolume.getMax()) ? seekVolume.getMax() : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
             seekVolume.setProgress((seekVolume.getProgress() + 1 > seekVolume.getMax()) ?
                     seekVolume.getMax() : mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-//            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : seekVolume.getProgress()-1);
-//            seekVolume.setProgress((seekVolume.getProgress()-1<0) ? 0 : audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
             seekVolume.setProgress((seekVolume.getProgress() - 1 < 0) ?
                     0 : mService.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
@@ -345,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
         if (!mIsBound) {
             sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
-            Log.d(TAG, "mOn: " + mIsBound+" "+c(mService));
             if (firstStartingService) {
                 startService();
             } else {
@@ -354,26 +289,7 @@ public class MainActivity extends AppCompatActivity {
 
             animate(transitionAnimation);
 
-//            txtStatus.setText(R.string.status_active);
-//            txtStatus.setTextSize(84);
-//            txtStatus.setAllCaps(true);
         }
-
-//        ObjectAnimator animator = ObjectAnimator.ofObject(txtStatus, "text", new TypeEvaluator<String>() {
-//            @Override
-//            public String evaluate(float fraction, String startValue, String endValue) {
-//                // Interpolate the text value based on the fraction
-//                return null; // Calculate interpolated text based on fraction, startValue, and endValue
-//            }
-//        }, String.valueOf(R.string.status_inactive), "End Text");
-//        animator.setDuration(1000); // Animation duration in milliseconds
-//        animator.start();
-
-//        motionLayout.setTransition(R.id.inactive, R.id.active);
-//        motionLayout.transitionToEnd();
-
-//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.text_animation);
-//        txtStatus.startAnimation(animation);
 
     }//mOn
 
@@ -386,8 +302,6 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher.setOutAnimation(animationOut);
 
         if (transition == 0) { //app initiation (initial to active state)
-//            motionLayout.setTransition(R.id.initial, R.id.active);
-//            motionLayout.transitionToEnd();
 
             textSwitcher.setText(getString(R.string.status_active));
             TextView textView = (TextView) textSwitcher.getCurrentView();
@@ -412,10 +326,9 @@ public class MainActivity extends AppCompatActivity {
             textSwitcher.setText(getString(R.string.status_inactive));
             TextView textView = (TextView) textSwitcher.getCurrentView();
             textView.setTextSize(72);
-//            textView.setAllCaps(false);
             textView.setAllCaps(true);
             setTextGradientColor(textView);
-            textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.ontserrategular));
+            textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.montserrat_regular));
         }
 
     }//animate()
@@ -427,62 +340,51 @@ public class MainActivity extends AppCompatActivity {
             sensorManager.unregisterListener(sensorEventListener);
 
             unbindService(serviceConnection);
-            Log.d(TAG, "mOff: after unbindService " + mIsBound+" "+c(mService));
+//            Log.d(TAG, "mOff: after unbindService " + mIsBound+" "+c(mService));
 
             stopService(new Intent(this, MediaService.class));
-            Log.d(TAG, "mOff: afterstopService " + mIsBound+" "+c(mService));
+//            Log.d(TAG, "mOff: afterstopService " + mIsBound+" "+c(mService));
 
             animate(2);
 
             mIsBound = false;
 
-//            txtStatus.setText(R.string.status_inactive);
-//            txtStatus.setTextSize(72);
-//            txtStatus.setAllCaps(false);
         }
     }//mOff
 
     private void startService() {
         Intent serviceIntent = new Intent(this, MediaService.class);
         ContextCompat.startForegroundService(this, serviceIntent);
-        Log.d(TAG, "startService: " + mIsBound);
         bindService();
     }
     private void bindService() {
         Intent serviceBindIntent = new Intent(this, MediaService.class);
         bindService(serviceBindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-        Log.d(TAG, "bindService: "+ mIsBound);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "onServiceConnected: " + c(mService));
 
             MediaService.MyBinder binder = (MediaService.MyBinder) service;
             mService = binder.getService();
-//            mService = ((MediaService.MyBinder) service).getService();
             mIsBound = true;
-            Log.d(TAG, mIsBound + " mService = " + c(mService));
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "onServiceDisconnected: disconnected from service." + c(mService));
             mIsBound = false;
 
         }
     };
 
     //helper method for cropping mService's name in the logs
-    public String c(Object objectName) {
-        return objectName.toString().replace("com.example.antidepremdemo.", "");
-    }
+//    public String c(Object objectName) {
+//        return objectName.toString().replace("com.example.antidepremdemo.", "");
+//    }
 
 }//MainActivity
 
-//TODO: txt_status text fill the TextView
-//TODO: use a template fot the design
 
 // Done:
 //todo: save preferences of sensitivity.

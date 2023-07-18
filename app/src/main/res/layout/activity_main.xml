@@ -8,7 +8,6 @@
     android:background="@color/black"
     app:layoutDescription="@xml/activity_main_scene"
     tools:context=".MainActivity">
-<!--    android:background="#2D325E"-->
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lBackground"
@@ -44,17 +43,6 @@
         app:lottie_rawRes="@raw/stars4"
         app:lottie_speed="0.3" />
 
-<!--    <com.airbnb.lottie.LottieAnimationView-->
-<!--        android:id="@+id/lStarsActivate"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        app:layout_constraintStart_toEndOf="@id/btn_on"-->
-<!--        app:layout_constraintTop_toTopOf="@id/text_switcher"-->
-<!--        app:lottie_autoPlay="true"-->
-<!--        app:lottie_loop="true"-->
-<!--        app:lottie_rawRes="@raw/stars_activate"-->
-<!--        tools:layout_editor_absoluteY="25dp" />-->
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
@@ -87,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btns_on_off"
-        android:fontFamily="@font/ontserrategular"
+        android:fontFamily="@font/montserrat_regular"
         android:text="@string/on"
         android:textAlignment="center"
         android:textSize="36sp"
@@ -100,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btns_on_off"
-        android:fontFamily="@font/ontserrategular"
+        android:fontFamily="@font/montserrat_regular"
         android:text="@string/off"
         android:textAlignment="center"
         android:textSize="36sp"
@@ -113,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:fontFamily="@font/ontserrathin"
+        android:fontFamily="@font/montserrat_thin"
         android:text="@string/sensitivity"
         android:textAlignment="center"
         android:textAllCaps="true"
@@ -146,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:fontFamily="@font/ontserrathin"
+        android:fontFamily="@font/montserrat_thin"
         android:text="@string/volume"
         android:textAlignment="center"
         android:textAllCaps="true"
@@ -172,8 +160,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-<!--    <Button-->
-<!--        android:layout_margin="16dp"-->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_more"
         android:layout_width="60dp"

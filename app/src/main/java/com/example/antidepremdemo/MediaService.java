@@ -21,7 +21,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -51,7 +50,6 @@ public class MediaService extends Service {
         @Override
         public void onCompletion(MediaPlayer mp) {
             mReleaseMediaPlayer();
-            Log.d(TAG, "onCompletion: ");
         }
     };
 
@@ -64,20 +62,15 @@ public class MediaService extends Service {
             switch (focusChange) {
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                case AudioManager.AUDIOFOCUS_LOSS:
 
-                    Toast.makeText(MainActivity.getContex(), "Duck", Toast.LENGTH_SHORT).show();
                     mediaPlayer.setVolume(0.1f, 0.1f);
 
                     break;
                 case AudioManager.AUDIOFOCUS_GAIN:
-                    Toast.makeText(MainActivity.getContex(), "Gain", Toast.LENGTH_SHORT).show();
                     if (mediaPlayer != null)
                         mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
 
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS:
-                    Toast.makeText(MainActivity.getContex(), "Loss", Toast.LENGTH_SHORT).show();
-                    mediaPlayer.setVolume(0.1f, 0.1f);
                     break;
             }
         }
@@ -98,14 +91,12 @@ public class MediaService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
         return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         mReleaseMediaPlayer();
-        Log.d(TAG, "onDestroy: ");
     }
 
     @Nullable
@@ -142,9 +133,7 @@ public class MediaService extends Service {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "handler of loop breaking");
                         if (mediaPlayer != null) {
-//                        mediaPlayer.setLooping(false);//doesn't affect the system's built-in alarm tones
                             mediaPlayer.stop();
                             mReleaseMediaPlayer();
                         }
@@ -152,7 +141,6 @@ public class MediaService extends Service {
                 };
                 new Handler(Looper.getMainLooper())
                         .postDelayed(runnable, 5000);
-//                handler.postDelayed(runnable, 2 * 60 * 1000);
             }
         }
 
@@ -162,7 +150,6 @@ public class MediaService extends Service {
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
-            Log.d(TAG, "mReleaseMediaPlayer: ");
             volumeBeforeDucking = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 audioManager.abandonAudioFocusRequest(focusRequest);
@@ -193,7 +180,6 @@ public class MediaService extends Service {
 
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
                     .createNotificationChannel(serviceChannel);
-//            ((NotificationManager) getSystemService(NotificationManager.class)).createNotificationChannel(serviceChannel);
         }
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -203,7 +189,6 @@ public class MediaService extends Service {
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("My App is running... hooray!")
-//                    .setContentText("My app is running... hurray!")
                 .setSmallIcon(R.drawable.baseline_home_24)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
@@ -215,7 +200,6 @@ public class MediaService extends Service {
 
     public Uri selectedTone() {
         int rawResourceId = R.raw.soft;
-//        int rawResourceId = R.raw.breach_alarm;
         String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 getResources().getResourcePackageName(rawResourceId) + '/' +
                 getResources().getResourceTypeName(rawResourceId) + '/' +
@@ -229,9 +213,6 @@ public class MediaService extends Service {
 
 }//MediaService.class
 
-
-//todo: edit notification title ...
-//todo: edit handler.postDelayed() to 2 minutes
 
 //done:
 //todo: use notification for foreground service for all api levels

@@ -8,7 +8,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +42,6 @@ public class MoreFragment extends Fragment {
         btnTone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: btnTone");
 
                 int rawResourceId = R.raw.soft;
                 String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
@@ -69,7 +67,6 @@ public class MoreFragment extends Fragment {
         btnFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: btnFeedback");
                 sendEmail();
             }//onClick
         });//btnFeedback OnClickListener
@@ -96,8 +93,6 @@ public class MoreFragment extends Fragment {
                             String previousToneStr = sharedPreferences.getString("alarm_tone", null);
                             sharedPreferences.edit().putString("alarm_tone", previousToneStr).apply();
                         }
-                        Log.d(TAG, "onActivityResult: " + selectedToneUri);
-                        Log.d(TAG, "onActivityResult: " + sharedPreferences.getString("alarm_tone", null));
                     }
                 }//onActivityResult
             });//mGetContent
@@ -117,8 +112,8 @@ public class MoreFragment extends Fragment {
         if (emailIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(Intent.createChooser(emailIntent, "Send Feedback"));
         } else {
-            Toast.makeText(getContext(), "No email app found", Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "Your feedback is welcome ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_email_app_found, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + R.string.recipient_email_address, Toast.LENGTH_SHORT).show();
         }
     }//sendEmail()
 
