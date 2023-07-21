@@ -213,34 +213,3 @@ public class MediaService extends Service {
 
 }//MediaService.class
 
-
-//done:
-//todo: use notification for foreground service for all api levels
-//todo: add “immutable” flag to pending intent for api above 31 because it is necessary
-//todo: add stopService() (mOff()) to MainActivity’s onDestroy and remove stopWithTask from AndroidManifest
-//todo: I might be able to remove bound service and use a started service instead
-//todo: try new Thread(new Runnable(…)).start   like in JobScheduler video.
-// or just new Handler with new Runnable, instead of handler =… for memory saving
-//todo: create a Tag on github of the main branch (where the app was working
-// fine before using a Service)
-//todo: check the permissions and manifest attributes written in startForeground(1, notification); :
-//todo: revise the role of pendingIntent
-//todo: complete the overview of Services on Notion
-//todo: use switch instead of if in focusChangeListener
-//todo: loop the player,
-// and make the handler and the runnable = null
-//todo: remove volumeBeforeDucking because it's no longer needed,
-// and increase the volume of the mediaPlayer after regaining the focus
-//todo: the volume is ducking, but I can't get its value before and after ducking
-//todo: Cannot resolve method 'baseSetVolume' in 'MediaPlayer'
-// ducking mutes the volume of the app forever. mediaPlayer.setVolume().
-//todo: the mediaPlayer.setVolume() crashes the app. rearrange the mediaPlayer methods (create, pause,...)
-// like the mediaPlayer in Miwok
-//todo: audio isn't playing after stop()
-//todo: CodingWithMitch video: make this service a bound service to
-// fix calling null audioManger issue
-//todo: the problem is mOn() in MainActivity's onCreate is not being called
-// so the service is not being created. NO***. it is being called but
-// I didn't get an onServiceConnected() callback from serviceConnection
-// aka. there is no connection between MainActivity and MediaService yet.
-//todo: Audio is not playing after AudioManager.AUDIOFOCUS_LOSS

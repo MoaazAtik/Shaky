@@ -384,32 +384,3 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 }//MainActivity
-
-
-// Done:
-//todo: save preferences of sensitivity.
-//todo: increase the points of sensitivity seekbar
-//Todo: remove onRetainCustomNonConfigurationInstance() and mService = (MediaService) getLastCustomNonConfigurationInstance()
-// because there is no need to them.
-//todo: "send Email" option
-//todo: "Change tone" option
-//todo: fix buttons under MoreFragment's layout are still clickable
-//todo: turn btnMore into an edit icon with a context? menu that has a Change audio and send Email options
-//todo: hide the title bar
-//todo: edit the placeholder attribute tools:text="Active"
-//todo: survive configuration changes
-//todo: add a landscape layout
-//todo: do I need to add wake lock even if I'm using a foreground service?
-// Manage device awake state (wake lock). MediaPlayer.setWakeMode().
-//todo: should I invoke abandonAudioFocus in onPause() mStop()?
-//TODO: sync seekVolume with the device's original one.
-//TODO: check on the MediaPlayer code in 1MAC's and Edraak's project.
-//todo: requestAudioFocus
-//todo try adding "android.permission.MODIFY_AUDIO_SETTINGS" to the manifest to use STREAM_SYSTEM.
-// it didn't work.
-//Todo: the audio is not playing as STREAM_SYSTEM, while seekVolume is controlling the volume as STREAM_SYSTEM properly.
-// couldn't be done because Samsung has restricted the use of STREAM_SYSTEM audio stream type on some of its devices, including the Samsung Galaxy J7 Prime.
-
-
-//Notes:
-//Galaxy J7 Prime. 5.5" 1080x1920 (16:9 ratio) ~401 ppi density, ~xhdpi ~320dpi x2. Nougat 7 (API / SDK 24)
