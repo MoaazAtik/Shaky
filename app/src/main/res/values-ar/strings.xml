@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Anti Deprem Demo</string>
+    <string name="app_name">Vibro</string>
     <string name="status_active">فعال</string>
     <string name="status_inactive">معطل</string>
     <string name="on">تشغيل</string>
@@ -8,7 +8,7 @@
     <string name="sensitivity">الحساسية</string>
     <string name="volume">مستوى الصوت</string>
 
-    <string name="email_subject">تعليقات واقتراحات بخصوص Anti Deprem Demo</string>
+    <string name="email_subject">تعليقات واقتراحات بخصوص Vibro</string>
     <string name="email_body">
         [نحن نرحب بمشاركة تعليقاتك، واقتراحات التحسين، والإبلاغ عن أي أخطاء أو مشاكل في الاستخدام، أو تقديم أي تعليقات إضافية!]
     </string>

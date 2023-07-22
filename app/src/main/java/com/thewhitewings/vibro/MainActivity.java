@@ -1,4 +1,4 @@
-package com.example.antidepremdemo;
+package com.thewhitewings.vibro;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
 
     //helper method for cropping mService's name in the logs
 //    public String c(Object objectName) {
-//        return objectName.toString().replace("com.example.antidepremdemo.", "");
+//        return objectName.toString().replace("com.thewhitewings.vibro.", "");
 //    }
 
 }//MainActivity

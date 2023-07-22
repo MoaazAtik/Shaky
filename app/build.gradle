@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.antidepremdemo'
+    namespace 'com.thewhitewings.vibro'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.antidepremdemo"
+        applicationId "com.thewhitewings.vibro"
         minSdk 21
         targetSdk 33
         versionCode 1

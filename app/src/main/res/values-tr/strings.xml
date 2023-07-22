@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Anti Deprem Demo</string>
+    <string name="app_name">Vibro</string>
     <string name="status_active">Aktif</string>
     <string name="status_inactive">pasif</string>
     <string name="on">Aç</string>
@@ -8,7 +8,7 @@
     <string name="sensitivity">Duyarlılık</string>
     <string name="volume">Ses Düzeyi</string>
 
-    <string name="email_subject">Anti Deprem Demo için Geri Bildirim ve Öneriler</string>
+    <string name="email_subject">Vibro için Geri Bildirim ve Öneriler</string>
     <string name="email_body">
         [Geri bildirimlerinizi bizimle paylaşmanızı, geliştirmeler önermenizi, herhangi bir hata veya kullanılabilirlik sorunu bildirmenizi, ve ek yorumlarınızı memnuniyetle karşılıyoruz!]
     </string>

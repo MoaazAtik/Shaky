@@ -1,4 +1,4 @@
-package com.example.antidepremdemo;
+package com.thewhitewings.vibro;
 
 import org.junit.Test;
 

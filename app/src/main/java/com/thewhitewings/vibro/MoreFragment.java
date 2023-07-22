@@ -1,4 +1,4 @@
-package com.example.antidepremdemo;
+package com.thewhitewings.vibro;
 
 import android.app.Activity;
 import android.content.ContentResolver;
