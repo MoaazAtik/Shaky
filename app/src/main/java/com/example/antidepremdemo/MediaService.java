@@ -174,9 +174,10 @@ public class MediaService extends Service {
 
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Media Service Chennel",
+                    getString(R.string.alarm_notification),
                     NotificationManager.IMPORTANCE_HIGH
             );
+            serviceChannel.setDescription(getString(R.string.this_is_the_channel_of_alarm_notifications));
 
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
                     .createNotificationChannel(serviceChannel);
@@ -188,11 +189,13 @@ public class MediaService extends Service {
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("My App is running... hooray!")
-                .setSmallIcon(R.drawable.baseline_home_24)
+                .setContentTitle(getString(R.string.vibro_is_active))
+                .setContentText(getString(R.string.click_to_get_back_to_vibro))
+                .setSmallIcon(R.drawable.app_icon_notification)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .build();
 
         return notification;

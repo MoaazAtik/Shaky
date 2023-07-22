@@ -18,4 +18,8 @@
     <string name="more_actions">Diğer eylemler</string>
     <string name="no_email_app_found">E-posta uygulaması bulunamadı</string>
     <string name="your_feedback_is_welcome_at">Geri bildiriminizi memnuniyetle karşılıyoruz</string>
+    <string name="vibro_is_active">Vibro aktif</string>
+    <string name="click_to_get_back_to_vibro">Vibro\'ya dönmek için tıkla</string>
+    <string name="alarm_notification">Alarm Bildirimi</string>
+    <string name="this_is_the_channel_of_alarm_notifications">Bu alarm bildirimleri kanalıdır</string>
 </resources>

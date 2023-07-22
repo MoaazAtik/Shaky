@@ -18,4 +18,8 @@
     <string name="more_actions">إجراءات أخرى</string>
     <string name="no_email_app_found">لم يتم العثور على تطبيق البريد الإلكتروني</string>
     <string name="your_feedback_is_welcome_at">نرحب بملاحظاتك على البريد الإلكتروني</string>
+    <string name="vibro_is_active">فايبرو فعال</string>
+    <string name="click_to_get_back_to_vibro">انقر للرجوع إلى فايبرو</string>
+    <string name="alarm_notification">إشعار المنبه</string>
+    <string name="this_is_the_channel_of_alarm_notifications">هذه قناة إشعارات المنبه</string>
 </resources>

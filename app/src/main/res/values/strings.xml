@@ -18,4 +18,8 @@
     <string name="more_actions">More actions</string>
     <string name="no_email_app_found">No email app found</string>
     <string name="your_feedback_is_welcome_at">Your feedback is welcome at</string>
+    <string name="vibro_is_active">Vibro is Active</string>
+    <string name="click_to_get_back_to_vibro">Click to get back to Vibro</string>
+    <string name="alarm_notification">Alarm Notification</string>
+    <string name="this_is_the_channel_of_alarm_notifications">This is the channel of alarm notifications</string>
 </resources>
