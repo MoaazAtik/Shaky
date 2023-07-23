@@ -183,10 +183,11 @@ public class MediaService extends Service {
                     .createNotificationChannel(serviceChannel);
         }
 
+        // FLAG_IMMUTABLE (or FLAG_MUTABLE) is required for APIs 31 and above, and will be ignored for APIs below 31
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent,
-                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
+                PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.vibro_is_active))
