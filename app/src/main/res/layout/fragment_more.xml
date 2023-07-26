@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fragment_background_gradient"
-    android:clickable="true">
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_tone"
@@ -17,7 +18,8 @@
         android:text="@string/change_alarm_tone"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="26sp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,11 +32,11 @@
         android:background="@drawable/btns_fragment"
         android:fontFamily="@font/montserrat_regular"
         android:gravity="center"
-        android:minLines="2"
         android:text="@string/send_us_feedback"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="26sp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_tone" />

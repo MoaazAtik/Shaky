@@ -22,4 +22,6 @@
     <string name="click_to_get_back_to_vibro">انقر للرجوع إلى فايبرو</string>
     <string name="alarm_notification">إشعار المنبه</string>
     <string name="this_is_the_channel_of_alarm_notifications">هذه قناة إشعارات المنبه</string>
+    <string name="adjust_sensitivity">اضبط الحساسية</string>
+    <string name="adjust_volume">اضبط مستوى الصوت</string>
 </resources>

@@ -2,9 +2,11 @@ package com.thewhitewings.vibro;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -30,6 +32,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -85,10 +88,25 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
-                TextView textView = new TextView(MainActivity.this);
-                setTextGradientColor(textView);
+                AppCompatTextView textView = new AppCompatTextView(MainActivity.this);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.montserrat_semi_bold));
+
+                textView.setAllCaps(true);
+                TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                        textView, 10, 120, 1,
+                        TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
+                );
+                textView.setLayoutParams(new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+                ));
+                textView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                    @Override
+                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                        setTextGradientColor(textView);
+                    }
+                });
+
                 return textView;
             }
         });
@@ -193,8 +211,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setTextGradientColor(TextView textView) {
 
-        TextPaint paint = textView.getPaint();
-        float width = paint.measureText(textView.getText().toString());
         int colors[] = { getResources().getColor(R.color.premium_white1),
                 getResources().getColor(R.color.premium_white2),
                 getResources().getColor(R.color.premium_white3),
@@ -304,30 +320,19 @@ public class MainActivity extends AppCompatActivity {
         if (transition == 0) { //app initiation (initial to active state)
 
             textSwitcher.setText(getString(R.string.status_active));
-            TextView textView = (TextView) textSwitcher.getCurrentView();
-            textView.setTextSize(84);
-            textView.setAllCaps(true);
-            setTextGradientColor(textView);
 
         } else if (transition == 1) { //to active state (inactive to active state)
             motionLayout.setTransition(R.id.inactive, R.id.active);
             motionLayout.transitionToEnd();
 
             textSwitcher.setText(getString(R.string.status_active));
-            TextView textView = (TextView) textSwitcher.getCurrentView();
-            textView.setTextSize(84);
-            textView.setAllCaps(true);
-            setTextGradientColor(textView);
 
         } else if (transition == 2) { //to inactive state (active to inactive state)
             motionLayout.setTransition(R.id.active, R.id.inactive);
             motionLayout.transitionToEnd();
 
             textSwitcher.setText(getString(R.string.status_inactive));
-            TextView textView = (TextView) textSwitcher.getCurrentView();
-            textView.setTextSize(72);
-            textView.setAllCaps(true);
-            setTextGradientColor(textView);
+            AppCompatTextView textView = (AppCompatTextView) textSwitcher.getCurrentView();
             textView.setTypeface(ResourcesCompat.getFont(getApplicationContext(), R.font.montserrat_regular));
         }
 
