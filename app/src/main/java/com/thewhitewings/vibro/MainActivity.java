@@ -25,7 +25,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.text.TextPaint;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -211,12 +210,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setTextGradientColor(TextView textView) {
 
-        int colors[] = { getResources().getColor(R.color.premium_white1),
+        int[] colors = { getResources().getColor(R.color.premium_white1),
                 getResources().getColor(R.color.premium_white2),
                 getResources().getColor(R.color.premium_white3),
                 getResources().getColor(R.color.premium_white4) };
 
-        float positions[] = {0, 0.31f, 0.75f, 1};
+        float[] positions = {0, 0.31f, 0.75f, 1};
 
         Shader shader = new LinearGradient(0, textView.getTextSize(), 0, 0, colors,
                 positions, Shader.TileMode.CLAMP);
@@ -348,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d(TAG, "mOff: after unbindService " + mIsBound+" "+c(mService));
 
             stopService(new Intent(this, MediaService.class));
-//            Log.d(TAG, "mOff: afterstopService " + mIsBound+" "+c(mService));
+//            Log.d(TAG, "mOff: after stopService " + mIsBound+" "+c(mService));
 
             animate(2);
 
