@@ -48,7 +48,6 @@ public class MediaAndSensorService extends Service {
     private int currentAcceleration;
     private int prevAcceleration;
     private int changeInAcceleration;
-//    private int sensitivityCutoff = 1; //the lower value the more sensitive
     int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
 
@@ -269,12 +268,9 @@ public class MediaAndSensorService extends Service {
         prevAcceleration = currentAcceleration;
 
         if (changeInAcceleration > sensitivityCutoff) {
-//            if (mIsBound) {
-//                mService.playAudio();
-//            }
             playAudio();
         }
     }//mSensorChanged
 
-}//MediaAndSensorService.class
+}//MediaAndSensorService
 

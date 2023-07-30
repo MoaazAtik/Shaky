@@ -38,15 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
-//    private SensorManager sensorManager;
-//    private Sensor mAccelerometer;
-//    private int currentAcceleration;
-//    private int prevAcceleration;
-//    private int changeInAcceleration;
     private SeekBar seekSensitivity, seekVolume;
     private Button btnMore;
-//    private int sensitivityCutoff = 1; //the lower value the more sensitive
-//    private SensorEventListener sensorEventListener;
 
     public static MediaAndSensorService mService;
     public Boolean mIsBound = false;
@@ -73,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
         seekSensitivity = findViewById(R.id.seek_sensitivity);
         seekVolume = findViewById(R.id.seek_volume);
         btnMore = findViewById(R.id.btn_more);
-
-//        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-//        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         motionLayout = findViewById(R.id.motion_layout);
 
@@ -115,17 +105,6 @@ public class MainActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 
-//        //sensorEventListener
-//        sensorEventListener = new SensorEventListener() {
-//            @Override
-//            public void onSensorChanged(SensorEvent event) {
-//                mSensorChanged(event);
-//            }
-//
-//            @Override
-//            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-//        };
-
         //to avoid reinitializing a new service when configurations change (e.g. screen rotation)
         if (savedInstanceState == null) {
             mService = new MediaAndSensorService();
@@ -163,10 +142,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 //                sensitivityCutoff = (9 - (i * 4)) / 2;
-//                sensitivityCutoff = seekSensitivity.getMax() - i;
                 mService.sensitivityCutoff = seekSensitivity.getMax() - i;
 
-//                sharedPreferences.edit().putInt("sensitivity_cutoff", sensitivityCutoff).apply();
                 sharedPreferences.edit().putInt("sensitivity_cutoff", mService.sensitivityCutoff).apply();
             }
 
@@ -271,28 +248,9 @@ public class MainActivity extends AppCompatActivity {
     }//onKeyDown
 
 
-//    private void mSensorChanged(SensorEvent event) {
-//        double x = event.values[0];
-//        double y = event.values[1];
-//        double z = event.values[2];
-//
-//        currentAcceleration = (int) Math.sqrt(x * x + y * y + z * z);
-//        if (prevAcceleration != 0) {
-//            changeInAcceleration = currentAcceleration - prevAcceleration;
-//        }
-//        prevAcceleration = currentAcceleration;
-//
-//        if (changeInAcceleration > sensitivityCutoff) {
-//            if (mIsBound) {
-//                mService.playAudio();
-//            }
-//        }
-//    }//mSensorChanged
-
     private void mOn(boolean firstStartingService, int transitionAnimation) {
 
         if (!mIsBound) {
-//            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
             if (firstStartingService) {
                 startService();
@@ -338,8 +296,6 @@ public class MainActivity extends AppCompatActivity {
     private void mOff() {
 
         if (mIsBound) {
-
-//            sensorManager.unregisterListener(sensorEventListener);
 
             unbindService(serviceConnection);
 //            Log.d(TAG, "mOff: after unbindService " + mIsBound+" "+c(mService));
