@@ -113,7 +113,7 @@ public class MoreFragment extends Fragment {
             startActivity(Intent.createChooser(emailIntent, "Send Feedback"));
         } else {
             Toast.makeText(getContext(), R.string.no_email_app_found, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + R.string.recipient_email_address, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + getString(R.string.recipient_email_address), Toast.LENGTH_LONG).show();
         }
     }//sendEmail()
 
