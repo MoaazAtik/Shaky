@@ -17,10 +17,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -42,17 +38,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
-    private SensorManager sensorManager;
-    private Sensor mAccelerometer;
-    private int currentAcceleration;
-    private int prevAcceleration;
-    private int changeInAcceleration;
+//    private SensorManager sensorManager;
+//    private Sensor mAccelerometer;
+//    private int currentAcceleration;
+//    private int prevAcceleration;
+//    private int changeInAcceleration;
     private SeekBar seekSensitivity, seekVolume;
     private Button btnMore;
-    private int sensitivityCutoff = 1; //the lower value the more sensitive
-    private SensorEventListener sensorEventListener;
+//    private int sensitivityCutoff = 1; //the lower value the more sensitive
+//    private SensorEventListener sensorEventListener;
 
-    public static MediaService mService;
+    public static MediaAndSensorService mService;
     public Boolean mIsBound = false;
 
     private MotionLayout motionLayout;
@@ -78,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
         seekVolume = findViewById(R.id.seek_volume);
         btnMore = findViewById(R.id.btn_more);
 
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+//        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         motionLayout = findViewById(R.id.motion_layout);
 
@@ -119,20 +115,20 @@ public class MainActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 
-        //sensorEventListener
-        sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                mSensorChanged(event);
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-        };
+//        //sensorEventListener
+//        sensorEventListener = new SensorEventListener() {
+//            @Override
+//            public void onSensorChanged(SensorEvent event) {
+//                mSensorChanged(event);
+//            }
+//
+//            @Override
+//            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+//        };
 
         //to avoid reinitializing a new service when configurations change (e.g. screen rotation)
         if (savedInstanceState == null) {
-            mService = new MediaService();
+            mService = new MediaAndSensorService();
 //            Log.d(TAG, "onCreate: 1" + "savedInstanceState..."+" "+c(mService)+" "+mIsBound);
             mOn(true, 0);
         } else if (savedInstanceState.getBoolean("mIsBound") == true) {
@@ -167,9 +163,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 //                sensitivityCutoff = (9 - (i * 4)) / 2;
-                sensitivityCutoff = seekSensitivity.getMax() - i;
+//                sensitivityCutoff = seekSensitivity.getMax() - i;
+                mService.sensitivityCutoff = seekSensitivity.getMax() - i;
 
-                sharedPreferences.edit().putInt("sensitivity_cutoff", sensitivityCutoff).apply();
+//                sharedPreferences.edit().putInt("sensitivity_cutoff", sensitivityCutoff).apply();
+                sharedPreferences.edit().putInt("sensitivity_cutoff", mService.sensitivityCutoff).apply();
             }
 
             @Override
@@ -273,28 +271,28 @@ public class MainActivity extends AppCompatActivity {
     }//onKeyDown
 
 
-    private void mSensorChanged(SensorEvent event) {
-        double x = event.values[0];
-        double y = event.values[1];
-        double z = event.values[2];
-
-        currentAcceleration = (int) Math.sqrt(x * x + y * y + z * z);
-        if (prevAcceleration != 0) {
-            changeInAcceleration = currentAcceleration - prevAcceleration;
-        }
-        prevAcceleration = currentAcceleration;
-
-        if (changeInAcceleration > sensitivityCutoff) {
-            if (mIsBound) {
-                mService.playAudio();
-            }
-        }
-    }//mSensorChanged
+//    private void mSensorChanged(SensorEvent event) {
+//        double x = event.values[0];
+//        double y = event.values[1];
+//        double z = event.values[2];
+//
+//        currentAcceleration = (int) Math.sqrt(x * x + y * y + z * z);
+//        if (prevAcceleration != 0) {
+//            changeInAcceleration = currentAcceleration - prevAcceleration;
+//        }
+//        prevAcceleration = currentAcceleration;
+//
+//        if (changeInAcceleration > sensitivityCutoff) {
+//            if (mIsBound) {
+//                mService.playAudio();
+//            }
+//        }
+//    }//mSensorChanged
 
     private void mOn(boolean firstStartingService, int transitionAnimation) {
 
         if (!mIsBound) {
-            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+//            sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
             if (firstStartingService) {
                 startService();
@@ -341,12 +339,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (mIsBound) {
 
-            sensorManager.unregisterListener(sensorEventListener);
+//            sensorManager.unregisterListener(sensorEventListener);
 
             unbindService(serviceConnection);
 //            Log.d(TAG, "mOff: after unbindService " + mIsBound+" "+c(mService));
 
-            stopService(new Intent(this, MediaService.class));
+            stopService(new Intent(this, MediaAndSensorService.class));
 //            Log.d(TAG, "mOff: after stopService " + mIsBound+" "+c(mService));
 
             animate(2);
@@ -357,12 +355,12 @@ public class MainActivity extends AppCompatActivity {
     }//mOff
 
     private void startService() {
-        Intent serviceIntent = new Intent(this, MediaService.class);
+        Intent serviceIntent = new Intent(this, MediaAndSensorService.class);
         ContextCompat.startForegroundService(this, serviceIntent);
         bindService();
     }
     private void bindService() {
-        Intent serviceBindIntent = new Intent(this, MediaService.class);
+        Intent serviceBindIntent = new Intent(this, MediaAndSensorService.class);
         bindService(serviceBindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -370,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
 
-            MediaService.MyBinder binder = (MediaService.MyBinder) service;
+            MediaAndSensorService.MyBinder binder = (MediaAndSensorService.MyBinder) service;
             mService = binder.getService();
             mIsBound = true;
         }
@@ -378,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mIsBound = false;
-
+            Log.d(TAG, "onServiceDisconnected: ");
         }
     };
 

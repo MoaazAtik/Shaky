@@ -9,6 +9,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -26,9 +30,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 
-public class MediaService extends Service {
+public class MediaAndSensorService extends Service {
 
-    private static final String TAG = "MediaService";
+    private static final String TAG = "MediaAndSensorService";
 
     private final IBinder mBinder = new MyBinder();
 
@@ -39,7 +43,17 @@ public class MediaService extends Service {
     AudioManager audioManager;
     float volumeBeforeDucking;
 
-    public MediaService() {
+    private SensorManager sensorManager;
+    private Sensor mAccelerometer;
+    private int currentAcceleration;
+    private int prevAcceleration;
+    private int changeInAcceleration;
+//    private int sensitivityCutoff = 1; //the lower value the more sensitive
+    int sensitivityCutoff = 1; //the lower value the more sensitive
+    private SensorEventListener sensorEventListener;
+
+
+    public MediaAndSensorService() {
         audioManager = (AudioManager) MainActivity.getContex().getSystemService(Context.AUDIO_SERVICE);
     }
 
@@ -87,16 +101,41 @@ public class MediaService extends Service {
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
+
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        //sensorEventListener
+        sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                mSensorChanged(event);
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        };
+
+        sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+
     }//onCreate
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_REDELIVER_INTENT;
+
+
+//        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         mReleaseMediaPlayer();
+
+        Log.d(TAG, "onDestroy: ");
+        sensorManager.unregisterListener(sensorEventListener);
     }
 
     @Nullable
@@ -162,8 +201,8 @@ public class MediaService extends Service {
 
     //MyBinder class
     public class MyBinder extends Binder {
-        MediaService getService() {
-            return MediaService.this;
+        MediaAndSensorService getService() {
+            return MediaAndSensorService.this;
         }
     }
 
@@ -193,9 +232,12 @@ public class MediaService extends Service {
                 .setContentTitle(getString(R.string.vibro_is_active))
                 .setContentText(getString(R.string.click_to_get_back_to_vibro))
                 .setSmallIcon(R.drawable.app_icon_notification)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+                .setSound(null)
+                .setVibrate(null)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .build();
 
@@ -215,5 +257,24 @@ public class MediaService extends Service {
     }
 
 
-}//MediaService.class
+    private void mSensorChanged(SensorEvent event) {
+        double x = event.values[0];
+        double y = event.values[1];
+        double z = event.values[2];
+
+        currentAcceleration = (int) Math.sqrt(x * x + y * y + z * z);
+        if (prevAcceleration != 0) {
+            changeInAcceleration = currentAcceleration - prevAcceleration;
+        }
+        prevAcceleration = currentAcceleration;
+
+        if (changeInAcceleration > sensitivityCutoff) {
+//            if (mIsBound) {
+//                mService.playAudio();
+//            }
+            playAudio();
+        }
+    }//mSensorChanged
+
+}//MediaAndSensorService.class
 

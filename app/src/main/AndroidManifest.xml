@@ -17,7 +17,7 @@
         >
 
         <service
-            android:name=".MediaService"
+            android:name=".MediaAndSensorService"
             android:foregroundServiceType="mediaPlayback">
 
         </service>
