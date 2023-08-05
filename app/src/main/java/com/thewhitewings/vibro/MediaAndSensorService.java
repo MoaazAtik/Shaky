@@ -23,9 +23,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -51,6 +51,8 @@ public class MediaAndSensorService extends Service {
     private int changeInAcceleration;
     int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
+
+    PowerManager.WakeLock wakeLock;
 
 
     public MediaAndSensorService() {
@@ -96,6 +98,11 @@ public class MediaAndSensorService extends Service {
 
         Log.d(TAG, "onCreate:");
 
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "vibro:service");
+        wakeLock.acquire();
+
+
         startForeground(1, mNotification());
 
         audioAttributes = new AudioAttributes.Builder()
@@ -118,7 +125,8 @@ public class MediaAndSensorService extends Service {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
-        sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL); //SENSOR_DELAY_NORMAL = 200000 microseconds
+//        sensorManager.registerListener(sensorEventListener, mAccelerometer, 500000);
 
 
     }//onCreate
@@ -137,6 +145,9 @@ public class MediaAndSensorService extends Service {
 
         Log.d(TAG, "onDestroy: ");
         sensorManager.unregisterListener(sensorEventListener);
+
+        if (wakeLock.isHeld())
+            wakeLock.release();
     }
 
     @Nullable
@@ -223,7 +234,8 @@ public class MediaAndSensorService extends Service {
             );
             serviceChannel.setDescription(getString(R.string.this_is_the_channel_of_alarm_notifications));
 
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+//            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+            ((NotificationManager) getSystemService(NotificationManager.class))
                     .createNotificationChannel(serviceChannel);
         }
 

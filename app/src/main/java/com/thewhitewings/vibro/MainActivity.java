@@ -60,17 +60,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "onCreate: ");
-//        TextView test = findViewById(R.id.txt_test);
-//        new Handler(getMainLooper())
-//                .post(new Runnable() {
-//            @Override
-//            public void run() {
-//                for (int i = 0; i < 4; i++) {
-//                    test.setText(String.valueOf(i));
-//                    SystemClock.sleep(1000);
-//                }
-//            }
-//        });
 
         contex = getApplicationContext();
 
