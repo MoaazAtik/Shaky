@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -51,9 +52,12 @@ public class MediaAndSensorService extends Service {
     int sensitivityCutoff = 1; //the lower value the more sensitive
     private SensorEventListener sensorEventListener;
 
+    PowerManager.WakeLock wakeLock;
+
 
     public MediaAndSensorService() {
         audioManager = (AudioManager) MainActivity.getContex().getSystemService(Context.AUDIO_SERVICE);
+        Log.d(TAG, "MediaAndSensorService: constructor");
     }
 
     int result = 0;
@@ -94,6 +98,11 @@ public class MediaAndSensorService extends Service {
 
         Log.d(TAG, "onCreate:");
 
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "vibro:service");
+        wakeLock.acquire();
+
+
         startForeground(1, mNotification());
 
         audioAttributes = new AudioAttributes.Builder()
@@ -116,7 +125,8 @@ public class MediaAndSensorService extends Service {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
-        sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL); //SENSOR_DELAY_NORMAL = 200000 microseconds
+//        sensorManager.registerListener(sensorEventListener, mAccelerometer, 500000);
 
 
     }//onCreate
@@ -124,7 +134,7 @@ public class MediaAndSensorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-
+        Log.d(TAG, "onStartCommand: ");
 //        return START_REDELIVER_INTENT;
         return START_STICKY;
     }
@@ -135,17 +145,21 @@ public class MediaAndSensorService extends Service {
 
         Log.d(TAG, "onDestroy: ");
         sensorManager.unregisterListener(sensorEventListener);
+
+        if (wakeLock.isHeld())
+            wakeLock.release();
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(TAG, "onBind: ");
         return mBinder;
     }
 
 
     public void playAudio() {
-
+        Log.d(TAG, "playAudio: ");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             //for Android 8.0 (API level 26) through Android 11 (API level 30), and Android 12 (API level 31) or later
             focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
@@ -162,6 +176,7 @@ public class MediaAndSensorService extends Service {
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (mediaPlayer == null) {
+                Log.d(TAG, "playAudio: AUDIOFOCUS_REQUEST_GRANTED");
                 mediaPlayer = MediaPlayer.create(this, selectedTone());
                 mediaPlayer.setAudioAttributes(audioAttributes);
                 mediaPlayer.setLooping(true);
@@ -201,12 +216,14 @@ public class MediaAndSensorService extends Service {
     //MyBinder class
     public class MyBinder extends Binder {
         MediaAndSensorService getService() {
+            Log.d(TAG, "getService: MyBinder");
             return MediaAndSensorService.this;
         }
     }
 
     //mNotification()
     private Notification mNotification() {
+        Log.d(TAG, "mNotification: ");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -217,7 +234,8 @@ public class MediaAndSensorService extends Service {
             );
             serviceChannel.setDescription(getString(R.string.this_is_the_channel_of_alarm_notifications));
 
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+//            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+            ((NotificationManager) getSystemService(NotificationManager.class))
                     .createNotificationChannel(serviceChannel);
         }
 
@@ -251,6 +269,7 @@ public class MediaAndSensorService extends Service {
                 getResources().getResourceEntryName(rawResourceId);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d(TAG, "selectedTone: ");
 
         return Uri.parse(sharedPreferences.getString("alarm_tone", rawResourceString));
     }
@@ -267,7 +286,9 @@ public class MediaAndSensorService extends Service {
         }
         prevAcceleration = currentAcceleration;
 
+//        Log.d(TAG, "mSensorChanged: ");
         if (changeInAcceleration > sensitivityCutoff) {
+            Log.d(TAG, "mSensorChanged: changeInAcceleration > sensitivityCutoff");
             playAudio();
         }
     }//mSensorChanged

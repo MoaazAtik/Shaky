@@ -19,7 +19,9 @@ import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -211,12 +213,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        Log.d(TAG, "onResume: " + mIsBound+" "+c(mService));
+        Log.d(TAG, "onResume: ");
     }//onResume
 
     @Override
     protected void onPause() {
         super.onPause();
 //        Log.d(TAG, "onPause: " + mIsBound+" "+c(mService));
+        Log.d(TAG, "onPause: ");
     }//onPause
 
     @Override
@@ -225,10 +229,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy: ");
 //        Log.d(TAG, "onDestroy: " + mIsBound+" "+c(mService));
         if (isFinishing()) {
+            Log.d(TAG, "onDestroy: isFinishing()");
             mOff(); //especially for unregisterListener()
         }
 
         if (mIsBound) {
+            Log.d(TAG, "onDestroy: if(mIsBound)");
             unbindService(serviceConnection);
             mIsBound = false;
         }
@@ -294,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
     }//animate()
 
     private void mOff() {
+        Log.d(TAG, "mOff: ");
 
         if (mIsBound) {
 
@@ -313,11 +320,13 @@ public class MainActivity extends AppCompatActivity {
     private void startService() {
         Intent serviceIntent = new Intent(this, MediaAndSensorService.class);
         ContextCompat.startForegroundService(this, serviceIntent);
+        Log.d(TAG, "startService: my method");
         bindService();
     }
     private void bindService() {
         Intent serviceBindIntent = new Intent(this, MediaAndSensorService.class);
         bindService(serviceBindIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, "bindService: ");
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -327,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
             MediaAndSensorService.MyBinder binder = (MediaAndSensorService.MyBinder) service;
             mService = binder.getService();
             mIsBound = true;
+            Log.d(TAG, "onServiceConnected: ");
         }
 
         @Override
