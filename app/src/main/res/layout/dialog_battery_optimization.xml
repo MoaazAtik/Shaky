@@ -3,22 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="please disable battery optimization for this app." />
+        android:layout_marginBottom="16dp"
+        android:text="Battery Optimization"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="In order for the app to function properly, it's important to make a few adjustments that allow it to run in the background.
+\n\nKindly click the button below and follow the steps tailored to your device specifications."
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txt_specs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="..." />
+        android:layout_marginBottom="16dp"
+        android:text="Android Version"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <CheckBox
         android:id="@+id/checkbox_dont_show_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't show this message again" />
+        android:text="Don't show again" />
 </LinearLayout>

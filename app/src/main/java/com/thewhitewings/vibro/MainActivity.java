@@ -191,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Check battery optimization status and show a message if not disabled
-        checkBatteryOptimization();
+        // Show battery optimization message
+        showBatteryOptimizationDialog();
 
     }//onCreate
 
@@ -357,25 +357,36 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void checkBatteryOptimization() {
-        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        boolean isIgnoringBatteryOptimizations = false;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            isIgnoringBatteryOptimizations = powerManager.isIgnoringBatteryOptimizations(getPackageName());
-        }
-
-        if (!isIgnoringBatteryOptimizations) {
-            // Battery optimization is not disabled, show a message
-            showBatteryOptimizationDialog();
-        }
-    }
+//    private void checkBatteryOptimization() {
+//        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+//        boolean isIgnoringBatteryOptimizations = false;
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//            isIgnoringBatteryOptimizations = powerManager.isIgnoringBatteryOptimizations(getPackageName());
+//            Log.d(TAG, "checkBatteryOptimization: " +isIgnoringBatteryOptimizations);
+//        }
+//
+//        if (!isIgnoringBatteryOptimizations) {
+//            // Battery optimization is not disabled, show a message
+//            showBatteryOptimizationDialog();
+//        }
+//    }
 
     private void showBatteryOptimizationDialog() {
+
+        // Check if the dialog should be shown based on the preference
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        boolean shouldNotShowDialog = preferences.getBoolean("dontShowBatteryDialog", false);
+
+        if (shouldNotShowDialog) {
+            return;
+        }
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Battery Optimization");
-        builder.setMessage(
-                "To ensure proper app functionality in the background, please disable battery optimization for this app." + "\n\n" +
-                        "To fix it, please follow the provided steps");
+//        builder.setTitle("Battery Optimization");
+//        builder.setMessage(
+//                "To ensure proper app functionality in the background, please disable battery optimization for this app." + "\n\n" +
+//                        "To fix it, please follow the provided steps");
 
         // Inflate a custom layout for the dialog content
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_battery_optimization, null);
@@ -394,8 +405,7 @@ public class MainActivity extends AppCompatActivity {
                 ", Release: " + versionRelease +
                 ", SDK: " + versionSDKLevel);
         TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
-        txtSpecs.setText("Apply the steps related to your phone specifications:\n\n" +
-                manufacturer + " • Android " + versionName + " " + versionRelease + " (SDK Level " + versionSDKLevel + ")");
+        txtSpecs.setText(manufacturer + " • Android " + versionName + " " + versionRelease);
 
 
 //            builder.setPositiveButton("Open Battery Settings", new DialogInterface.OnClickListener() {
@@ -422,13 +432,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Check if the dialog should be shown based on the preference
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        boolean shouldShowDialog = !preferences.getBoolean("dontShowBatteryDialog", false);
+        builder.show();
 
-        if (shouldShowDialog) {
-            builder.show();
-        }
     }
 
 //    private void openBatterySettings() {
