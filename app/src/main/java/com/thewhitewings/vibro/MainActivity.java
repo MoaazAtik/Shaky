@@ -1,6 +1,7 @@
 package com.thewhitewings.vibro;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
@@ -12,23 +13,30 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextSwitcher;
@@ -182,6 +190,9 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
         });
+
+        // Check battery optimization status and show a message if not disabled
+        checkBatteryOptimization();
 
     }//onCreate
 
@@ -345,6 +356,127 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onServiceDisconnected: ");
         }
     };
+
+    private void checkBatteryOptimization() {
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        boolean isIgnoringBatteryOptimizations = false;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            isIgnoringBatteryOptimizations = powerManager.isIgnoringBatteryOptimizations(getPackageName());
+        }
+
+        if (!isIgnoringBatteryOptimizations) {
+            // Battery optimization is not disabled, show a message
+            showBatteryOptimizationDialog();
+        }
+    }
+
+    private void showBatteryOptimizationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Battery Optimization");
+        builder.setMessage(
+                "To ensure proper app functionality in the background, please disable battery optimization for this app." + "\n\n" +
+                        "To fix it, please follow the provided steps");
+
+        // Inflate a custom layout for the dialog content
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_battery_optimization, null);
+        builder.setView(dialogView);
+
+        // Find the checkbox in the custom layout
+        CheckBox dontShowAgainCheckbox = dialogView.findViewById(R.id.checkbox_dont_show_again);
+
+        String manufacturer = android.os.Build.MANUFACTURER.toUpperCase();
+        String versionName = getVersionName();
+        String versionRelease = Build.VERSION.RELEASE;
+        String versionSDKLevel = String.valueOf(Build.VERSION.SDK_INT);
+        Log.d(TAG, "openBatteryOptimizationWebsite: " +
+                "Manufacturer: " + manufacturer +
+                ", Version name: " + getVersionName() +
+                ", Release: " + versionRelease +
+                ", SDK: " + versionSDKLevel);
+        TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
+        txtSpecs.setText("Apply the steps related to your phone specifications:\n\n" +
+                manufacturer + " • Android " + versionName + " " + versionRelease + " (SDK Level " + versionSDKLevel + ")");
+
+
+//            builder.setPositiveButton("Open Battery Settings", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Let's fix it", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+//                openBatterySettings();
+                openBatteryOptimizationWebsite();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.setCancelable(false);
+
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (dontShowAgainCheckbox.isChecked()) {
+                    // Save a preference to not show the dialog again
+                    SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    preferences.edit().putBoolean("dontShowBatteryDialog", true).apply();
+                }
+            }
+        });
+
+        // Check if the dialog should be shown based on the preference
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        boolean shouldShowDialog = !preferences.getBoolean("dontShowBatteryDialog", false);
+
+        if (shouldShowDialog) {
+            builder.show();
+        }
+    }
+
+//    private void openBatterySettings() {
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//            Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+//            startActivity(intent);
+//        }
+//    }
+
+    private void openBatteryOptimizationWebsite() {
+        String manufacturer = android.os.Build.MANUFACTURER.toLowerCase();
+
+        String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
+
+        Uri uri = Uri.parse(websiteUrl);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
+
+    private String getVersionName() {
+        String versionRelease = Build.VERSION.RELEASE;
+
+        switch (versionRelease) {
+            case "5.0":
+                return "Lollipop";
+            case "5.1":
+                return "Lollipop MR1";
+            case "6.0":
+                return "Marshmallow";
+            case "7.0":
+                return "Nougat";
+            case "7.1":
+                return "Nougat MR1";
+            case "8.0":
+                return "Oreo";
+            case "8.1":
+                return "Oreo MR1";
+            case "9":
+                return "Pie";
+            case "10":
+                return "Q";
+            case "11":
+                return "R";
+            default:
+                return "Unknown";
+        }
+    }
+
 
     //helper method for cropping mService's name in the logs
 //    public String c(Object objectName) {
