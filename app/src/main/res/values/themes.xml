@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.Vibro" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -12,5 +12,15 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">#252525</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <!-- Theme of 'Cancel' button of the Battery optimization dialog. -->
+    <style name="MyCancelTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#BA5454</item>
+    </style>
+
+    <!-- Theme of the checkbox of the Battery optimization dialog. -->
+    <style name="MyCheckboxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorSecondary">#BA5454</item>
     </style>
 </resources>

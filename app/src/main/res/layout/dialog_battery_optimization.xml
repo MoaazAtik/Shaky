@@ -1,41 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:background="#CACACA"
     android:padding="24dp">
 
     <TextView
+        android:id="@+id/txt_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/montserrat_regular"
         android:text="Battery Optimization"
         android:textColor="@color/black"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/txt_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserrat_regular"
         android:text="In order for the app to function properly, it's important to make a few adjustments that allow it to run in the background.
 \n\nKindly click the button below and follow the steps tailored to your device specifications."
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_title" />
 
     <TextView
         android:id="@+id/txt_specs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat_regular"
         android:text="Android Version"
         android:textColor="@color/black"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_message" />
 
     <CheckBox
         android:id="@+id/checkbox_dont_show_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't show again" />
-</LinearLayout>
+        android:layout_marginTop="16sp"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Don't show again"
+        android:textSize="16sp"
+        android:theme="@style/MyCheckboxTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_specs" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_cancel"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Cancel"
+        android:textSize="16sp"
+        android:theme="@style/MyCancelTheme"
+        app:layout_constraintEnd_toStartOf="@id/btn_fix"
+        app:layout_constraintTop_toTopOf="@id/btn_fix" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_fix"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="140dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/black"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Let's fix it"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_dont_show_again" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
