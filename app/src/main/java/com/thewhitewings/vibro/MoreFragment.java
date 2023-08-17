@@ -21,12 +21,15 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MoreFragment extends Fragment {
 
     private static final String TAG = "MoreFragment";
     private Button btnTone;
     private Button btnFeedback;
+    private Button btnNotes;
 
 
     @Nullable
@@ -37,6 +40,7 @@ public class MoreFragment extends Fragment {
 
         btnTone = (Button) view.findViewById(R.id.btn_tone);
         btnFeedback = (Button) view.findViewById(R.id.btn_feedback);
+        btnNotes = (Button) view.findViewById(R.id.btn_notes);
 
         //btnTone
         btnTone.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +74,47 @@ public class MoreFragment extends Fragment {
                 sendEmail();
             }//onClick
         });//btnFeedback OnClickListener
+
+        //btnNotes
+        btnNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.replace(R.id.fragment_container_notes, new NotesFragment());
+                fragmentTransaction.addToBackStack(null); // Optional, for back navigation
+
+//                //animations
+//                fragmentTransaction.setCustomAnimations(
+//                        android.R.anim.slide_in_left, // Enter animation
+//                        android.R.anim.slide_out_right, // Exit animation
+//                        android.R.anim.slide_in_left, // Pop enter animation (when navigating back)
+//                        android.R.anim.slide_out_right // Pop exit animation (when navigating back)
+//                );
+
+//                fragmentTransaction.setCustomAnimations(
+//                        androidx.fragment.R.animator.fragment_open_enter, // Enter animation
+//                        androidx.fragment.R.animator.fragment_open_exit, // Exit animation
+//                        androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
+//                        androidx.fragment.R.animator.fragment_close_exit // Pop exit animation (when navigating back)
+//                );
+
+//                fragment_fade_enter
+//                        fragment_fade_exit
+//                fragment_open_enter
+//                        fragment_open_exit
+//                fragment_close_enter
+//                        fragment_close_exit
+
+//                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//                fragmentManager.popBackStack();
+
+
+                fragmentTransaction.commit();
+
+            }
+        });//btnNotes OnClickListener
 
         return view;
     }//onCreateView
