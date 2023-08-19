@@ -1,85 +1,339 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical">
 
-    <!-- Expandable View 1 -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_view1"
-        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:id="@+id/card_view"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="8dp"
+        style="@style/Widget.MaterialComponents.CardView">
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/title1"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Battery Instructions"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+            android:orientation="vertical">
 
-        <!-- Content (Initially Hidden) -->
-        <TextView
-            android:id="@+id/content1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="This is the content for Battery Instructions."
-            android:visibility="gone"
-            />
+            <!-- Title View -->
+            <RelativeLayout
+                android:id="@+id/title_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless">
+<!--                android:background="?attr/selectableItemBackground">-->
+
+                <!-- Title TextView -->
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/expand_button"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="0dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Battery Instructions For The aa"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+<!--                    android:paddingEnd="16dp"-->
+<!--                    android:ellipsize="end"-->
+<!--                    android:maxLines="1"-->
+
+                <!-- Expand Button -->
+                <ImageView
+                    android:id="@+id/expand_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/baseline_more"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    />
+<!--                    android:padding="8dp"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+
+            </RelativeLayout>
+
+            <!-- Content View -->
+<!--            <FrameLayout-->
+<!--                android:id="@+id/content_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center">-->
+<!--                android:background="?attr/selectableItemBackground"-->
+<!--                android:visibility="gone"-->
+
+                <!-- Content TextView -->
+                <TextView
+                    android:id="@+id/content_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="This is the content for the selected option. Lorem ipsum dolor sit amet..."
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:visibility="gone" />
+<!--                    android:gravity="start"-->
+<!--                    android:id="@+id/content"-->
+<!--                    android:maxLines="4" -->
+<!--                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"-->
+
+<!--            </FrameLayout>-->
+
+        </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Repeat for Expandable Views 2 and 3 -->
+<!--    card 2-->
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/card_view"-->
+<!--        android:layout_margin="16dp"-->
+<!--        app:cardCornerRadius="8dp"-->
+<!--        style="@style/Widget.MaterialComponents.CardView">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            &lt;!&ndash; Title View &ndash;&gt;-->
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/title_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                android:background="?attr/selectableItemBackgroundBorderless">-->
+<!--                &lt;!&ndash;                android:background="?attr/selectableItemBackground">&ndash;&gt;-->
+
+<!--                &lt;!&ndash; Title TextView &ndash;&gt;-->
+<!--                <TextView-->
+<!--                    android:id="@+id/title"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentStart="true"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_toStartOf="@id/expand_button"-->
+<!--                    android:paddingStart="16dp"-->
+<!--                    android:paddingEnd="0dp"-->
+<!--                    android:paddingTop="8dp"-->
+<!--                    android:paddingBottom="8dp"-->
+<!--                    android:text="Battery Instructions For The aa"-->
+<!--                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />-->
+<!--                &lt;!&ndash;                    android:paddingEnd="16dp"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:ellipsize="end"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:maxLines="1"&ndash;&gt;-->
+
+<!--                &lt;!&ndash; Expand Button &ndash;&gt;-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/expand_button"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:src="@drawable/baseline_more"-->
+<!--                    android:paddingEnd="16dp"-->
+<!--                    android:paddingStart="16dp"-->
+<!--                    />-->
+<!--                &lt;!&ndash;                    android:padding="8dp"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_alignParentTop="true"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_width="24dp"&ndash;&gt;-->
+<!--                &lt;!&ndash;                    android:layout_height="24dp"&ndash;&gt;-->
+
+<!--            </RelativeLayout>-->
+
+<!--            &lt;!&ndash; Content View &ndash;&gt;-->
+<!--            &lt;!&ndash;            <FrameLayout&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:id="@+id/content_view"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_gravity="center">&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:background="?attr/selectableItemBackground"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:visibility="gone"&ndash;&gt;-->
+
+<!--            &lt;!&ndash; Content TextView &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/content_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="16dp"-->
+<!--                android:text="This is the content for the selected option. Lorem ipsum dolor sit amet..."-->
+<!--                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"-->
+<!--                android:visibility="gone" />-->
+<!--            &lt;!&ndash;                    android:gravity="start"&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:id="@+id/content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:maxLines="4" &ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"&ndash;&gt;-->
+
+<!--            &lt;!&ndash;            </FrameLayout>&ndash;&gt;-->
+
+<!--        </LinearLayout>-->
+
+<!--    </com.google.android.material.card.MaterialCardView>-->
+
+
+
+    <!--working new    <Linear Layout....  + remove layout_constraint s-->
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:id="@+id/card_view"-->
+<!--        style="@style/Widget.MaterialComponents.CardView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp"-->
+<!--        app:cardCornerRadius="8dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            &lt;!&ndash; Title View &ndash;&gt;-->
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/title_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"-->
+<!--                android:background="?attr/selectableItemBackground">-->
+
+<!--                &lt;!&ndash; Title TextView &ndash;&gt;-->
+<!--                <TextView-->
+<!--                    android:id="@+id/title"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Battery Instructions"-->
+<!--                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_alignParentStart="true"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:paddingStart="16dp"-->
+<!--                    android:paddingTop="8dp"-->
+<!--                    android:paddingEnd="16dp"-->
+<!--                    android:paddingBottom="8dp"-->
+<!--                    android:ellipsize="end"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:layout_toStartOf="@id/expand_button" />-->
+
+<!--                &lt;!&ndash; Expand Button &ndash;&gt;-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/expand_button"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:src="@drawable/baseline_more"-->
+<!--                    android:padding="8dp" />-->
+
+<!--            </RelativeLayout>-->
+
+<!--            &lt;!&ndash; Content View &ndash;&gt;-->
+<!--&lt;!&ndash;            <View&ndash;&gt;-->
+<!--&lt;!&ndash;            <com.google.android.material.circularreveal.CircularRevealFrameLayout&ndash;&gt;-->
+<!--            <FrameLayout-->
+<!--                android:id="@+id/content_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="?attr/selectableItemBackground"-->
+<!--                android:layout_gravity="center">-->
+<!--&lt;!&ndash;                android:visibility="gone"&ndash;&gt;-->
+
+<!--                &lt;!&ndash; Content TextView &ndash;&gt;-->
+<!--                <TextView-->
+<!--                    android:id="@+id/content"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="This is the content for the selected option. Lorem ipsum dolor sit amet..."-->
+<!--                    android:padding="16dp"-->
+<!--                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"-->
+<!--                    android:gravity="start"-->
+<!--                    android:maxLines="4" />-->
+
+<!--&lt;!&ndash;            </com.google.android.material.circularreveal.CircularRevealFrameLayout>&ndash;&gt;-->
+<!--            </FrameLayout>-->
+
+<!--        </LinearLayout>-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
+
+
+
+<!--working old-->
+    <!-- Expandable View 1 -->
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:id="@+id/card_view1"-->
+<!--        style="@style/Widget.MaterialComponents.CardView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="8dp">-->
+
+<!--        &lt;!&ndash; Title &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/title1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="16dp"-->
+<!--            android:text="Battery Instructions"-->
+<!--            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />-->
+
+<!--        &lt;!&ndash; Content (Initially Hidden) &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/content1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="16dp"-->
+<!--            android:text="This is the content for Battery Instructions."-->
+<!--            android:visibility="gone"-->
+<!--            />-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
+
+<!--    &lt;!&ndash; Repeat for Expandable Views 2 and 3 &ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; Expandable View 2 &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <com.google.android.material.card.MaterialCardView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/card_view2"&ndash;&gt;-->
+<!--&lt;!&ndash;        style="@style/Widget.MaterialComponents.CardView"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_margin="8dp">&ndash;&gt;-->
+
+<!--&lt;!&ndash;        &lt;!&ndash; Title &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;        <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/title2"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:padding="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text="Battery Instructions22"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;        &lt;!&ndash; Content (Initially Hidden) &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;        <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/content2"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:padding="16dp"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text="This is the content for Battery Instructions."&ndash;&gt;-->
+<!--&lt;!&ndash;            android:visibility="gone"&ndash;&gt;-->
+<!--&lt;!&ndash;            />&ndash;&gt;-->
+<!--&lt;!&ndash;    </com.google.android.material.card.MaterialCardView>&ndash;&gt;-->
 
 </LinearLayout>
-
-
-
-<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto">-->
-
-
-<!--    <androidx.appcompat.widget.AppCompatButton-->
-<!--        android:id="@+id/btn_feedback"-->
-<!--        android:layout_width="330dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:layout_marginTop="24dp"-->
-<!--        android:background="@drawable/btns_fragment"-->
-<!--        android:fontFamily="@font/montserrat_regular"-->
-<!--        android:gravity="center"-->
-<!--        android:text="@string/send_us_feedback"-->
-<!--        android:textAllCaps="false"-->
-<!--        android:textColor="@color/black"-->
-<!--        app:autoSizeTextType="uniform"-->
-<!--        app:autoSizeMaxTextSize="26sp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/btn_tone" />-->
-
-<!--    <androidx.appcompat.widget.AppCompatButton-->
-<!--        android:id="@+id/btn_notes"-->
-<!--        android:layout_width="330dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:layout_marginTop="24dp"-->
-<!--        android:background="@drawable/btns_fragment"-->
-<!--        android:fontFamily="@font/montserrat_regular"-->
-<!--        android:gravity="center"-->
-<!--        android:text="Important notes"-->
-<!--        android:textAllCaps="false"-->
-<!--        android:textColor="@color/black"-->
-<!--        app:autoSizeTextType="uniform"-->
-<!--        app:autoSizeMaxTextSize="26sp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/btn_feedback" />-->
-
-
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
