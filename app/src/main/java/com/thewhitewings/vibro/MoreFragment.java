@@ -82,34 +82,16 @@ public class MoreFragment extends Fragment {
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+                // Animations. this has to be before fragmentTransaction.replace()
+                fragmentTransaction.setCustomAnimations(
+                        androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
+                        androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
+                        androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
+                        androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
+                );
+
                 fragmentTransaction.replace(R.id.fragment_container_notes, new NotesFragment());
                 fragmentTransaction.addToBackStack(null); // Optional, for back navigation
-
-//                //animations
-//                fragmentTransaction.setCustomAnimations(
-//                        android.R.anim.slide_in_left, // Enter animation
-//                        android.R.anim.slide_out_right, // Exit animation
-//                        android.R.anim.slide_in_left, // Pop enter animation (when navigating back)
-//                        android.R.anim.slide_out_right // Pop exit animation (when navigating back)
-//                );
-
-//                fragmentTransaction.setCustomAnimations(
-//                        androidx.fragment.R.animator.fragment_open_enter, // Enter animation
-//                        androidx.fragment.R.animator.fragment_open_exit, // Exit animation
-//                        androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
-//                        androidx.fragment.R.animator.fragment_close_exit // Pop exit animation (when navigating back)
-//                );
-
-//                fragment_fade_enter
-//                        fragment_fade_exit
-//                fragment_open_enter
-//                        fragment_open_exit
-//                fragment_close_enter
-//                        fragment_close_exit
-
-//                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-//                fragmentManager.popBackStack();
-
 
                 fragmentTransaction.commit();
 

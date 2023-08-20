@@ -76,9 +76,21 @@
 \nTo prevent such occurrences, it's important to deactivate battery optimization for this app, in addition to adjusting specific settings based on your device's manufacturer and Android version.
 \nA step-by-step guide is here to assist you in rectifying this situation.
 \nPlease follow the instructions that align with your device's specifications:
-\n\n...specifications...
-\nThe guide: **dontkillmyapp.com**"
+\n\n..specifications..
+\nThe guide: ..dontkillmyapp.com.."
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:visibility="gone" />
+
+                <!-- Device's Specifications (only for the first card) -->
+                <TextView
+                    android:id="@+id/txt_specs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:padding="16dp"
+                    android:text="Android"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:textSize="18sp"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -325,7 +337,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="0dp"
                         android:paddingBottom="8dp"
-                        android:text="Permission required"
+                        android:text="Permission Required"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                     <!-- Expand Icon -->

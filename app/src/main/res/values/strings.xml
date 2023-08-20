@@ -25,4 +25,11 @@
     <string name="more_actions">More actions</string>
     <string name="adjust_sensitivity">Adjust sensitivity</string>
     <string name="adjust_volume">Adjust volume</string>
+
+    <string name="note_b" translatable="false">Apps running in the background may be halted by the Android system for battery preservation (Battery Optimization). This could lead to disruptions in app functionality shortly after your screen turns off.
+\nTo prevent such occurrences, it\'s important to deactivate battery optimization for this app, in addition to adjusting specific settings based on your device\'s manufacturer and Android version.
+\nA step-by-step guide is here to assist you in rectifying this situation.
+\nPlease follow the instructions that align with your device\'s specifications:
+\n\n..specifications..
+\nThe guide: ..dontkillmyapp.com..</string>
 </resources>

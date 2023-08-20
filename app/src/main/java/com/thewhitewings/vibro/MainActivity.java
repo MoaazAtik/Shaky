@@ -27,10 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.PowerManager;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -187,6 +184,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                // Animations. this has to be before fragmentTransaction.replace()
+                fragmentTransaction.setCustomAnimations(
+                        androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
+                        androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
+                        androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
+                        androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
+                );
                 fragmentTransaction.replace(R.id.fragmentContainerView, new MoreFragment());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -390,11 +394,14 @@ public class MainActivity extends AppCompatActivity {
         CheckBox dontShowAgainCheckbox = dialogView.findViewById(R.id.checkbox_dont_show_again);
 
         // Show the device's specifications
-        String manufacturer = android.os.Build.MANUFACTURER.toUpperCase();
-        String versionName = getVersionName();
-        String versionRelease = Build.VERSION.RELEASE;
+//        String manufacturer = android.os.Build.MANUFACTURER.toUpperCase();
+//        String versionName = getVersionName();
+//        String versionRelease = Build.VERSION.RELEASE;
+//        TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
+//        txtSpecs.setText(manufacturer + " • Android " + versionName + " " + versionRelease);
+
         TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
-        txtSpecs.setText(manufacturer + " • Android " + versionName + " " + versionRelease);
+        txtSpecs.setText(getDeviceSpecs());
 
         // Find the positive button (btn_fix) in the custom layout
         Button btnFix = (Button) dialogView.findViewById(R.id.btn_fix);
@@ -440,7 +447,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private String getVersionName() {
+    public static String getDeviceSpecs() {
+        String manufacturer = android.os.Build.MANUFACTURER.toUpperCase();
+        String versionName = getVersionName();
+        String versionRelease = Build.VERSION.RELEASE;
+        return manufacturer + " • Android " + versionName + " " + versionRelease;
+    }
+
+//    private String getVersionName() {
+    private static String getVersionName() {
         String versionRelease = Build.VERSION.RELEASE;
 
         switch (versionRelease) {
