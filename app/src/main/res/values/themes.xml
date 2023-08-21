@@ -23,4 +23,12 @@
     <style name="MyCheckboxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorSecondary">#BA5454</item>
     </style>
+
+    <!-- Theme of the Notes fragment. -->
+    <style name="MyFragmentTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- end-of-scrolling halo color -->
+        <item name="colorPrimary">@color/gray_scrolling</item>
+        <!-- website link color -->
+        <item name="colorSecondary">@color/teal_link</item>
+    </style>
 </resources>

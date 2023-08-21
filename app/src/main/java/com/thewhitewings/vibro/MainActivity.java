@@ -394,12 +394,6 @@ public class MainActivity extends AppCompatActivity {
         CheckBox dontShowAgainCheckbox = dialogView.findViewById(R.id.checkbox_dont_show_again);
 
         // Show the device's specifications
-//        String manufacturer = android.os.Build.MANUFACTURER.toUpperCase();
-//        String versionName = getVersionName();
-//        String versionRelease = Build.VERSION.RELEASE;
-//        TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
-//        txtSpecs.setText(manufacturer + " • Android " + versionName + " " + versionRelease);
-
         TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
         txtSpecs.setText(getDeviceSpecs());
 
@@ -454,7 +448,6 @@ public class MainActivity extends AppCompatActivity {
         return manufacturer + " • Android " + versionName + " " + versionRelease;
     }
 
-//    private String getVersionName() {
     private static String getVersionName() {
         String versionRelease = Build.VERSION.RELEASE;
 

@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/gray_background_light"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:theme="@style/MyFragmentTheme">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,25 +73,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:padding="16dp"
-                    android:text="Apps running in the background may be halted by the Android system for battery preservation (Battery Optimization). This could lead to disruptions in app functionality shortly after your screen turns off.
-\nTo prevent such occurrences, it's important to deactivate battery optimization for this app, in addition to adjusting specific settings based on your device's manufacturer and Android version.
-\nA step-by-step guide is here to assist you in rectifying this situation.
-\nPlease follow the instructions that align with your device's specifications:
-\n\n..specifications..
-\nThe guide: ..dontkillmyapp.com.."
+                    android:text="@string/note_content_background_operation_explanation"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:visibility="gone" />
-
-                <!-- Device's Specifications (only for the first card) -->
-                <TextView
-                    android:id="@+id/txt_specs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:padding="16dp"
-                    android:text="Android"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:textSize="18sp"
                     android:visibility="gone" />
 
             </LinearLayout>
