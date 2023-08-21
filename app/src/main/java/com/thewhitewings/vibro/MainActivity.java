@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //seekSensitivity
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         seekSensitivity.setProgress(
                 seekSensitivity.getMax() - sharedPreferences.getInt("sensitivity_cutoff", 0) );
 

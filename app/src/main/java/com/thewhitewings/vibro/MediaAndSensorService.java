@@ -268,7 +268,7 @@ public class MediaAndSensorService extends Service {
                 getResources().getResourceTypeName(rawResourceId) + '/' +
                 getResources().getResourceEntryName(rawResourceId);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         Log.d(TAG, "selectedTone: ");
 
         return Uri.parse(sharedPreferences.getString("alarm_tone", rawResourceString));

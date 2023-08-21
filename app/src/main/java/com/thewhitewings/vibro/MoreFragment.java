@@ -2,6 +2,7 @@ package com.thewhitewings.vibro;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -113,7 +114,7 @@ public class MoreFragment extends Fragment {
 //                        Uri selectedToneUri = result.getData().getData();//to get tone selected from external storage
                         Uri selectedToneUri = result.getData().getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);//to get tone selected from internal storage
 
-                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                         if (selectedToneUri != null) {
                             sharedPreferences.edit().putString("alarm_tone", selectedToneUri.toString()).apply();
                         } else {
@@ -136,11 +137,11 @@ public class MoreFragment extends Fragment {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
         emailIntent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
-        if (emailIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (emailIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
             startActivity(Intent.createChooser(emailIntent, "Send Feedback"));
         } else {
-            Toast.makeText(getContext(), R.string.no_email_app_found, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + getString(R.string.recipient_email_address), Toast.LENGTH_LONG).show();
+            Toast.makeText(requireContext(), R.string.no_email_app_found, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + getString(R.string.recipient_email_address), Toast.LENGTH_LONG).show();
         }
     }//sendEmail()
 

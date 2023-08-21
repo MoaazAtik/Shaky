@@ -103,7 +103,7 @@ public class NotesFragment extends Fragment {
                 String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
                 Uri uri = Uri.parse(websiteUrl);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
                     startActivity(intent);
                 }
             }
