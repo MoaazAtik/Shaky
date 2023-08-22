@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,7 +137,7 @@ public class MoreFragment extends Fragment {
         emailIntent.putExtra(Intent.EXTRA_TEXT, emailBody);
 
         if (emailIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            startActivity(Intent.createChooser(emailIntent, "Send Feedback"));
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_feedback_email_app_chooser)));
         } else {
             Toast.makeText(requireContext(), R.string.no_email_app_found, Toast.LENGTH_SHORT).show();
             Toast.makeText(requireActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + getString(R.string.recipient_email_address), Toast.LENGTH_LONG).show();

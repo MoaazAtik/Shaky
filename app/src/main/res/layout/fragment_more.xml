@@ -50,7 +50,7 @@
         android:background="@drawable/btns_fragment"
         android:fontFamily="@font/montserrat_regular"
         android:gravity="center"
-        android:text="Important notes"
+        android:text="@string/important_notes_sentence"
         android:textAllCaps="false"
         android:textColor="@color/black"
         app:autoSizeTextType="uniform"

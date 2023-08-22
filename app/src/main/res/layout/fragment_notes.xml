@@ -50,7 +50,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="0dp"
                         android:paddingBottom="8dp"
-                        android:text="Background Operation Explanation"
+                        android:text="@string/note_title_background_operation_explanation"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                     <!-- Expand Icon -->
@@ -60,6 +60,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/content_description_show_note"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:src="@drawable/baseline_expand_arrow" />
@@ -117,7 +118,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="0dp"
                         android:paddingBottom="8dp"
-                        android:text="Battery-Saver Mode Impact"
+                        android:text="@string/note_title_battery_saver_mode_impact"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                     <!-- Expand Icon -->
@@ -127,6 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/content_description_show_note"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:src="@drawable/baseline_expand_arrow" />
@@ -140,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
                     android:padding="16dp"
-                    android:text="Please be aware that the app's functionality might be affected when the phone is in battery-saver mode."
+                    android:text="@string/note_content_battery_saver_mode_impact"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:visibility="gone" />
 
@@ -184,7 +186,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="0dp"
                         android:paddingBottom="8dp"
-                        android:text="Power-Intensive App Alert"
+                        android:text="@string/note_title_power_intensive_app_alert"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                     <!-- Expand Icon -->
@@ -194,6 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/content_description_show_note"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:src="@drawable/baseline_expand_arrow" />
@@ -207,11 +210,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
                     android:padding="16dp"
-                    android:text="You may receive messages from your device's system regarding the app, such as 'The app may drain your battery by keeping your system awake. Would you like to close it?' or 'Frequently refreshes in the background. Force stop to save power.'
-\nThese messages are not a cause for concern since the app typically utilizes minimal resources, averaging around 8 hours per night while you're asleep. This behavior is due to our need to maintain a wake lock to keep the sensor active.
-\nFor optimal performance, we recommend ensuring your device is adequately charged before using the app. Additionally, consider closing unnecessary running apps before launching ours."
+                    android:text="@string/note_content_power_intensive_app_alert"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </LinearLayout>
 
@@ -253,7 +254,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="0dp"
                         android:paddingBottom="8dp"
-                        android:text="Insufficient RAM"
+                        android:text="@string/note_title_insufficient_ram"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                     <!-- Expand Icon -->
@@ -263,6 +264,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/content_description_show_note"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:src="@drawable/baseline_expand_arrow" />
@@ -276,8 +278,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
                     android:padding="16dp"
-                    android:text="In instances where your phone's RAM is insufficient, the app may cease to function.
-\nTo ensure uninterrupted app usage, consider closing unnecessary applications to free up RAM space."
+                    android:text="@string/note_content_insufficient_ram"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:visibility="gone" />
 
@@ -321,7 +322,7 @@
                         android:paddingTop="8dp"
                         android:paddingEnd="0dp"
                         android:paddingBottom="8dp"
-                        android:text="Permission Required"
+                        android:text="@string/note_title_permission_required"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                     <!-- Expand Icon -->
@@ -331,6 +332,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/content_description_show_note"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:src="@drawable/baseline_expand_arrow" />
@@ -344,7 +346,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
                     android:padding="16dp"
-                    android:text="For the app to be able to function, please grant the essential 'Show Notification' permission."
+                    android:text="@string/note_content_permission_required"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:visibility="gone" />
 

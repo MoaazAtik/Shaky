@@ -24,4 +24,32 @@
     <string name="this_is_the_channel_of_alarm_notifications">Bu alarm bildirimleri kanalıdır</string>
     <string name="adjust_sensitivity">Duyarlılığı ayarla</string>
     <string name="adjust_volume">Ses düzeyini ayarla</string>
+
+    <string name="send_feedback_email_app_chooser">Geri bildirim gönder</string>
+    <string name="important_notes_sentence">ملاحظات مهمة</string>
+    <string name="content_description_show_note">إظهار الملاحظة</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_title_battery_optimization">تحسين البطارية</string>
+    <string name="dialog_content_battery_optimization">لضمان عمل التطبيق بشكل سليم، من المهم إجراء بعض التعديلات التي تسمح له بالتشغيل في الخلفية.\n\nيرجى النقر على الزر أدناه واتباع الخطوات المُعدة وفقاً لمواصفات جهازك.</string>
+    <string name="dont_show_again">لا تظهر النافذة مرة أخرى</string>
+    <string name="cancel">إلغاء</string>
+    <string name="lets_fix_it">دعنا نصلحها</string>
+    <string name="dialog_title_important_notes">ملاحظات مهمة</string>
+    <string name="dialog_content_important_notes">يمكنك العثور على تعليمات مفصلة في قسم "ملاحظات مهمة" داخل هذا التطبيق.</string>
+    <string name="got_it">حسناً</string>
+
+    <!-- Notes -->
+    <string name="note_title_background_operation_explanation">شرح التشغيل في الخلفية</string>
+    <string name="note_content_background_operation_explanation">قد يتم إيقاف تشغيل البرامج التي تعمل في الخلفية من قبل نظام أندرويد لتوفير الطاقة (تحسين البطارية). قد يؤدي ذلك إلى خلل في وظائف التطبيق بعد وقت قصير من إغلاق الشاشة.\nلمنع حدوث مثل هذه الحالات، من المهم إلغاء تحسين البطارية لهذا التطبيق، بالإضافة إلى ضبط إعدادات محددة استنادًا إلى مُصنع جهازك وإصدار أندرويد الخاص بك.\n\nفيما يلي تعليمات خطوة بخطوة لمساعدتك في تفادي هذا الأمر.\n\nيرجى اتباع التعليمات التي تتوافق مع مواصفات جهازك:\n\n..specifications..\nالدليل الأول: Dontkillmyapp.com\nالدليل الثاني: Bark.us</string>
+    <string name="note_title_battery_saver_mode_impact">تأثير وضع حفظ الطاقة</string>
+    <string name="note_content_battery_saver_mode_impact">يرجى ملاحظة أن وظائف التطبيق قد تتأثر سلباً عندما يكون الجهاز في وضع توفير البطارية.</string>
+    <string name="note_title_power_intensive_app_alert">تنبيه بتطبيق يستهلك الطاقة بشكل كبير</string>
+    <string name="note_content_power_intensive_app_alert">قد تتلقى رسائل من نظام جهازك بخصوص التطبيق، مثل "قد يستنزف التطبيق بطاريتك من خلال إبقاء نظامك قيد التشغيل. هل ترغب في إغلاقه؟" أو "تطبيق يعمل في الخلفية. إيقاف التطبيق لتوفير الطاقة."\nهذه الرسائل ليست سبباَ للقلق حيث يستخدم التطبيق عادةً موارد ضئيلة لمتوسط حوالي 8 ساعات في الليل أثناء نومك. يعود هذا السلوك إلى حاجتنا للحفاظ على الجهاز يقظاً لإبقاء التطبيق نشطًا.\nللحصول على أداء مثالي، نوصي بالتأكد من أن جهازك مشحون بشكل كاف قبل استخدام التطبيق. بالإضافة إلى ذلك، يُنصح بإغلاق التطبيقات المفتوحة غير الضرورية قبل تشغيل التطبيق الخاص بنا.</string>
+    <string name="note_title_insufficient_ram">الذاكرة غير كافية</string>
+    <string name="note_content_insufficient_ram">في حالات عدم كفاية ذاكرة الوصول العشوائي في جهازك، قد يتوقف التطبيق عن العمل. لضمان استخدام التطبيق دون انقطاع، يُفضل إغلاق التطبيقات غير الضرورية لتحرير مساحة ذاكرة الوصول العشوائي.</string>
+    <string name="note_title_permission_required">إذن ضروري</string>
+    <string name="note_content_permission_required">ليتمكن التطبيق من العمل، يُرجى منح الإذن الضروري "إظهار الإشعارات".</string>
+
+
 </resources>
