@@ -212,7 +212,7 @@
                     android:padding="16dp"
                     android:text="@string/note_content_power_intensive_app_alert"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             </LinearLayout>
 

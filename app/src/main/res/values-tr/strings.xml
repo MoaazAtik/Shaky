@@ -26,30 +26,29 @@
     <string name="adjust_volume">Ses düzeyini ayarla</string>
 
     <string name="send_feedback_email_app_chooser">Geri bildirim gönder</string>
-    <string name="important_notes_sentence">ملاحظات مهمة</string>
-    <string name="content_description_show_note">إظهار الملاحظة</string>
+    <string name="important_notes_sentence">Önemli Notlar</string>
+    <string name="content_description_show_note">Notu göster</string>
 
     <!-- Dialogs -->
-    <string name="dialog_title_battery_optimization">تحسين البطارية</string>
-    <string name="dialog_content_battery_optimization">لضمان عمل التطبيق بشكل سليم، من المهم إجراء بعض التعديلات التي تسمح له بالتشغيل في الخلفية.\n\nيرجى النقر على الزر أدناه واتباع الخطوات المُعدة وفقاً لمواصفات جهازك.</string>
-    <string name="dont_show_again">لا تظهر النافذة مرة أخرى</string>
-    <string name="cancel">إلغاء</string>
-    <string name="lets_fix_it">دعنا نصلحها</string>
-    <string name="dialog_title_important_notes">ملاحظات مهمة</string>
-    <string name="dialog_content_important_notes">يمكنك العثور على تعليمات مفصلة في قسم "ملاحظات مهمة" داخل هذا التطبيق.</string>
-    <string name="got_it">حسناً</string>
+    <string name="dialog_title_battery_optimization">Pil Optimizasyonu</string>
+    <string name="dialog_content_battery_optimization">Uygulamanın düzgün çalışabilmesi için arka planda çalışmasına izin veren bazı düzenlemeler yapmak gereklidir.\n\nLütfen aşağıdaki düğmeye tıklayın ve cihazınızın özelliklerine uygun adımları izleyin.</string>
+    <string name="dont_show_again">Bir daha gösterme</string>
+    <string name="cancel">İptal</string>
+    <string name="lets_fix_it">Düzeltelim</string>
+    <string name="dialog_title_important_notes">Önemli Notlar</string>
+    <string name="dialog_content_important_notes">Detaylı talimatları bu uygulamanın \"Önemli Notlar\" bölümünde bulabilirsiniz.</string>
+    <string name="got_it">Tamam</string>
 
     <!-- Notes -->
-    <string name="note_title_background_operation_explanation">شرح التشغيل في الخلفية</string>
-    <string name="note_content_background_operation_explanation">قد يتم إيقاف تشغيل البرامج التي تعمل في الخلفية من قبل نظام أندرويد لتوفير الطاقة (تحسين البطارية). قد يؤدي ذلك إلى خلل في وظائف التطبيق بعد وقت قصير من إغلاق الشاشة.\nلمنع حدوث مثل هذه الحالات، من المهم إلغاء تحسين البطارية لهذا التطبيق، بالإضافة إلى ضبط إعدادات محددة استنادًا إلى مُصنع جهازك وإصدار أندرويد الخاص بك.\n\nفيما يلي تعليمات خطوة بخطوة لمساعدتك في تفادي هذا الأمر.\n\nيرجى اتباع التعليمات التي تتوافق مع مواصفات جهازك:\n\n..specifications..\nالدليل الأول: Dontkillmyapp.com\nالدليل الثاني: Bark.us</string>
-    <string name="note_title_battery_saver_mode_impact">تأثير وضع حفظ الطاقة</string>
-    <string name="note_content_battery_saver_mode_impact">يرجى ملاحظة أن وظائف التطبيق قد تتأثر سلباً عندما يكون الجهاز في وضع توفير البطارية.</string>
-    <string name="note_title_power_intensive_app_alert">تنبيه بتطبيق يستهلك الطاقة بشكل كبير</string>
-    <string name="note_content_power_intensive_app_alert">قد تتلقى رسائل من نظام جهازك بخصوص التطبيق، مثل "قد يستنزف التطبيق بطاريتك من خلال إبقاء نظامك قيد التشغيل. هل ترغب في إغلاقه؟" أو "تطبيق يعمل في الخلفية. إيقاف التطبيق لتوفير الطاقة."\nهذه الرسائل ليست سبباَ للقلق حيث يستخدم التطبيق عادةً موارد ضئيلة لمتوسط حوالي 8 ساعات في الليل أثناء نومك. يعود هذا السلوك إلى حاجتنا للحفاظ على الجهاز يقظاً لإبقاء التطبيق نشطًا.\nللحصول على أداء مثالي، نوصي بالتأكد من أن جهازك مشحون بشكل كاف قبل استخدام التطبيق. بالإضافة إلى ذلك، يُنصح بإغلاق التطبيقات المفتوحة غير الضرورية قبل تشغيل التطبيق الخاص بنا.</string>
-    <string name="note_title_insufficient_ram">الذاكرة غير كافية</string>
-    <string name="note_content_insufficient_ram">في حالات عدم كفاية ذاكرة الوصول العشوائي في جهازك، قد يتوقف التطبيق عن العمل. لضمان استخدام التطبيق دون انقطاع، يُفضل إغلاق التطبيقات غير الضرورية لتحرير مساحة ذاكرة الوصول العشوائي.</string>
-    <string name="note_title_permission_required">إذن ضروري</string>
-    <string name="note_content_permission_required">ليتمكن التطبيق من العمل، يُرجى منح الإذن الضروري "إظهار الإشعارات".</string>
-
+    <string name="note_title_background_operation_explanation">Arka Plan İşlem Açıklaması</string>
+    <string name="note_content_background_operation_explanation">Arka planda çalışan uygulamalar, pil koruması için Android sistemi tarafından durdurulabilir (Pil Optimizasyonu). Bu, ekranınızı kapattıktan kısa bir süre sonra uygulama işlevlerinde aksaklıklara yol açabilir.\nBu tür durumların önlenmesi için bu uygulama için pil optimizasyonunu devre dışı bırakmak ve ayrıca cihazınızın üreticisine ve Android sürümüne göre belirli ayarları yapmak gereklidir.\n\nBu durumu düzeltmenize yardımcı olmak için adım adım rehberler aşağıda bulunmaktadır.\n\nLütfen cihazınızın özellikleriyle uyumlu olan talimatları izleyin:\n\n..specifications..\nİlk rehber: Dontkillmyapp.com\nİkinci rehber: Bark.us</string>
+    <string name="note_title_battery_saver_mode_impact">Güç Tasarrufu Modu Etkisi</string>
+    <string name="note_content_battery_saver_mode_impact">Güç tasarrufu modu açık olduğunda uygulamanın işlevselliği negatif yönde etkilenebilir.</string>
+    <string name="note_title_power_intensive_app_alert">Güç Harcaması Yüksek Uygulama Uyarısı</string>
+    <string name="note_content_power_intensive_app_alert">Cihazınızın sisteminden, uygulama hakkında mesajlar alabilirsiniz. Örneğin, \"Uygulama, sisteminizi aktif tutarak pilinizi tüketebilir. Kapatmak ister misiniz\?\" veya \"Arka planda sık sık yenileniyor. Güç tasarrufu için zorla durdurun.\"\nBu mesajlar endişe kaynağı değildir, çünkü uygulama ortalama 8 saat gece uykusu boyunca çalışmak için genellikle minimum kaynak kullanır.\nBu davranış, sensörü aktif tutabilmek için cihazı uyanık tutmak gerektiğinden kaynaklanır.\n\nEn iyi performans için, uygulamayı kullanmadan önce cihazınızın yeterince şarj edildiğinden emin olmanızı öneririz. Ayrıca, uygulamamızı başlatmadan önce kullanmakta olmadığınız açık uygulamaları kapatmak faydalıdır.</string>
+    <string name="note_title_insufficient_ram">Yetersiz Bellek</string>
+    <string name="note_content_insufficient_ram">Cihazınızın belleği yetersiz olduğunda, uygulama çalışmayı durdurabilir.\nKesintisiz uygulama kullanımı sağlamak için kullanmakta olmadığınız uygulamaları kapatmayı dolayısı ile bellek alanını boşaltmayı öneririz.</string>
+    <string name="note_title_permission_required">Gerekli izin</string>
+    <string name="note_content_permission_required">Uygulamanın çalışabilmesi için lütfen gerekli olan \"Bildirimleri Göster\" iznini verin.</string>
 
 </resources>
