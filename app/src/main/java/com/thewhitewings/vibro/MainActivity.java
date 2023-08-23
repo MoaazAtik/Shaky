@@ -422,7 +422,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // OnDismissListener will be applied when btnCancel, device's back button, or outside the dialog box is clicked
+        // OnDismissListener will be applied when btnCancel, device's back button, or outside the dialog box is clicked.
+        // Eventually showMoreInformationDialog() is called in all situations even if btnFix is clicked.
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

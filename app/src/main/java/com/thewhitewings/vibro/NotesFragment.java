@@ -19,13 +19,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
 public class NotesFragment extends Fragment {
 
     private static final String TAG = "NotesFragment";
 
-    private TextView content1, content2, content3, content4, content5;
+    private AppCompatTextView content1, content2, content3, content4, content5;
     private ImageView icon1, icon2, icon3, icon4, icon5;
 
     @Nullable
@@ -58,7 +59,7 @@ public class NotesFragment extends Fragment {
         titleView4.setOnClickListener(v -> toggleExpand(content4, icon4));
         titleView5.setOnClickListener(v -> toggleExpand(content5, icon5));
 
-        // Show 'Permission Required' note only for Android 13, API >= 33
+        // Hide 'Permission Required' note for Android < 13, API < 33
         if (Build.VERSION.SDK_INT < 33)
             titleView5.setVisibility(View.GONE);
 
@@ -94,11 +95,11 @@ public class NotesFragment extends Fragment {
         // Create a SpannableStringBuilder which allows to change the markup and content of a text
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(contentText1);
 
-        // Create a ClickableSpan for the link
-        ClickableSpan linkClickableSpan = new ClickableSpan() {
+        // Create a ClickableSpan for the first link
+        ClickableSpan linkClickableSpan1 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                // Handle the link click here
+                // Handle the link click
                 String manufacturer = android.os.Build.MANUFACTURER.toLowerCase();
                 String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
                 Uri uri = Uri.parse(websiteUrl);
@@ -108,10 +109,29 @@ public class NotesFragment extends Fragment {
                 }
             }
         };
-        // Apply the ClickableSpan to the link part
-        spannableStringBuilder.setSpan(linkClickableSpan,
+        // Apply the ClickableSpan to the first link part
+        spannableStringBuilder.setSpan(linkClickableSpan1,
                 contentText1.indexOf("Dontkillmyapp.com"),
                 contentText1.indexOf("Dontkillmyapp.com") + "Dontkillmyapp.com".length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Create a ClickableSpan for the second link
+        ClickableSpan linkClickableSpan2 = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                // Handle the link click
+                String websiteUrl = "https://support.bark.us/hc/en-us/articles/11484413158669#find-your-kid-s-android-version-0";
+                Uri uri = Uri.parse(websiteUrl);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        };
+        // Apply the ClickableSpan to the second link part
+        spannableStringBuilder.setSpan(linkClickableSpan2,
+                contentText1.indexOf("Bark.us"),
+                contentText1.indexOf("Bark.us") + "Bark.us".length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Apply the larger text size to the Device's specifications part
