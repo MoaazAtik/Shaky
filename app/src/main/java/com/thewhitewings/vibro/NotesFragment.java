@@ -101,6 +101,7 @@ public class NotesFragment extends Fragment {
             public void onClick(@NonNull View widget) {
                 // Handle the link click
                 String manufacturer = android.os.Build.MANUFACTURER.toLowerCase();
+                manufacturer = manufacturer.replace('ı', 'i');
                 String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
                 Uri uri = Uri.parse(websiteUrl);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
@@ -21,7 +20,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.media.AudioManager;
@@ -31,7 +29,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -61,10 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TextSwitcher textSwitcher;
 
-    private static Context contex;
-    public static Context getContex() {
-        return contex; }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
         }
-
-        contex = getApplicationContext();
 
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
@@ -443,6 +434,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void openBatteryOptimizationWebsite() {
         String manufacturer = android.os.Build.MANUFACTURER.toLowerCase();
+
+        manufacturer = manufacturer.replace('ı', 'i');
 
         String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
 
