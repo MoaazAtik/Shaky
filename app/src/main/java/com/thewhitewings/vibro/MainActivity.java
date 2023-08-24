@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
     private TextSwitcher textSwitcher;
 
+    private static Context contex;
+    public static Context getContex() {
+        return contex; }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
         }
+
+        contex = getApplicationContext();
 
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
