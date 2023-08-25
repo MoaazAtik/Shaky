@@ -33,7 +33,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_got_it"
         style="@style/Widget.Material3.Button"
-        android:layout_width="140dp"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/black"
@@ -43,5 +43,6 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_message" />
+<!--        android:layout_width="140dp"-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

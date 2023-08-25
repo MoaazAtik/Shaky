@@ -527,6 +527,12 @@ public class MainActivity extends AppCompatActivity {
                 return "Q";
             case "11":
                 return "R";
+            case "12":
+                return "S";
+            case "13":
+                return "Tiramisu";
+            case "14":
+                return "Upside Down Cake";
             default:
                 return "Unknown";
         }

@@ -79,7 +79,7 @@
         android:text="@string/on"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="36sp"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline_status_bottom" />
@@ -93,7 +93,7 @@
         android:text="@string/off"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="36sp"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_on" />
