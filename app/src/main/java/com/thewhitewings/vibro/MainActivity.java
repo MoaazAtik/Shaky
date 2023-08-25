@@ -489,13 +489,20 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // getDeviceSpecs()
     public static String getDeviceSpecs() {
+        // Get device's manufacturer
         String manufacturer = android.os.Build.MANUFACTURER.toUpperCase();
+        // Get device's version name
         String versionName = getVersionName();
+        // Get device's version release number
         String versionRelease = Build.VERSION.RELEASE;
+        // Return device's manufacturer, version name, and release
         return manufacturer + " • Android " + versionName + " " + versionRelease;
     }
 
+    // getVersionName()
+    // Get version name by converting version release number to version name
     private static String getVersionName() {
         String versionRelease = Build.VERSION.RELEASE;
 
@@ -525,6 +532,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // showMoreInformationDialog()
+    // Show the second dialog that refers to 'Important notes' section in the app
     private void showMoreInformationDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

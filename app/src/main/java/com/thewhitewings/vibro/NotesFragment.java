@@ -35,8 +35,10 @@ public class NotesFragment extends Fragment {
 
         Log.d(TAG, "onCreateView: ");
 
+        // Inflate a custom layout for the fragment
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
 
+        // Initialize the UI elements
         RelativeLayout titleView1 = view.findViewById(R.id.title_view1);
         RelativeLayout titleView2 = view.findViewById(R.id.title_view2);
         RelativeLayout titleView3 = view.findViewById(R.id.title_view3);
@@ -53,22 +55,24 @@ public class NotesFragment extends Fragment {
         icon4 = view.findViewById(R.id.icon4);
         icon5 = view.findViewById(R.id.icon5);
 
+        // Call toggleExpand() when the notes' titles are clicked
         titleView1.setOnClickListener(v -> toggleExpand(content1, icon1));
         titleView2.setOnClickListener(v -> toggleExpand(content2, icon2));
         titleView3.setOnClickListener(v -> toggleExpand(content3, icon3));
         titleView4.setOnClickListener(v -> toggleExpand(content4, icon4));
         titleView5.setOnClickListener(v -> toggleExpand(content5, icon5));
 
-        // Hide 'Permission Required' note for Android < 13, API < 33
+        // Hide 'Permission Required' note for Android < 13, API < 33 because it's not needed
         if (Build.VERSION.SDK_INT < 33)
             titleView5.setVisibility(View.GONE);
 
+        // Make some edits to the content of the first note
         editContent1();
 
         return view;
     }
 
-
+    // toggleExpand()
     private void toggleExpand(TextView content,ImageView icon) {
         if (content.getVisibility() == View.VISIBLE) { // collapsed note
             // dismiss the note
@@ -83,6 +87,9 @@ public class NotesFragment extends Fragment {
         }
     }
 
+    // editContent1()
+    // Edit the content of the first note
+    // Show the device specifications and increase their font size, and hyperlink the web links by adding clickable spans to them
     private void editContent1() {
 
         // Initialize the content text
