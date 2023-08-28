@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,8 +113,10 @@ public class NotesFragment extends Fragment {
                 String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
                 Uri uri = Uri.parse(websiteUrl);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                try {
                     startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
@@ -131,8 +134,10 @@ public class NotesFragment extends Fragment {
                 String websiteUrl = "https://support.bark.us/hc/en-us/articles/11484413158669#find-your-kid-s-android-version-0";
                 Uri uri = Uri.parse(websiteUrl);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                try {
                     startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
