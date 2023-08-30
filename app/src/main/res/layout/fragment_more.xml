@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fragment_background_gradient"
@@ -40,5 +41,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_tone" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_notes"
+        android:layout_width="330dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/btns_fragment"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center"
+        android:text="@string/important_notes_sentence"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_feedback" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_notes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_notes"
+        tools:name="com.thewhitewings.vibro.NotesFragment"
+        android:elevation="3dp"
+        tools:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

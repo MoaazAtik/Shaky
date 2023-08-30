@@ -2,6 +2,7 @@
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
+    <!-- The initial transition (initial to active) -->
     <Transition
         motion:autoTransition="animateToEnd"
         motion:constraintSetEnd="@+id/active"
@@ -15,6 +16,7 @@
         </KeyFrameSet>
     </Transition>
 
+    <!-- The activation transition (inactive to active) -->
     <Transition
         motion:constraintSetEnd="@id/active"
         motion:constraintSetStart="@id/inactive"
@@ -31,6 +33,7 @@
         </KeyFrameSet>
     </Transition>
 
+    <!-- The inactivation transition (active to inactive) -->
     <Transition
         motion:constraintSetEnd="@+id/inactive"
         motion:constraintSetStart="@id/active"
@@ -48,6 +51,7 @@
     </Transition>
 
 
+    <!-- Initial constraints (before initialization) -->
     <ConstraintSet android:id="@+id/initial">
         <Constraint
             android:id="@+id/btn_on"
@@ -128,6 +132,7 @@
             motion:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
+    <!-- Active state constraints -->
     <ConstraintSet android:id="@+id/active">
         <Constraint
             android:id="@+id/btn_on"
@@ -193,6 +198,7 @@
             motion:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
+    <!-- Inactive state constraints -->
     <ConstraintSet android:id="@+id/inactive">
         <Constraint
             android:id="@+id/btn_on"

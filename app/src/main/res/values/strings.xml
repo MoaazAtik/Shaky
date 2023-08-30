@@ -25,4 +25,33 @@
     <string name="more_actions">More actions</string>
     <string name="adjust_sensitivity">Adjust sensitivity</string>
     <string name="adjust_volume">Adjust volume</string>
+
+    <string name="send_feedback_email_app_chooser">Send Feedback</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_title_battery_optimization">Battery Optimization</string>
+    <string name="dialog_content_battery_optimization">In order for the app to function properly, it\'s important to make a few adjustments that allow it to run in the background.\n\nKindly click the button below and follow the steps tailored to your device specifications.</string>
+    <string name="android_version_placeholder" translatable="false">Android Version</string>
+    <string name="dont_show_again">Don\'t show again</string>
+    <string name="cancel">Cancel</string>
+    <string name="lets_fix_it">Let\'s fix it</string>
+    <string name="dialog_title_important_notes">Important Notes</string>
+    <string name="dialog_content_important_notes">You can find detailed instructions under the \'Important Notes\' section within this app.</string>
+    <string name="got_it">Got it</string>
+
+    <string name="important_notes_sentence">Important notes</string>
+
+    <string name="content_description_show_note">Show note</string>
+
+    <!-- Notes -->
+    <string name="note_title_background_operation_explanation">Background Operation Explanation</string>
+    <string name="note_content_background_operation_explanation">Apps running in the background may be halted by the Android system for battery preservation (Battery Optimization). This could lead to disruptions in app functionality shortly after your screen turns off.\nTo prevent such occurrences, it\'s important to deactivate battery optimization for this app, in addition to adjusting specific settings based on your device\'s manufacturer and Android version.\n\nStep-by-step guides is here to assist you in rectifying this situation.\n\nPlease follow the instructions that align with your device\'s specifications:\n\n..specifications..\nThe first guide: Dontkillmyapp.com \nThe second guide: Bark.us </string>
+    <string name="note_title_battery_saver_mode_impact">Battery-Saver Mode Impact</string>
+    <string name="note_content_battery_saver_mode_impact">Please be aware that the app\'s functionality might be affected when the device is in battery-saver mode.</string>
+    <string name="note_title_power_intensive_app_alert">Power-Intensive App Alert</string>
+    <string name="note_content_power_intensive_app_alert">You may receive messages from your device\'s system regarding the app, such as \'The app may drain your battery by keeping your system awake. Would you like to close it\?\' or \'Frequently refreshes in the background. Force stop to save power.\'\nThese messages are not a cause for concern since the app typically utilizes minimal resources, averaging around 8 hours per night while you\'re asleep.\nThis behavior is due to our need to maintain a wake lock to keep the sensor active.\n\nFor optimal performance, we recommend ensuring your device is adequately charged before using the app. Additionally, consider closing unnecessary running apps before launching ours.</string>
+    <string name="note_title_insufficient_ram">Insufficient RAM</string>
+    <string name="note_content_insufficient_ram">In instances where your device\'s RAM is insufficient, the app may cease to function.\nTo ensure uninterrupted app usage, consider closing unnecessary applications to free up RAM space.</string>
+    <string name="note_title_permission_required">Permission Required</string>
+    <string name="note_content_permission_required">For the app to be able to function, please grant the essential \'Show Notification\' permission.</string>
 </resources>

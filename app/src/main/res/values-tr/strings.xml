@@ -24,4 +24,31 @@
     <string name="this_is_the_channel_of_alarm_notifications">Bu alarm bildirimleri kanalıdır</string>
     <string name="adjust_sensitivity">Duyarlılığı ayarla</string>
     <string name="adjust_volume">Ses düzeyini ayarla</string>
+
+    <string name="send_feedback_email_app_chooser">Geri bildirim gönder</string>
+    <string name="important_notes_sentence">Önemli Notlar</string>
+    <string name="content_description_show_note">Notu göster</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_title_battery_optimization">Pil Optimizasyonu</string>
+    <string name="dialog_content_battery_optimization">Uygulamanın düzgün çalışabilmesi için arka planda çalışmasına izin veren bazı düzenlemeler yapmak gereklidir.\n\nLütfen aşağıdaki düğmeye tıklayın ve cihazınızın özelliklerine uygun adımları izleyin.</string>
+    <string name="dont_show_again">Bir daha gösterme</string>
+    <string name="cancel">İptal</string>
+    <string name="lets_fix_it">Düzeltelim</string>
+    <string name="dialog_title_important_notes">Önemli Notlar</string>
+    <string name="dialog_content_important_notes">Detaylı talimatları bu uygulamanın \"Önemli Notlar\" bölümünde bulabilirsiniz.</string>
+    <string name="got_it">Tamam</string>
+
+    <!-- Notes -->
+    <string name="note_title_background_operation_explanation">Arka Plan İşlem Açıklaması</string>
+    <string name="note_content_background_operation_explanation">Arka planda çalışan uygulamalar, pil koruması için Android sistemi tarafından durdurulabilir (Pil Optimizasyonu). Bu, ekranınızı kapattıktan kısa bir süre sonra uygulama işlevlerinde aksaklıklara yol açabilir.\nBu tür durumların önlenmesi için bu uygulama için pil optimizasyonunu devre dışı bırakmak ve ayrıca cihazınızın üreticisine ve Android sürümüne göre belirli ayarları yapmak gereklidir.\n\nBu durumu düzeltmenize yardımcı olmak için adım adım rehberler aşağıda bulunmaktadır.\n\nLütfen cihazınızın özellikleriyle uyumlu olan talimatları izleyin:\n\n..specifications..\nİlk rehber: Dontkillmyapp.com \nİkinci rehber: Bark.us </string>
+    <string name="note_title_battery_saver_mode_impact">Güç Tasarrufu Modu Etkisi</string>
+    <string name="note_content_battery_saver_mode_impact">Güç tasarrufu modu açık olduğunda uygulamanın işlevselliği negatif yönde etkilenebilir.</string>
+    <string name="note_title_power_intensive_app_alert">Güç Harcaması Yüksek Uygulama Uyarısı</string>
+    <string name="note_content_power_intensive_app_alert">Cihazınızın sisteminden, uygulama hakkında mesajlar alabilirsiniz. Örneğin, \"Uygulama, sisteminizi aktif tutarak pilinizi tüketebilir. Kapatmak ister misiniz\?\" veya \"Arka planda sık sık yenileniyor. Güç tasarrufu için zorla durdurun.\"\nBu mesajlar endişe kaynağı değildir, çünkü uygulama ortalama 8 saat gece uykusu boyunca çalışmak için genellikle minimum kaynak kullanır.\nBu davranış, sensörü aktif tutabilmek için cihazı uyanık tutmak gerektiğinden kaynaklanır.\n\nEn iyi performans için, uygulamayı kullanmadan önce cihazınızın yeterince şarj edildiğinden emin olmanızı öneririz. Ayrıca, uygulamamızı başlatmadan önce kullanmakta olmadığınız açık uygulamaları kapatmak faydalıdır.</string>
+    <string name="note_title_insufficient_ram">Yetersiz Bellek</string>
+    <string name="note_content_insufficient_ram">Cihazınızın belleği yetersiz olduğunda, uygulama çalışmayı durdurabilir.\nKesintisiz uygulama kullanımı sağlamak için kullanmakta olmadığınız uygulamaları kapatmayı dolayısı ile bellek alanını boşaltmayı öneririz.</string>
+    <string name="note_title_permission_required">Gerekli izin</string>
+    <string name="note_content_permission_required">Uygulamanın çalışabilmesi için lütfen gerekli olan \"Bildirimleri Göster\" iznini verin.</string>
+
 </resources>
