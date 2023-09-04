@@ -50,5 +50,6 @@
     <string name="note_content_insufficient_ram">في حالات عدم كفاية ذاكرة الوصول العشوائي في جهازك، قد يتوقف التطبيق عن العمل.\nلضمان استخدام التطبيق دون انقطاع، يُفضل إغلاق التطبيقات غير الضرورية لتحرير مساحة ذاكرة الوصول العشوائي.</string>
     <string name="note_title_permission_required">إذن ضروري</string>
     <string name="note_content_permission_required">ليتمكن التطبيق من العمل، يُرجى منح الإذن الضروري \"إظهار الإشعارات\".</string>
-
+    <string name="note_title_privacy_policy">سياسة الخصوصية</string>
+    <string name="note_content_privacy_policy">افتح رابط سياسة الخصوصية:\nshaky-privacy-policy </string>
 </resources>

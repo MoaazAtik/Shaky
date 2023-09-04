@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -27,8 +28,8 @@ public class NotesFragment extends Fragment {
 
     private static final String TAG = "NotesFragment";
 
-    private AppCompatTextView content1, content2, content3, content4, content5;
-    private ImageView icon1, icon2, icon3, icon4, icon5;
+    private AppCompatTextView content1, content2, content3, content4, content5, content6;
+    private ImageView icon1, icon2, icon3, icon4, icon5, icon6;
 
     @Nullable
     @Override
@@ -45,16 +46,19 @@ public class NotesFragment extends Fragment {
         RelativeLayout titleView3 = view.findViewById(R.id.title_view3);
         RelativeLayout titleView4 = view.findViewById(R.id.title_view4);
         RelativeLayout titleView5 = view.findViewById(R.id.title_view5);
+        RelativeLayout titleView6 = view.findViewById(R.id.title_view6);
         content1 = view.findViewById(R.id.content1);
         content2 = view.findViewById(R.id.content2);
         content3 = view.findViewById(R.id.content3);
         content4 = view.findViewById(R.id.content4);
         content5 = view.findViewById(R.id.content5);
+        content6 = view.findViewById(R.id.content6);
         icon1 = view.findViewById(R.id.icon1);
         icon2 = view.findViewById(R.id.icon2);
         icon3 = view.findViewById(R.id.icon3);
         icon4 = view.findViewById(R.id.icon4);
         icon5 = view.findViewById(R.id.icon5);
+        icon6 = view.findViewById(R.id.icon6);
 
         // Call toggleExpand() when the notes' titles are clicked
         titleView1.setOnClickListener(v -> toggleExpand(content1, icon1));
@@ -62,13 +66,17 @@ public class NotesFragment extends Fragment {
         titleView3.setOnClickListener(v -> toggleExpand(content3, icon3));
         titleView4.setOnClickListener(v -> toggleExpand(content4, icon4));
         titleView5.setOnClickListener(v -> toggleExpand(content5, icon5));
+        titleView6.setOnClickListener(v -> toggleExpand(content6, icon6));
 
         // Hide 'Permission Required' note for Android < 13, API < 33 because it's not needed
         if (Build.VERSION.SDK_INT < 33)
-            titleView5.setVisibility(View.GONE);
+            view.findViewById(R.id.card5).setVisibility(View.GONE);
 
         // Make some edits to the content of the first note
         editContent1();
+
+        // Add a hyperlink to the content of the sixth note
+        editContent6();
 
         return view;
     }
@@ -158,5 +166,42 @@ public class NotesFragment extends Fragment {
         content1.setText(spannableStringBuilder);
         content1.setMovementMethod(LinkMovementMethod.getInstance());
     }//editContent1()
+
+    // editContent6()
+    // Edit the content of the sixth note
+    // Show the device specifications and increase their font size, and hyperlink the web links by adding clickable spans to them
+    private void editContent6() {
+
+        // Initialize the content text
+        String contentText6 = getString(R.string.note_content_privacy_policy);
+
+        // Create a SpannableString which allows to change the markup of a text
+        SpannableString spannableString = new SpannableString(contentText6);
+
+        // Create a ClickableSpan for the link
+        ClickableSpan linkClickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                // Handle the link click
+                String websiteUrl = "https://sites.google.com/view/shaky-privacy-policy";
+                Uri uri = Uri.parse(websiteUrl);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        // Apply the ClickableSpan to the link part
+        spannableString.setSpan(linkClickableSpan,
+                contentText6.indexOf("shaky-privacy-policy"),
+                contentText6.indexOf("shaky-privacy-policy") + "shaky-privacy-policy".length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Update the TextView with the updated SpannableString
+        content6.setText(spannableString);
+        content6.setMovementMethod(LinkMovementMethod.getInstance());
+    }
 
 }

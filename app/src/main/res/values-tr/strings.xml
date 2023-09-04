@@ -50,5 +50,6 @@
     <string name="note_content_insufficient_ram">Cihazınızın belleği yetersiz olduğunda, uygulama çalışmayı durdurabilir.\nKesintisiz uygulama kullanımı sağlamak için kullanmakta olmadığınız uygulamaları kapatmayı dolayısı ile bellek alanını boşaltmayı öneririz.</string>
     <string name="note_title_permission_required">Gerekli izin</string>
     <string name="note_content_permission_required">Uygulamanın çalışabilmesi için lütfen gerekli olan \"Bildirimleri Göster\" iznini verin.</string>
-
+    <string name="note_title_privacy_policy">Gizlilik Politikası</string>
+    <string name="note_content_privacy_policy">Gizlilik politikası bağlantısını aç:\nshaky-privacy-policy </string>
 </resources>

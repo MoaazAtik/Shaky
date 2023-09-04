@@ -54,4 +54,6 @@
     <string name="note_content_insufficient_ram">In instances where your device\'s RAM is insufficient, the app may cease to function.\nTo ensure uninterrupted app usage, consider closing unnecessary applications to free up RAM space.</string>
     <string name="note_title_permission_required">Permission Required</string>
     <string name="note_content_permission_required">For the app to be able to function, please grant the essential \'Show Notification\' permission.</string>
+    <string name="note_title_privacy_policy">Privacy Policy</string>
+    <string name="note_content_privacy_policy">Open the privacy policy link:\nshaky-privacy-policy </string>
 </resources>
