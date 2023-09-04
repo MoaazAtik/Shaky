@@ -1,4 +1,4 @@
-package com.thewhitewings.vibro;
+package com.thewhitewings.shaky;
 
 import org.junit.Test;
 

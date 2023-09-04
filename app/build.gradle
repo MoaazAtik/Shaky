@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.thewhitewings.vibro'
+    namespace 'com.thewhitewings.shaky'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.thewhitewings.vibro"
+        applicationId "com.thewhitewings.shaky"
         minSdk 21
         targetSdk 33
         versionCode 3

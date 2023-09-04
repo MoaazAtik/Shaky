@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Vibro</string>
+    <string name="app_name">Shaky</string>
     <string name="status_active">فعال</string>
     <string name="status_inactive">معطل</string>
     <string name="on">تشغيل</string>
@@ -8,7 +8,7 @@
     <string name="sensitivity">الحساسية</string>
     <string name="volume">مستوى الصوت</string>
 
-    <string name="email_subject">تعليقات واقتراحات بخصوص Vibro</string>
+    <string name="email_subject">تعليقات واقتراحات بخصوص Shaky</string>
     <string name="email_body">
         [نحن نرحب بمشاركة تعليقاتك، واقتراحات التحسين، والإبلاغ عن أي أخطاء أو مشاكل في الاستخدام، أو تقديم أي تعليقات إضافية!]
     </string>
@@ -18,8 +18,8 @@
     <string name="more_actions">إجراءات أخرى</string>
     <string name="no_email_app_found">لم يتم العثور على تطبيق البريد الإلكتروني</string>
     <string name="your_feedback_is_welcome_at">نرحب بملاحظاتك على البريد الإلكتروني</string>
-    <string name="vibro_is_active">فايبرو فعال</string>
-    <string name="click_to_get_back_to_vibro">انقر للرجوع إلى فايبرو</string>
+    <string name="shaky_is_active">فايبرو فعال</string>
+    <string name="click_to_get_back_to_shaky">انقر للرجوع إلى فايبرو</string>
     <string name="alarm_notification">إشعار المنبه</string>
     <string name="this_is_the_channel_of_alarm_notifications">هذه قناة إشعارات المنبه</string>
     <string name="adjust_sensitivity">اضبط الحساسية</string>

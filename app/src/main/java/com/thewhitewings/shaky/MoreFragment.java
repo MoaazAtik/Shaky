@@ -1,4 +1,4 @@
-package com.thewhitewings.vibro;
+package com.thewhitewings.shaky;
 
 import android.app.Activity;
 import android.content.ContentResolver;

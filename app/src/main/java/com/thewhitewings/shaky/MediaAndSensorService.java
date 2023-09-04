@@ -1,4 +1,4 @@
-package com.thewhitewings.vibro;
+package com.thewhitewings.shaky;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -106,7 +106,7 @@ public class MediaAndSensorService extends Service {
 
         // Initialize and acquire a partial wake lock to keep the app running when the device goes into sleep or doze mode
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "vibro:service");
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "shaky:service");
         wakeLock.acquire();
 
         // Promote the service to a Foreground service
@@ -265,8 +265,8 @@ public class MediaAndSensorService extends Service {
 
         // Create the notification
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.vibro_is_active))
-                .setContentText(getString(R.string.click_to_get_back_to_vibro))
+                .setContentTitle(getString(R.string.shaky_is_active))
+                .setContentText(getString(R.string.click_to_get_back_to_shaky))
                 .setSmallIcon(R.drawable.app_icon_notification)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)

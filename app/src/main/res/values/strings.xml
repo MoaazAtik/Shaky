@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Vibro</string>
+    <string name="app_name">Shaky</string>
     <string name="status_active">Active</string>
     <string name="status_inactive">inactive</string>
     <string name="on">On</string>
@@ -8,7 +8,7 @@
     <string name="volume">Volume</string>
 
     <string name="recipient_email_address" translatable="false">info.thewhitewings@gmail.com</string>
-    <string name="email_subject">Feedback and Suggestions for Vibro</string>
+    <string name="email_subject">Feedback and Suggestions for Shaky</string>
     <string name="email_body">
         [You are welcome to share your Feedback, suggest Enhancements, report any bugs or usability Issues, and provide any additional Comments!]
     </string>
@@ -17,8 +17,8 @@
     <string name="send_us_feedback">Send us feedback</string>
     <string name="no_email_app_found">No email app found</string>
     <string name="your_feedback_is_welcome_at">Your feedback is welcome at</string>
-    <string name="vibro_is_active">Vibro is Active</string>
-    <string name="click_to_get_back_to_vibro">Click to get back to Vibro</string>
+    <string name="shaky_is_active">Shaky is Active</string>
+    <string name="click_to_get_back_to_shaky">Click to get back to Shaky</string>
     <string name="alarm_notification">Alarm Notification</string>
     <string name="this_is_the_channel_of_alarm_notifications">This is the channel of alarm notifications</string>
 

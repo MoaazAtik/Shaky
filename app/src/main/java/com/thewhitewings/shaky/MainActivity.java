@@ -1,4 +1,4 @@
-package com.thewhitewings.vibro;
+package com.thewhitewings.shaky;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -563,7 +563,7 @@ public class MainActivity extends AppCompatActivity {
 
     //helper method for cropping mService's name in the logs
 //    public String c(Object objectName) {
-//        return objectName.toString().replace("com.thewhitewings.vibro.", "");
+//        return objectName.toString().replace("com.thewhitewings.shaky.", "");
 //    }
 
 }//MainActivity
