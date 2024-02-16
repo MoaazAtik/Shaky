@@ -220,6 +220,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Enable btnOff after The initial transition ends
+        new Handler(Looper.getMainLooper()).postDelayed(
+                () -> btnOff.setEnabled(true),
+                3000);
+
         // Show battery optimization dialog
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
