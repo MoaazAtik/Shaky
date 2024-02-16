@@ -28,7 +28,7 @@ public class NotesFragment extends Fragment {
 
     private static final String TAG = "NotesFragment";
 
-    private AppCompatTextView content1, content2, content3, content4, content5, content6;
+    private TextView content1, content2, content3, content4, content5, content6;
     private ImageView icon1, icon2, icon3, icon4, icon5, icon6;
 
     @Nullable
