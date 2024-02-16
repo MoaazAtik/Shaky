@@ -164,16 +164,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <ImageButton
         android:id="@+id/btn_more"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="22dp"
         android:layout_marginEnd="30dp"
+        app:srcCompat="@drawable/baseline_more"
+        android:background="@drawable/bg_ripple_btn_more"
         android:contentDescription="@string/more_actions"
-        android:background="@drawable/baseline_more"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

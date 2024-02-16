@@ -38,6 +38,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Button btnOn, btnOff;
     private SeekBar seekSensitivity, seekVolume;
-    private Button btnMore;
+    private ImageButton btnMore;
 
     public static MediaAndSensorService mService;
     // Initialize boolean mIsBound to track the service status
