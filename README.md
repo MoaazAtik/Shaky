@@ -30,22 +30,26 @@ So, I set out to create **Shaky**. My goal was to design an app that anyone coul
 
 ## Quick Start 🚀
 **Clone** the Repository or **Download Shaky** from Play Store, and **Run** the app on your device or emulator.
+
+After that:
 1. **Start Detection:** The detector will start monitoring **automatically**.
-2. **Enable Notifications:** Upon opening the app, grant permission for notifications.
+2. **Enable Notifications:** Upon opening the app, grant permission for notifications.<br>
 This allows Shaky to alert you when vibrations are detected.
 - **To Stop Detection:** Tap the *OFF* button at the middle of the screen.
-- **Set Sensitivity:** Adjust the sensitivity level of the vibration detector with the *Sensitivity slider*. More instructions in the [Usage](#usage) section.
-- **Adjust Alarm Volume:** Set the volume level for the alert alarm.
+- **Set Sensitivity:** Adjust the sensitivity level of the vibration detector with the *Sensitivity slider*. More instructions in the [Usage](#usage-) section.
+- **Adjust Alarm Volume:** Set the volume level for the alert alarm.<br>
 Choose a volume that ensures you'll wake up or be alerted during vibrations.
 
 <br>
 
 ## Usage 📱
-- **Multilingual support:** Available in **English**, **Arabic**, and **Turkish**.
+- **Multilingual support:** Available in **English**, **Arabic**, and **Turkish**.<br>
 It correspondes to your device language.
-- **Monitoring Vibrations:** After openning Shaky, it will start monitoring vibrations **automatically**.
+- **Monitoring Vibrations:** After openning Shaky, it will start monitoring vibrations **automatically**.<br>
 Keep the app running in the background, and it will continuously detect any vibrations.
 - You can **return** to Shaky effortlessly through its **Notification**.
+
+<br>
 
 Interacting with the Main Screen:
    - **Status Indicator:** Check the status indicator on the main screen to see if the app is actively monitoring vibrations.
@@ -54,15 +58,21 @@ Interacting with the Main Screen:
    Start with the maximum sensitivity and adjust it gradually to suit your preference. You can increase sensitivity to detect weaker vibrations or decrease it to avoid false alarms.
    - **Adjust Alarm Volume:** Slide the *Alarm volume slider* to set your preferred alarm volume level.
    - **Access Additional Functions:** Tap the button on the bottom right corner of the main screen to access more functions.
-   
+ 
+<br>
+  
 Accessing Additional Features:
    - **Changing Alarm Tone:** Customize the alarm tone by tapping on the corresponding button and selecting from available options.
    - **Providing Feedback:** Share your thoughts or report issues by tapping on the feedback button, which will direct you to your preferred email app.
    - **Accessing Important Notes:** Navigate to the Notes Screen by tapping on the corresponding button.
-   
+
+<br>
+ 
 On the Notes Screen:
 - You will find essential notes about using the app. Here, you'll discover instructions on overcoming **common obstacles** you may face, such as background operation disruptions.
 - Additiaonally you'll find a reference to the app's **Privacy Policy**.
+
+<br>
 
 Shaky operates offline and features a straightforward UI, making it accessible for **Everyone Anytime, Anywhere.**
 
@@ -72,9 +82,6 @@ Shaky operates offline and features a straightforward UI, making it accessible f
 Click the image below to watch the full app demo on YouTube ⬇️
 
 [![Full demo](https://github.com/TheMaestroCo/Shaky/assets/75887565/88cff34e-dd5d-4988-947e-444d530a74d7)](https://youtu.be/-XRmLw_ChLI)
-
-<br>
-
 
 ## Utilized Technologies 🔧
 - **Programming Language:** Java
