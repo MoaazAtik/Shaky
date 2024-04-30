@@ -74,6 +74,13 @@ On the Notes Screen:
 
 <br>
 
+Ensuring proper app functionality when the **screen turns off** ❕
+- Apps running in the background may be halted by the Android system for battery preservation. This could lead to disruptions in app functionality shortly after your screen turns off.
+- To prevent such occurrences, you should adjust specific settings based on your *device's manufacturer* and *Android version*. While this process may seem challenging in some cases, unfortunately, these settings can only be modified manually by the user.
+- To overcome this obstacle, click the *"Let's fix it"* button on the dialog that appears upon app launch, or refer to the **"Background Operation Explanation"** note in the **"Important Notes"** section. You'll find **step-by-step guides** to assist you in rectifying this situation.
+
+<br>
+
 Shaky operates offline and features a straightforward UI, making it accessible for **Everyone Anytime, Anywhere.**
 
 <br>
