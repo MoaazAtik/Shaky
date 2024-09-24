@@ -14,7 +14,7 @@ Supported by **The White Wings**🪽. Play Store [link](https://play.google.com/
 3. [Usage](#usage-)
 4. [Demonstration](#demonstration-)
 5. [Utilized Technologies](#utilized-technologies-)
-6. [Main Files](#main-files-)
+6. [Core Files](#core-files-)
 7. [Links to Check Out](#links-to-check-out-)
 
 <br>
@@ -101,7 +101,7 @@ Click the image below to watch the full app demo on YouTube ⬇️
 
 <br>
 
-## Main Files 📁
+## Core Files 📁
 - [MainActivity.java](app/src/main/java/com/thewhitewings/shaky/MainActivity.java)
 - [activity_main.xml](app/src/main/res/layout/activity_main.xml)
 - [activity_main_scene.xml](app/src/main/res/xml/activity_main_scene.xml)<br><br>
@@ -115,8 +115,8 @@ Click the image below to watch the full app demo on YouTube ⬇️
 <br>
 
 ## Links to Check Out: 👍
-- My Developer Page [at](https://play.google.com/store/apps/dev?id=6456450686494659010) **Play Store**
-- Shaky [at](https://play.google.com/store/apps/details?id=com.thewhitewings.shaky) **Play Store**
+- My Developer Page [on](https://play.google.com/store/apps/dev?id=6456450686494659010) **Play Store**
+- Shaky [on](https://play.google.com/store/apps/details?id=com.thewhitewings.shaky) **Play Store**
 - Shaky [on](https://www.youtube.com/watch?v=DE-bHpHHT2Q) **YouTube**
 
 <br></br>
