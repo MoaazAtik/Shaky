@@ -17,14 +17,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
-public class NotesFragment extends Fragment {
+public class NotesFragmentOld extends Fragment {
 
     private static final String TAG = "NotesFragment";
 
@@ -104,9 +102,9 @@ public class NotesFragment extends Fragment {
         // Initialize the content text
         String contentText1 = getString(R.string.note_content_background_operation_explanation);
 
-//        String specs = MainActivity.getDeviceSpecs();
+        String specs = MainActivityOld.getDeviceSpecs();
         // Replace text "specifications" with the device's specifications
-//        contentText1 = contentText1.replace("..specifications..", specs);
+        contentText1 = contentText1.replace("..specifications..", specs);
 
         // Create a SpannableStringBuilder which allows to change the markup and content of a text
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(contentText1);
@@ -116,7 +114,7 @@ public class NotesFragment extends Fragment {
             @Override
             public void onClick(@NonNull View widget) {
                 // Handle the link click
-                String manufacturer = android.os.Build.MANUFACTURER.toLowerCase();
+                String manufacturer = Build.MANUFACTURER.toLowerCase();
                 manufacturer = manufacturer.replace('ı', 'i');
                 String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
                 Uri uri = Uri.parse(websiteUrl);
@@ -157,10 +155,10 @@ public class NotesFragment extends Fragment {
 
         // Apply the larger text size to the Device's specifications part
         AbsoluteSizeSpan textSizeSpan = new AbsoluteSizeSpan(18, true);
-//        spannableStringBuilder.setSpan(textSizeSpan,
-//                contentText1.indexOf(specs),
-//                contentText1.indexOf(specs) + specs.length(),
-//                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableStringBuilder.setSpan(textSizeSpan,
+                contentText1.indexOf(specs),
+                contentText1.indexOf(specs) + specs.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the TextView with the updated SpannableStringBuilder
         content1.setText(spannableStringBuilder);
