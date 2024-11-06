@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private TextSwitcher textSwitcher;
     private Button btnOn, btnOff;
-    private SeekBar seekSensitivity, seekVolume;
+    private SeekBar seekBarSensitivity, seekBarVolume;
     private ImageButton btnMore;
     private MotionLayout motionLayout;
     private MediaAndSensorViewModel mediaAndSensorViewModel;
@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher = findViewById(R.id.text_switcher);
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
-        seekSensitivity = findViewById(R.id.seek_sensitivity);
+        seekBarSensitivity = findViewById(R.id.seek_sensitivity);
         TextView txtSensitivity = findViewById(R.id.txt_sensitivity);
         TextView txtVolume = findViewById(R.id.txt_volume);
-        seekVolume = findViewById(R.id.seek_volume);
+        seekBarVolume = findViewById(R.id.seek_volume);
         btnMore = findViewById(R.id.btn_more);
         motionLayout = findViewById(R.id.motion_layout);
 
@@ -69,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
         setTextGradientColor(txtSensitivity);
         setTextGradientColor(txtVolume);
 
+        seekBarSensitivity.setProgress(
+                seekBarSensitivity.getMax() -
+                        mediaAndSensorViewModel.getUiState().getValue().getSensitivityThreshold()
+        );
+        seekBarSensitivity.setOnSeekBarChangeListener(seekBarChangeListener);
+
+//        seekBarVolume.setProgress(uiState.getVolume());
         setupUiStateObserver();
 
         // Request POST_NOTIFICATIONS permission for the foreground service
@@ -156,6 +163,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private final SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            mediaAndSensorViewModel.updateSensitivityThreshold(
+                    seekBarSensitivity.getMax() - progress
+            );
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {}
+    };
 
     @Override
     protected void onDestroy() {

@@ -5,11 +5,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class SensorHelper {
+
+    private static final String TAG = "SensorHelper";
 
     private final SensorManager sensorManager;
     private final Sensor accelerometer;
@@ -18,7 +21,7 @@ public class SensorHelper {
     private int currentAcceleration;
     private int lastAcceleration;
     private int magnitudeOfAcceleration;
-    private static final int SHAKE_THRESHOLD = 1;
+    private int sensitivityThreshold = 0;
     private final MutableLiveData<Boolean> isShaking = new MutableLiveData<>();
 
     public SensorHelper(Context context) {
@@ -47,6 +50,10 @@ public class SensorHelper {
         sensorManager.unregisterListener(sensorEventListener);
     }
 
+    public void updateSensitivityThreshold(int sensitivityThreshold) {
+        this.sensitivityThreshold = sensitivityThreshold;
+    }
+
 
     private void calculateChange(SensorEvent event) {
         double x = event.values[0];
@@ -60,7 +67,7 @@ public class SensorHelper {
         }
         lastAcceleration = currentAcceleration;
 
-        if (magnitudeOfAcceleration > SHAKE_THRESHOLD) {
+        if (magnitudeOfAcceleration > sensitivityThreshold) {
             isShaking.postValue(true);
         }
     }
