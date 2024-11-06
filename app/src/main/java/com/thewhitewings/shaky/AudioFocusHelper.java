@@ -64,7 +64,7 @@ public class AudioFocusHelper {
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
         new Handler(Looper.getMainLooper())
-                .postDelayed(this::stopMedia, 4000);
+                .postDelayed(this::stopMedia, 2000);
     }
 
     public void stopMedia() {

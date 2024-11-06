@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer;
 public class MediaAndSensorViewModel extends AndroidViewModel {
 
     private static final String TAG = "MediaAndSensorViewModel";
-    private final MutableLiveData<Boolean> isActive = new MutableLiveData<>();
+    private final MutableLiveData<MediaAndSensorUiState> uiState;
     private final SensorHelper sensorHelper;
     private final AudioFocusHelper audioFocusHelper;
     private final Context context;
@@ -24,11 +24,13 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         context = application;
         sensorHelper = new SensorHelper(context);
         audioFocusHelper = new AudioFocusHelper(context);
+        uiState = new MutableLiveData<>(new MediaAndSensorUiState(ActivationState.INITIALIZATION_TO_ACTIVE, 1, 10));
+
+        activate();
     }
 
-
-    public LiveData<Boolean> getIsActive() {
-        return isActive;
+    public LiveData<MediaAndSensorUiState> getUiState() {
+        return uiState;
     }
 
     public void activate() {
@@ -39,7 +41,14 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         sensorHelper.activateSensor();
         sensorHelper.getIsShaking().observeForever(shakingObserver);
 
-        isActive.setValue(true);
+        if (uiState.getValue().getActivationState() != ActivationState.INITIALIZATION_TO_ACTIVE)
+            uiState.setValue(
+                new MediaAndSensorUiState(
+                        ActivationState.MANUAL_INACTIVE_TO_ACTIVE,
+                        uiState.getValue().getSensitivityThreshold(),
+                        uiState.getValue().getVolume()
+                )
+            );
     }
 
     public void deactivate() {
@@ -52,7 +61,13 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         audioFocusHelper.stopMedia();
         audioFocusHelper.releaseAudioFocus();
 
-        isActive.setValue(false);
+        uiState.setValue(
+                new MediaAndSensorUiState(
+                        ActivationState.MANUAL_ACTIVE_TO_INACTIVE,
+                        uiState.getValue().getSensitivityThreshold(),
+                        uiState.getValue().getVolume()
+                )
+        );
     }
 
     private final Observer<Boolean> shakingObserver = new Observer<Boolean>() {

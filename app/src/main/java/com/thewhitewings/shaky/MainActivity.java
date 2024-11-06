@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnMore;
     private MotionLayout motionLayout;
     private MediaAndSensorViewModel mediaAndSensorViewModel;
+    private ActivationState currentActivationState = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,23 +60,16 @@ public class MainActivity extends AppCompatActivity {
         btnOff.setEnabled(true);
         btnOn.setOnClickListener(v -> {
             mediaAndSensorViewModel.activate();
-            animate(AppStateTransition.INACTIVE_TO_ACTIVE);
         });
 
         btnOff.setOnClickListener(v -> {
             mediaAndSensorViewModel.deactivate();
-            animate(AppStateTransition.ACTIVE_TO_INACTIVE);
         });
 
         setTextGradientColor(txtSensitivity);
         setTextGradientColor(txtVolume);
 
-        if (savedInstanceState == null) {
-            mediaAndSensorViewModel.activate();
-            animate(AppStateTransition.INITIALIZATION);
-        } else if (savedInstanceState.getBoolean("isActive")) {
-            animate(AppStateTransition.INITIALIZATION);
-        }
+        setupUiStateObserver();
 
         // Request POST_NOTIFICATIONS permission for the foreground service
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -110,24 +104,24 @@ public class MainActivity extends AppCompatActivity {
             return textView;
     }};
 
-    private void animate(AppStateTransition transition) {
+    private void animate(ActivationState transition) {
         Animation animationIn = AnimationUtils.loadAnimation(this, R.anim.animation_in);
         Animation animationOut = AnimationUtils.loadAnimation(this, R.anim.animation_out);
 
         textSwitcher.setInAnimation(animationIn);
         textSwitcher.setOutAnimation(animationOut);
 
-        if (transition == AppStateTransition.INITIALIZATION) { //app initiation (initial to active state)
+        if (transition == ActivationState.INITIALIZATION_TO_ACTIVE) { //app initiation (initial to active state)
 
             textSwitcher.setText(getString(R.string.status_active));
 
-        } else if (transition == AppStateTransition.INACTIVE_TO_ACTIVE) { //to active state (inactive to active state)
+        } else if (transition == ActivationState.MANUAL_INACTIVE_TO_ACTIVE) { //to active state (inactive to active state)
             motionLayout.setTransition(R.id.inactive, R.id.active);
             motionLayout.transitionToEnd();
 
             textSwitcher.setText(getString(R.string.status_active));
 
-        } else if (transition == AppStateTransition.ACTIVE_TO_INACTIVE) { //to inactive state (active to inactive state)
+        } else if (transition == ActivationState.MANUAL_ACTIVE_TO_INACTIVE) { //to inactive state (active to inactive state)
             motionLayout.setTransition(R.id.active, R.id.inactive);
             motionLayout.transitionToEnd();
 
@@ -137,11 +131,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private enum AppStateTransition {
-        INITIALIZATION,
-        ACTIVE_TO_INACTIVE,
-        INACTIVE_TO_ACTIVE
-    }
 
     private void setTextGradientColor(TextView textView) {
         int[] colors = { getResources().getColor(R.color.premium_white1),
@@ -155,6 +144,17 @@ public class MainActivity extends AppCompatActivity {
 
         textView.getPaint().setShader(shader); //sets the shader (color) of the text
         textView.setTextColor(getResources().getColor(R.color.white)); //sets the color of the text initially or if the shader failed to render
+    }
+
+    private void setupUiStateObserver() {
+        mediaAndSensorViewModel.getUiState().observe(this, uiState -> {
+
+            ActivationState newActivationState = uiState.getActivationState();
+            if (newActivationState != currentActivationState) {
+                animate(newActivationState);
+                currentActivationState = newActivationState;
+            }
+        });
     }
 
     @Override
