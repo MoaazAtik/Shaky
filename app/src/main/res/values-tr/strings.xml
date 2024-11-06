@@ -18,10 +18,10 @@
     <string name="more_actions">Diğer eylemler</string>
     <string name="no_email_app_found">E-posta uygulaması bulunamadı</string>
     <string name="your_feedback_is_welcome_at">Geri bildiriminizi memnuniyetle karşılıyoruz</string>
-    <string name="shaky_is_active">Shaky Aktiftir</string>
-    <string name="click_to_get_back_to_shaky">Shaky\'e dönmek için tıkla</string>
-    <string name="alarm_notification">Alarm Bildirimi</string>
-    <string name="this_is_the_channel_of_alarm_notifications">Bu alarm bildirimleri kanalıdır</string>
+    <string name="alarm_notification_title">Shaky Aktiftir</string>
+    <string name="alarm_notification_text">Shaky\'e dönmek için tıkla</string>
+    <string name="alarm_notification_channel_name">Alarm Bildirimi</string>
+    <string name="alarm_notification_channel_description">Bu alarm bildirimleri kanalıdır</string>
     <string name="adjust_sensitivity">Duyarlılığı ayarla</string>
     <string name="adjust_volume">Ses düzeyini ayarla</string>
 

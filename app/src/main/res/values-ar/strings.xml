@@ -18,10 +18,10 @@
     <string name="more_actions">إجراءات أخرى</string>
     <string name="no_email_app_found">لم يتم العثور على تطبيق البريد الإلكتروني</string>
     <string name="your_feedback_is_welcome_at">نرحب بملاحظاتك على البريد الإلكتروني</string>
-    <string name="shaky_is_active">شيكي فعال</string>
-    <string name="click_to_get_back_to_shaky">انقر للرجوع إلى شيكي</string>
-    <string name="alarm_notification">إشعار المنبه</string>
-    <string name="this_is_the_channel_of_alarm_notifications">هذه قناة إشعارات المنبه</string>
+    <string name="alarm_notification_title">شيكي فعال</string>
+    <string name="alarm_notification_text">انقر للرجوع إلى شيكي</string>
+    <string name="alarm_notification_channel_name">إشعار المنبه</string>
+    <string name="alarm_notification_channel_description">هذه قناة إشعارات المنبه</string>
     <string name="adjust_sensitivity">اضبط الحساسية</string>
     <string name="adjust_volume">اضبط مستوى الصوت</string>
 

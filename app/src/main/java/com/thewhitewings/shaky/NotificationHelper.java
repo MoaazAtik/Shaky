@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat;
 
 public class NotificationHelper {
 
-    private static final String CHANNEL_ID = "media_playback_channel";
+    private static final String CHANNEL_ID = "media_and_sensor_service_channel";
     private final Context context;
     private final NotificationManager notificationManager;
 
@@ -25,35 +25,29 @@ public class NotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Media Playback",
+                    context.getString(R.string.alarm_notification_channel_name),
                     NotificationManager.IMPORTANCE_LOW
             );
-            channel.setDescription("Channel for media playback controls");
+            channel.setDescription(context.getString(R.string.alarm_notification_channel_description));
             notificationManager.createNotificationChannel(channel);
         }
     }
 
-    public Notification buildNotification(String trackTitle) {
+    public Notification buildNotification() {
+        Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
+                context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         return new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("Now Playing")
-                .setContentText(trackTitle)
+                .setContentTitle(context.getString(R.string.alarm_notification_title))
+                .setContentText(context.getString(R.string.alarm_notification_text))
                 .setSmallIcon(R.drawable.app_icon_notification)
                 .setContentIntent(pendingIntent)
-                .setOngoing(true) // Keeps it persistent
-                .build();
-    }
-
-
-    public void updateNotification(String trackTitle) {
-        Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("Now Playing")
-                .setContentText(trackTitle)
-                .setSmallIcon(R.drawable.app_icon_notification)
                 .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .build();
-        notificationManager.notify(1, notification);
     }
+
 }

@@ -1,15 +1,14 @@
 package com.thewhitewings.shaky;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.Manifest;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,26 +24,18 @@ public class MainActivity extends AppCompatActivity {
 
         mediaAndSensorViewModel = new ViewModelProvider(this).get(MediaAndSensorViewModel.class);
 
-        // Observe playback state and current track title for UI updates
-        mediaAndSensorViewModel.getCurrentTrack().observe(this, trackTitle -> {
-            // Update UI with track title
-        });
-
-        mediaAndSensorViewModel.getIsPlaying().observe(this, isPlaying -> {
-            // Update UI with play/pause status
+        mediaAndSensorViewModel.getIsActive().observe(this, isPlaying -> {
             btnOff.setText(isPlaying ? "Pause" : "Play");
         });
 
         btnOff = findViewById(R.id.btn_off);
         btnOff.setEnabled(true);
         btnOff.setOnClickListener(v -> {
-            mediaAndSensorViewModel.play();
-            Log.d(TAG, "onCreate: btnOff click");
+            mediaAndSensorViewModel.activate();
         });
 
         findViewById(R.id.btn_more).setOnClickListener(v -> {
-            mediaAndSensorViewModel.stop();
-            Log.d(TAG, "onCreate: btnMore click");
+            mediaAndSensorViewModel.deactivate();
         });
 
 
@@ -57,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaAndSensorViewModel.stop();
+        mediaAndSensorViewModel.deactivate();
         Log.d(TAG, "onDestroy: ");
     }
 }

@@ -17,10 +17,10 @@
     <string name="send_us_feedback">Send us feedback</string>
     <string name="no_email_app_found">No email app found</string>
     <string name="your_feedback_is_welcome_at">Your feedback is welcome at</string>
-    <string name="shaky_is_active">Shaky is Active</string>
-    <string name="click_to_get_back_to_shaky">Click to get back to Shaky</string>
-    <string name="alarm_notification">Alarm Notification</string>
-    <string name="this_is_the_channel_of_alarm_notifications">This is the channel of alarm notifications</string>
+    <string name="alarm_notification_title">Shaky is Active</string>
+    <string name="alarm_notification_text">Click to get back to Shaky</string>
+    <string name="alarm_notification_channel_name">Alarm Notification</string>
+    <string name="alarm_notification_channel_description">This is the channel of alarm notifications</string>
 
     <string name="more_actions">More actions</string>
     <string name="adjust_sensitivity">Adjust sensitivity</string>

@@ -246,10 +246,10 @@ public class MediaAndSensorServiceOld extends Service {
             // Create a notification channel for the foreground service
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
-                    getString(R.string.alarm_notification),
+                    getString(R.string.alarm_notification_channel_name),
                     NotificationManager.IMPORTANCE_LOW
             );
-            serviceChannel.setDescription(getString(R.string.this_is_the_channel_of_alarm_notifications));
+            serviceChannel.setDescription(getString(R.string.alarm_notification_channel_description));
 
 //            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
             ((NotificationManager) getSystemService(NotificationManager.class))
@@ -265,8 +265,8 @@ public class MediaAndSensorServiceOld extends Service {
 
         // Create the notification
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.shaky_is_active))
-                .setContentText(getString(R.string.click_to_get_back_to_shaky))
+                .setContentTitle(getString(R.string.alarm_notification_title))
+                .setContentText(getString(R.string.alarm_notification_text))
                 .setSmallIcon(R.drawable.app_icon_notification)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
