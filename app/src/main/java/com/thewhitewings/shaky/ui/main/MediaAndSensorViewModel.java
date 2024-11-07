@@ -26,7 +26,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     private final MutableLiveData<MediaAndSensorUiState> uiState;
     private final SensorHandler sensorHandler;
     private final MediaHandler mediaHandler;
-    private final Context context;
+    private final Application context;
 
     public MediaAndSensorViewModel(Application application) {
         super(application);
