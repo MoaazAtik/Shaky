@@ -34,7 +34,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.thewhitewings.shaky.MoreFragment;
+import com.thewhitewings.shaky.ui.more.MoreFragment;
 import com.thewhitewings.shaky.OnSeekBarChangeListenerImpl;
 import com.thewhitewings.shaky.R;
 import com.thewhitewings.shaky.Util;

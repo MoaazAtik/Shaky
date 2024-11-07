@@ -1,4 +1,4 @@
-package com.thewhitewings.shaky;
+package com.thewhitewings.shaky.ui.more;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -23,6 +23,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.thewhitewings.shaky.NotesFragment;
+import com.thewhitewings.shaky.R;
 
 public class MoreFragment extends Fragment {
 

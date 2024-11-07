@@ -49,7 +49,7 @@
         android:layout_height="match_parent"
         android:elevation="3dp"
         tools:layout="@layout/fragment_more"
-        tools:name="com.thewhitewings.shaky.MoreFragment"
+        tools:name="com.thewhitewings.shaky.ui.more.MoreFragment"
         tools:visibility="gone" />
 
     <TextSwitcher
