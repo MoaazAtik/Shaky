@@ -7,6 +7,6 @@ public class ShakyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        new NotificationHelper(this).createNotificationChannel();
+        new NotificationHandler(this).createNotificationChannel();
     }
 }

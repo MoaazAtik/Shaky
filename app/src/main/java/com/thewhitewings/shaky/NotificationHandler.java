@@ -9,13 +9,13 @@ import android.content.Intent;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
-public class NotificationHelper {
+public class NotificationHandler {
 
     private static final String CHANNEL_ID = "media_and_sensor_service_channel";
     private final Context context;
     private final NotificationManager notificationManager;
 
-    public NotificationHelper(Context context) {
+    public NotificationHandler(Context context) {
         this.context = context;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }

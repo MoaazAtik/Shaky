@@ -9,12 +9,12 @@ import androidx.annotation.Nullable;
 public class MediaAndSensorService extends Service {
 
     private static final String TAG = "MediaAndSensorService";
-    private NotificationHelper notificationHelper;
+    private NotificationHandler notificationHandler;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        notificationHelper = new NotificationHelper(this);
+        notificationHandler = new NotificationHandler(this);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class MediaAndSensorService extends Service {
         if (intent != null) {
             String action = intent.getAction();
             if (Action.ACTIVATE.name().equals(action))
-                startForeground(1, notificationHelper.buildNotification());
+                startForeground(1, notificationHandler.buildNotification());
             else if (Action.DEACTIVATE.name().equals(action))
                 stopSelf();
         }
