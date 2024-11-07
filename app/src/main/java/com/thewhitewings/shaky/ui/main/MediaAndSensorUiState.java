@@ -2,8 +2,6 @@ package com.thewhitewings.shaky.ui.main;
 
 import androidx.annotation.NonNull;
 
-import com.thewhitewings.shaky.ActivationState;
-
 public class MediaAndSensorUiState {
 
     private final ActivationState activationState;

@@ -15,6 +15,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.thewhitewings.shaky.ui.main.ActivationState;
 import com.thewhitewings.shaky.ui.main.MediaAndSensorUiState;
 
 public class MediaAndSensorViewModel extends AndroidViewModel {

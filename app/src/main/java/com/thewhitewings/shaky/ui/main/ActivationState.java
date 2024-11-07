@@ -1,4 +1,4 @@
-package com.thewhitewings.shaky;
+package com.thewhitewings.shaky.ui.main;
 
 public enum ActivationState {
     INITIALIZATION_TO_ACTIVE,
