@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekBarSensitivity, seekBarVolume;
     private ImageButton btnMore;
     private MotionLayout motionLayout;
-    private MediaAndSensorViewModel mediaAndSensorViewModel;
+    private MediaAndSensorViewModel viewModel;
     private ActivationState currentActivationState = null;
 
     @Override
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mediaAndSensorViewModel = new ViewModelProvider(this).get(MediaAndSensorViewModel.class);
+        viewModel = new ViewModelProvider(this).get(MediaAndSensorViewModel.class);
 
         textSwitcher = findViewById(R.id.text_switcher);
         btnOn = findViewById(R.id.btn_on);
@@ -77,17 +77,17 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher.setFactory(textViewFactory);
         textSwitcher.setCurrentText(getString(R.string.status_inactive));
 
-        btnOn.setOnClickListener(v -> mediaAndSensorViewModel.activate());
+        btnOn.setOnClickListener(v -> viewModel.activate());
 
         enableBtnOff();
-        btnOff.setOnClickListener(v -> mediaAndSensorViewModel.deactivate());
+        btnOff.setOnClickListener(v -> viewModel.deactivate());
 
         setTextGradientColor(txtSensitivity);
         setTextGradientColor(txtVolume);
 
         seekBarSensitivity.setOnSeekBarChangeListener(sensitivitySeekBarListener);
 
-        seekBarVolume.setMax(mediaAndSensorViewModel.getVolumeMusicStreamMax());
+        seekBarVolume.setMax(viewModel.getVolumeMusicStreamMax());
         seekBarVolume.setOnSeekBarChangeListener(volumeSeekBarListener);
 
         btnMore.setOnClickListener(v -> navigateToMoreFragment());
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showBatteryOptimizationDialog() {
-        if (!mediaAndSensorViewModel.getBatteryOptimizationDialogPreference())
+        if (!viewModel.getBatteryOptimizationDialogPreference())
             return;
 
         Runnable runnable = () -> {
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             btnCancel.setOnClickListener(v -> {
                 // Check if the dialog should show again
                 if (dontShowAgainCheckbox.isChecked())
-                    mediaAndSensorViewModel.updateBatteryOptimizationDialogPreference();
+                    viewModel.updateBatteryOptimizationDialogPreference();
 
                 dialog.dismiss();
             });
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUiStateObserver() {
-        mediaAndSensorViewModel.getUiState().observe(this, uiState -> {
+        viewModel.getUiState().observe(this, uiState -> {
 
             ActivationState newActivationState = uiState.getActivationState();
             if (newActivationState != currentActivationState) {
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
     private final SeekBar.OnSeekBarChangeListener sensitivitySeekBarListener = new OnSeekBarChangeListenerImpl() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            mediaAndSensorViewModel.updateSensitivityThreshold(
+            viewModel.updateSensitivityThreshold(
                     seekBarSensitivity.getMax() - progress
             );
         }
@@ -296,14 +296,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-                if (mediaAndSensorViewModel.getUiState().getValue() == null) return;
-                if (progress > mediaAndSensorViewModel.getUiState().getValue().getVolume())
-                    mediaAndSensorViewModel.adjustVolume(
+                if (viewModel.getUiState().getValue() == null) return;
+                if (progress > viewModel.getUiState().getValue().getVolume())
+                    viewModel.adjustVolume(
                             AudioManager.ADJUST_RAISE,
                             false
                     );
                 else
-                    mediaAndSensorViewModel.adjustVolume(
+                    viewModel.adjustVolume(
                             AudioManager.ADJUST_LOWER,
                             false
                     );
@@ -319,13 +319,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            mediaAndSensorViewModel.adjustVolume(
+            viewModel.adjustVolume(
                     AudioManager.ADJUST_RAISE,
                     true
             );
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            mediaAndSensorViewModel.adjustVolume(
+            viewModel.adjustVolume(
                     AudioManager.ADJUST_LOWER,
                     true
             );
@@ -342,13 +342,13 @@ public class MainActivity extends AppCompatActivity {
         It is needed to make the volume seekbar update
          when user adjusts volume while app is in background.
          */
-        mediaAndSensorViewModel.updateVolumeState();
+        viewModel.updateVolumeState();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (isFinishing())
-            mediaAndSensorViewModel.deactivate();
+            viewModel.deactivate();
     }
 }
