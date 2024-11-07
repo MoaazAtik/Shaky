@@ -15,7 +15,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.thewhitewings.shaky.MediaAndSensorService;
+import com.thewhitewings.shaky.service.MediaAndSensorService;
 import com.thewhitewings.shaky.MediaHandler;
 import com.thewhitewings.shaky.SensorHandler;
 
