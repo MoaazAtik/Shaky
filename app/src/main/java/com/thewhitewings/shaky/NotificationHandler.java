@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
+import com.thewhitewings.shaky.ui.MainActivity;
+
 public class NotificationHandler {
 
     private static final String CHANNEL_ID = "media_and_sensor_service_channel";
