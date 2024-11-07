@@ -8,13 +8,14 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+
+import com.thewhitewings.shaky.ui.main.MediaAndSensorUiState;
 
 public class MediaAndSensorViewModel extends AndroidViewModel {
 
