@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.thewhitewings.shaky.NotesFragment;
+import com.thewhitewings.shaky.ui.notes.NotesFragment;
 import com.thewhitewings.shaky.R;
 
 public class MoreFragment extends Fragment {

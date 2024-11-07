@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_notes"
-        tools:name="com.thewhitewings.shaky.NotesFragment"
+        tools:name="com.thewhitewings.shaky.ui.notes.NotesFragment"
         android:elevation="3dp"
         tools:visibility="gone"/>
 
