@@ -34,6 +34,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.thewhitewings.shaky.service.MediaAndSensorService;
 import com.thewhitewings.shaky.ui.more.MoreFragment;
 import com.thewhitewings.shaky.OnSeekBarChangeListenerImpl;
 import com.thewhitewings.shaky.R;
@@ -132,12 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Handle the positive button (btn_fix) in the custom layout
             Button btnFix = dialogView.findViewById(R.id.btn_fix);
-            btnFix.setOnClickListener(v -> {
-                Uri uri = Util.getBatteryOptimizationGuideUri1();
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            });
+            btnFix.setOnClickListener(v -> openBatteryOptimizationGuide1());
 
             // Handle the negative button (btn_cancel) in the custom layout
             Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
@@ -256,12 +252,37 @@ public class MainActivity extends AppCompatActivity {
             if (newActivationState != currentActivationState) {
                 animate(newActivationState);
                 currentActivationState = newActivationState;
+                if (newActivationState == ActivationState.MANUAL_ACTIVE_TO_INACTIVE)
+                    stopService();
+                else
+                    startService();
             }
+
             binding.seekBarSensitivity.setProgress(
                     binding.seekBarSensitivity.getMax() - uiState.getSensitivityThreshold()
             );
+
             binding.seekBarVolume.setProgress(uiState.getVolume());
         });
+    }
+
+    private void startService() {
+        Intent intent = new Intent(this, MediaAndSensorService.class);
+        intent.setAction(MediaAndSensorService.Action.ACTIVATE.name());
+        startService(intent);
+    }
+
+    private void stopService() {
+        Intent intent = new Intent(this, MediaAndSensorService.class);
+        intent.setAction(MediaAndSensorService.Action.DEACTIVATE.name());
+        startService(intent);
+    }
+
+    private void openBatteryOptimizationGuide1() {
+        Uri uri = Util.getBatteryOptimizationGuideUri1();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 
     private void navigateToMoreFragment() {

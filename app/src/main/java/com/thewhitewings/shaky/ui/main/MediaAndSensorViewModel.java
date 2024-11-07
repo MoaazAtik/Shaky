@@ -107,10 +107,6 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     }
 
     public void activate() {
-        Intent intent = new Intent(context, MediaAndSensorService.class);
-        intent.setAction(MediaAndSensorService.Action.ACTIVATE.name());
-        context.startService(intent);
-
         sensorHandler.activateSensor();
         sensorHandler.getIsShaking().observeForever(shakingObserver);
 
@@ -120,10 +116,6 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     }
 
     public void deactivate() {
-        Intent intent = new Intent(context, MediaAndSensorService.class);
-        intent.setAction(MediaAndSensorService.Action.DEACTIVATE.name());
-        context.startService(intent);
-
         sensorHandler.deactivateSensor();
         sensorHandler.getIsShaking().removeObserver(shakingObserver);
         mediaHandler.stopMedia();
