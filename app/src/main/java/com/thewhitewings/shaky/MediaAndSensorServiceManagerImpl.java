@@ -4,19 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import androidx.lifecycle.LifecycleOwner;
-
 public class MediaAndSensorServiceManagerImpl implements MediaAndSensorServiceManager {
 
     private static final String TAG = "ServiceManagerImpl";
     private final Context context;
     private SensorHelper sensorHelper;
-    private AudioFocusHelper audioFocusHelper;
+    private MediaHandler mediaHandler;
 
     public MediaAndSensorServiceManagerImpl(Context context) {
         this.context = context;
         sensorHelper = new SensorHelper(context);
-        audioFocusHelper = new AudioFocusHelper(context);
+        mediaHandler = new MediaHandler(context);
     }
 
     @Override
@@ -30,7 +28,7 @@ public class MediaAndSensorServiceManagerImpl implements MediaAndSensorServiceMa
 
 //        sensorHelper.getIsShaking().observe(context, isShaking -> {
 //            if (isShaking) {
-////                audioFocusHelper.playMedia();
+////                mediaHandler.playMedia();
 //                Log.d(TAG, "play: isShaking");
 //            }
 //        });

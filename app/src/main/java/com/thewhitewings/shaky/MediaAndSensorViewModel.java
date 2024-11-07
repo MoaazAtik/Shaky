@@ -20,7 +20,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
 
     private final MutableLiveData<MediaAndSensorUiState> uiState;
     private final SensorHelper sensorHelper;
-    private final AudioFocusHelper audioFocusHelper;
+    private final MediaHandler mediaHandler;
     private final Context context;
 
     public MediaAndSensorViewModel(Application application) {
@@ -28,7 +28,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
 //        context = application.getApplicationContext();
         context = application;
         sensorHelper = new SensorHelper(context);
-        audioFocusHelper = new AudioFocusHelper(context);
+        mediaHandler = new MediaHandler(context);
         uiState = new MutableLiveData<>(new MediaAndSensorUiState(
                 ActivationState.INITIALIZATION_TO_ACTIVE,
                 getSensitivityThresholdPreference(),
@@ -55,6 +55,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         sensorHelper.updateSensitivityThreshold(sensitivityThreshold);
 
         // Update sensitivity threshold state
+        if (uiState.getValue() == null) return;
         uiState.setValue(
                 new MediaAndSensorUiState(
                         uiState.getValue().getActivationState(),
@@ -65,20 +66,21 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     }
 
     public int getVolumeMusicStreamMax() {
-        return audioFocusHelper.getVolumeMusicStreamMax();
+        return mediaHandler.getVolumeMusicStreamMax();
     }
 
     public int getVolumeMusicStream() {
-        return audioFocusHelper.getVolumeMusicStream();
+        return mediaHandler.getVolumeMusicStream();
     }
 
     public void adjustVolume(int direction, boolean fromDeviceVolumeKeys) {
-        audioFocusHelper.adjustVolume(direction, fromDeviceVolumeKeys);
+        mediaHandler.adjustVolume(direction, fromDeviceVolumeKeys);
 
         updateVolumeState();
     }
 
     public void updateVolumeState() {
+        if (uiState.getValue() == null) return;
         uiState.setValue(
                 new MediaAndSensorUiState(
                         uiState.getValue().getActivationState(),
@@ -89,6 +91,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     }
 
     private void updateActivationState(ActivationState activationState) {
+        if (uiState.getValue() == null) return;
         uiState.setValue(
                 new MediaAndSensorUiState(
                         activationState,
@@ -106,6 +109,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         sensorHelper.activateSensor();
         sensorHelper.getIsShaking().observeForever(shakingObserver);
 
+        if (uiState.getValue() == null) return;
         if (uiState.getValue().getActivationState() != ActivationState.INITIALIZATION_TO_ACTIVE)
             updateActivationState(ActivationState.MANUAL_INACTIVE_TO_ACTIVE);
     }
@@ -117,8 +121,8 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
 
         sensorHelper.deactivateSensor();
         sensorHelper.getIsShaking().removeObserver(shakingObserver);
-        audioFocusHelper.stopMedia();
-        audioFocusHelper.releaseAudioFocus();
+        mediaHandler.stopMedia();
+        mediaHandler.releaseAudioFocus();
 
         updateActivationState(ActivationState.MANUAL_ACTIVE_TO_INACTIVE);
     }
@@ -127,7 +131,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         @Override
         public void onChanged(@Nullable final Boolean isShaking) {
             if (Boolean.TRUE.equals(isShaking))
-                audioFocusHelper.triggerAlarm();
+                mediaHandler.triggerAlarm();
         }
     };
 

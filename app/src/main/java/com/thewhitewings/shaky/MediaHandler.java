@@ -14,16 +14,16 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
-public class AudioFocusHelper {
+public class MediaHandler {
 
-    private static final String TAG = "AudioFocusHelper";
+    private static final String TAG = "MediaHandler";
     private MediaPlayer mediaPlayer;
     private final Context context;
     private final AudioManager audioManager;
     private final AudioManager.OnAudioFocusChangeListener focusChangeListener;
     private float volumeBeforeDucking;
 
-    public AudioFocusHelper(Context context) {
+    public MediaHandler(Context context) {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         focusChangeListener = this::onAudioFocusChange;
         this.context = context;
