@@ -21,14 +21,10 @@ public class MediaAndSensorService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             String action = intent.getAction();
-//            if ("ACTION_PLAY".equals(action)) {
-            if (Action.ACTIVATE.name().equals(action)) {
+            if (Action.ACTIVATE.name().equals(action))
                 startForeground(1, notificationHelper.buildNotification());
-//            } else if ("ACTION_STOP".equals(action)) {
-            } else if (Action.DEACTIVATE.name().equals(action)) {
-//                stopForeground(true);
+            else if (Action.DEACTIVATE.name().equals(action))
                 stopSelf();
-            }
         }
         return START_STICKY;
     }

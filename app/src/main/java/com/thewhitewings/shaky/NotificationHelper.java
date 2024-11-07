@@ -18,10 +18,9 @@ public class NotificationHelper {
     public NotificationHelper(Context context) {
         this.context = context;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        createNotificationChannel();
     }
 
-    private void createNotificationChannel() {
+    public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
@@ -49,5 +48,4 @@ public class NotificationHelper {
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .build();
     }
-
 }
