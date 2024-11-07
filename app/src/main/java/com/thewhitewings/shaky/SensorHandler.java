@@ -5,14 +5,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-public class SensorHelper {
+public class SensorHandler {
 
-    private static final String TAG = "SensorHelper";
+    private static final String TAG = "SensorHandler";
 
     private final SensorManager sensorManager;
     private final Sensor accelerometer;
@@ -24,7 +23,7 @@ public class SensorHelper {
     private int sensitivityThreshold = 0;
     private final MutableLiveData<Boolean> isShaking = new MutableLiveData<>();
 
-    public SensorHelper(Context context) {
+    public SensorHandler(Context context) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorEventListener = createSensorEventListener();
@@ -38,7 +37,8 @@ public class SensorHelper {
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
         };
     }
 

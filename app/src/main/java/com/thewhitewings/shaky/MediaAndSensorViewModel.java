@@ -19,7 +19,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     private static final String TAG = "MediaAndSensorViewModel";
 
     private final MutableLiveData<MediaAndSensorUiState> uiState;
-    private final SensorHelper sensorHelper;
+    private final SensorHandler sensorHandler;
     private final MediaHandler mediaHandler;
     private final Context context;
 
@@ -27,7 +27,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         super(application);
 //        context = application.getApplicationContext();
         context = application;
-        sensorHelper = new SensorHelper(context);
+        sensorHandler = new SensorHandler(context);
         mediaHandler = new MediaHandler(context);
         uiState = new MutableLiveData<>(new MediaAndSensorUiState(
                 ActivationState.INITIALIZATION_TO_ACTIVE,
@@ -52,7 +52,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
                 .putInt(SENSITIVITY_THRESHOLD_KEY, sensitivityThreshold)
                 .apply();
 
-        sensorHelper.updateSensitivityThreshold(sensitivityThreshold);
+        sensorHandler.updateSensitivityThreshold(sensitivityThreshold);
 
         // Update sensitivity threshold state
         if (uiState.getValue() == null) return;
@@ -106,8 +106,8 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         intent.setAction(MediaAndSensorService.Action.ACTIVATE.name());
         context.startService(intent);
 
-        sensorHelper.activateSensor();
-        sensorHelper.getIsShaking().observeForever(shakingObserver);
+        sensorHandler.activateSensor();
+        sensorHandler.getIsShaking().observeForever(shakingObserver);
 
         if (uiState.getValue() == null) return;
         if (uiState.getValue().getActivationState() != ActivationState.INITIALIZATION_TO_ACTIVE)
@@ -119,8 +119,8 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         intent.setAction(MediaAndSensorService.Action.DEACTIVATE.name());
         context.startService(intent);
 
-        sensorHelper.deactivateSensor();
-        sensorHelper.getIsShaking().removeObserver(shakingObserver);
+        sensorHandler.deactivateSensor();
+        sensorHandler.getIsShaking().removeObserver(shakingObserver);
         mediaHandler.stopMedia();
         mediaHandler.releaseAudioFocus();
 
