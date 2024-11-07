@@ -8,7 +8,11 @@ public class MediaAndSensorUiState {
     private final int sensitivityThreshold;
     private final int volume;
 
-    public MediaAndSensorUiState(@NonNull ActivationState activationState,@NonNull Integer sensitivityThreshold,@NonNull Integer volume) {
+    public MediaAndSensorUiState(
+            @NonNull ActivationState activationState,
+            @NonNull Integer sensitivityThreshold,
+            @NonNull Integer volume
+    ) {
         this.activationState = activationState;
         this.sensitivityThreshold = sensitivityThreshold;
         this.volume = volume;
@@ -25,5 +29,4 @@ public class MediaAndSensorUiState {
     public Integer getVolume() {
         return volume;
     }
-
 }

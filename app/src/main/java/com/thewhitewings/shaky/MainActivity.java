@@ -178,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
     private final SeekBar.OnSeekBarChangeListener volumeSeekBarListener = new OnSeekBarChangeListenerImpl() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (fromUser)
+            if (fromUser) {
+                if (mediaAndSensorViewModel.getUiState().getValue() == null) return;
                 if (progress > mediaAndSensorViewModel.getUiState().getValue().getVolume())
                     mediaAndSensorViewModel.adjustVolume(
                             AudioManager.ADJUST_RAISE,
@@ -189,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
                             AudioManager.ADJUST_LOWER,
                             false
                     );
+            }
         }
     };
 
