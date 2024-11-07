@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
-import com.thewhitewings.shaky.ui.MainActivity;
+import com.thewhitewings.shaky.ui.main.MainActivity;
 
 public class NotificationHandler {
 

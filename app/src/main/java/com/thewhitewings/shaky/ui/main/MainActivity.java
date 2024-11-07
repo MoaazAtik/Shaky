@@ -1,4 +1,4 @@
-package com.thewhitewings.shaky.ui;
+package com.thewhitewings.shaky.ui.main;
 
 import android.Manifest;
 import android.app.Dialog;
