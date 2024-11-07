@@ -1,20 +1,11 @@
 package com.thewhitewings.shaky;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.constraintlayout.motion.widget.MotionLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.widget.TextViewCompat;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.Manifest;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -27,12 +18,21 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.TextViewCompat;
+import androidx.lifecycle.ViewModelProvider;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private TextSwitcher textSwitcher;
     private Button btnOn, btnOff;
+    private TextView txtSensitivity, txtVolume;
     private SeekBar seekBarSensitivity, seekBarVolume;
     private ImageButton btnMore;
     private MotionLayout motionLayout;
@@ -49,13 +49,21 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher = findViewById(R.id.text_switcher);
         btnOn = findViewById(R.id.btn_on);
         btnOff = findViewById(R.id.btn_off);
+        txtSensitivity = findViewById(R.id.txt_sensitivity);
+        txtVolume = findViewById(R.id.txt_volume);
         seekBarSensitivity = findViewById(R.id.seek_sensitivity);
-        TextView txtSensitivity = findViewById(R.id.txt_sensitivity);
-        TextView txtVolume = findViewById(R.id.txt_volume);
         seekBarVolume = findViewById(R.id.seek_volume);
         btnMore = findViewById(R.id.btn_more);
         motionLayout = findViewById(R.id.motion_layout);
 
+        setupUiComponents();
+
+        setupUiStateObserver();
+
+        requestPermissions();
+    }
+
+    private void setupUiComponents() {
         textSwitcher.setFactory(textViewFactory);
         textSwitcher.setCurrentText(getString(R.string.status_inactive));
 
@@ -71,12 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
         seekBarVolume.setMax(mediaAndSensorViewModel.getVolumeMusicStreamMax());
         seekBarVolume.setOnSeekBarChangeListener(volumeSeekBarListener);
+    }
 
-        setupUiStateObserver();
-
+    private void requestPermissions() {
         // Request POST_NOTIFICATIONS permission for the foreground service
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    0
+            );
         }
     }
 
