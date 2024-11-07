@@ -68,7 +68,10 @@ public class SensorHandler {
         lastAcceleration = currentAcceleration;
 
         if (magnitudeOfAcceleration > sensitivityThreshold) {
-            isShaking.postValue(true);
+            isShaking.setValue(true);
+            // Reset the shaking state to prevent emitting true again
+            // to the observer after the observer re-connects to the live data.
+            isShaking.setValue(null);
         }
     }
 

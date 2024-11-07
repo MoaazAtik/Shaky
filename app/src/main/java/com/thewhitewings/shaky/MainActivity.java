@@ -159,8 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 currentActivationState = newActivationState;
             }
             seekBarSensitivity.setProgress(
-                    seekBarSensitivity.getMax() -
-                            uiState.getSensitivityThreshold()
+                    seekBarSensitivity.getMax() - uiState.getSensitivityThreshold()
             );
             seekBarVolume.setProgress(uiState.getVolume());
         });
