@@ -82,11 +82,11 @@
             android:alpha="0"
             android:scaleX="0.3"
             android:scaleY="0.3"
-            motion:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
+            motion:layout_constraintBottom_toTopOf="@id/seek_bar_sensitivity"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/seek_sensitivity"
+            android:id="@+id/seek_bar_sensitivity"
             android:layout_width="320dp"
             android:layout_height="10dp"
             android:layout_marginStart="16dp"
@@ -105,11 +105,11 @@
             android:alpha="0"
             android:scaleX="0.3"
             android:scaleY="0.3"
-            motion:layout_constraintBottom_toTopOf="@id/seek_volume"
+            motion:layout_constraintBottom_toTopOf="@id/seek_bar_volume"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/seek_volume"
+            android:id="@+id/seek_bar_volume"
             android:layout_width="320dp"
             android:layout_height="10dp"
             android:layout_marginStart="16dp"
@@ -157,11 +157,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            motion:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
+            motion:layout_constraintBottom_toTopOf="@id/seek_bar_sensitivity"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/seek_sensitivity"
+            android:id="@+id/seek_bar_sensitivity"
             android:layout_width="320dp"
             android:layout_height="26dp"
             android:layout_marginStart="16dp"
@@ -175,11 +175,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            motion:layout_constraintBottom_toTopOf="@id/seek_volume"
+            motion:layout_constraintBottom_toTopOf="@id/seek_bar_volume"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
         <Constraint
-            android:id="@+id/seek_volume"
+            android:id="@+id/seek_bar_volume"
             android:layout_width="320dp"
             android:layout_height="26dp"
             android:layout_marginStart="16dp"

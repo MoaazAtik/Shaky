@@ -109,12 +109,12 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/seek_sensitivity"
+        app:layout_constraintBottom_toTopOf="@id/seek_bar_sensitivity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
-        android:id="@+id/seek_sensitivity"
+        android:id="@+id/seek_bar_sensitivity"
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="320dp"
         android:layout_height="26dp"
@@ -143,12 +143,12 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/seek_volume"
+        app:layout_constraintBottom_toTopOf="@id/seek_bar_volume"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <SeekBar
-        android:id="@+id/seek_volume"
+        android:id="@+id/seek_bar_volume"
         android:layout_width="320dp"
         android:layout_height="26dp"
         android:layout_marginStart="16dp"

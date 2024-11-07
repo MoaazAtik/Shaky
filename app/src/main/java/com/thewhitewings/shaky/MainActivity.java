@@ -19,7 +19,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -35,15 +34,15 @@ import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.thewhitewings.shaky.databinding.ActivityMainBinding;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+
+    private ActivityMainBinding binding;
     private TextSwitcher textSwitcher;
-    private Button btnOn, btnOff;
-    private TextView txtSensitivity, txtVolume;
-    private SeekBar seekBarSensitivity, seekBarVolume;
-    private ImageButton btnMore;
     private MotionLayout motionLayout;
     private MediaAndSensorViewModel viewModel;
     private ActivationState currentActivationState = null;
@@ -51,22 +50,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(MediaAndSensorViewModel.class);
 
-        textSwitcher = findViewById(R.id.text_switcher);
-        btnOn = findViewById(R.id.btn_on);
-        btnOff = findViewById(R.id.btn_off);
-        txtSensitivity = findViewById(R.id.txt_sensitivity);
-        txtVolume = findViewById(R.id.txt_volume);
-        seekBarSensitivity = findViewById(R.id.seek_sensitivity);
-        seekBarVolume = findViewById(R.id.seek_volume);
-        btnMore = findViewById(R.id.btn_more);
-        motionLayout = findViewById(R.id.motion_layout);
-
         setupUiComponents();
-
         setupUiStateObserver();
 
         requestPermissions();
@@ -74,31 +63,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUiComponents() {
+        textSwitcher = binding.textSwitcher;
+        motionLayout = binding.motionLayout;
+
         textSwitcher.setFactory(textViewFactory);
         textSwitcher.setCurrentText(getString(R.string.status_inactive));
 
-        btnOn.setOnClickListener(v -> viewModel.activate());
+        binding.btnOn.setOnClickListener(v -> viewModel.activate());
 
         enableBtnOff();
-        btnOff.setOnClickListener(v -> viewModel.deactivate());
+        binding.btnOff.setOnClickListener(v -> viewModel.deactivate());
 
-        setTextGradientColor(txtSensitivity);
-        setTextGradientColor(txtVolume);
+        setTextGradientColor(binding.txtSensitivity);
+        setTextGradientColor(binding.txtVolume);
 
-        seekBarSensitivity.setOnSeekBarChangeListener(sensitivitySeekBarListener);
+        binding.seekBarSensitivity.setOnSeekBarChangeListener(sensitivitySeekBarListener);
 
-        seekBarVolume.setMax(viewModel.getVolumeMusicStreamMax());
-        seekBarVolume.setOnSeekBarChangeListener(volumeSeekBarListener);
+        binding.seekBarVolume.setMax(viewModel.getVolumeMusicStreamMax());
+        binding.seekBarVolume.setOnSeekBarChangeListener(volumeSeekBarListener);
 
-        btnMore.setOnClickListener(v -> navigateToMoreFragment());
+        binding.btnMore.setOnClickListener(v -> navigateToMoreFragment());
     }
 
     /**
-     * Enable {@link #btnOff} after The initial transition ends
+     * Enable {@link ActivityMainBinding#btnOff} after The initial transition ends
      */
     private void enableBtnOff() {
         new Handler(Looper.getMainLooper()).postDelayed(
-                () -> btnOff.setEnabled(true),
+                () -> binding.btnOff.setEnabled(true),
                 3000);
     }
 
@@ -261,10 +253,10 @@ public class MainActivity extends AppCompatActivity {
                 animate(newActivationState);
                 currentActivationState = newActivationState;
             }
-            seekBarSensitivity.setProgress(
-                    seekBarSensitivity.getMax() - uiState.getSensitivityThreshold()
+            binding.seekBarSensitivity.setProgress(
+                    binding.seekBarSensitivity.getMax() - uiState.getSensitivityThreshold()
             );
-            seekBarVolume.setProgress(uiState.getVolume());
+            binding.seekBarVolume.setProgress(uiState.getVolume());
         });
     }
 
@@ -287,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             viewModel.updateSensitivityThreshold(
-                    seekBarSensitivity.getMax() - progress
+                    binding.seekBarSensitivity.getMax() - progress
             );
         }
     };
