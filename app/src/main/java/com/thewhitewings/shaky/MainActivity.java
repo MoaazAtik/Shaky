@@ -1,16 +1,23 @@
 package com.thewhitewings.shaky;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -18,12 +25,14 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 
@@ -61,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setupUiStateObserver();
 
         requestPermissions();
+        showBatteryOptimizationDialog();
     }
 
     private void setupUiComponents() {
@@ -69,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnOn.setOnClickListener(v -> mediaAndSensorViewModel.activate());
 
-        btnOff.setEnabled(true);
+        enableBtnOff();
         btnOff.setOnClickListener(v -> mediaAndSensorViewModel.deactivate());
 
         setTextGradientColor(txtSensitivity);
@@ -79,6 +89,17 @@ public class MainActivity extends AppCompatActivity {
 
         seekBarVolume.setMax(mediaAndSensorViewModel.getVolumeMusicStreamMax());
         seekBarVolume.setOnSeekBarChangeListener(volumeSeekBarListener);
+
+        btnMore.setOnClickListener(v -> navigateToMoreFragment());
+    }
+
+    /**
+     * Enable {@link #btnOff} after The initial transition ends
+     */
+    private void enableBtnOff() {
+        new Handler(Looper.getMainLooper()).postDelayed(
+                () -> btnOff.setEnabled(true),
+                3000);
     }
 
     private void requestPermissions() {
@@ -90,6 +111,76 @@ public class MainActivity extends AppCompatActivity {
                     0
             );
         }
+    }
+
+    private void showBatteryOptimizationDialog() {
+        if (!mediaAndSensorViewModel.getBatteryOptimizationDialogPreference())
+            return;
+
+        Runnable runnable = () -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            // Inflate a custom layout for the dialog content
+            View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_battery_optimization, null);
+            builder.setView(dialogView);
+
+            Dialog dialog = builder.create();
+            dialog.show();
+
+            // Find the checkbox in the custom layout
+            CheckBox dontShowAgainCheckbox = dialogView.findViewById(R.id.checkbox_dont_show_again);
+
+            // Show the device's specifications
+            TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
+            txtSpecs.setText(Util.getDeviceSpecs());
+
+            // Handle the positive button (btn_fix) in the custom layout
+            Button btnFix = dialogView.findViewById(R.id.btn_fix);
+            btnFix.setOnClickListener(v -> {
+                Uri uri = Util.getBatteryOptimizationGuideUri1();
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            });
+
+            // Handle the negative button (btn_cancel) in the custom layout
+            Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
+            btnCancel.setOnClickListener(v -> {
+                // Check if the dialog should show again
+                if (dontShowAgainCheckbox.isChecked())
+                    mediaAndSensorViewModel.updateBatteryOptimizationDialogPreference();
+
+                dialog.dismiss();
+            });
+
+            // set OnDismissListener for the dialog
+            /*
+             onDismiss will be called when btnCancel, device's back button,
+              or outside the dialog box is clicked.
+             Eventually showMoreInformationDialog() is called in all situations
+              even if btnFix is clicked.
+             */
+            dialog.setOnDismissListener(dialog2 -> showMoreInformationDialog());
+        };
+
+        new Handler(Looper.getMainLooper()).postDelayed(
+                runnable,
+                5000);
+    }
+
+    private void showMoreInformationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Inflate a custom layout for the dialog content
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_more_information, null);
+        builder.setView(dialogView);
+
+        Dialog dialog = builder.create();
+        dialog.show();
+
+        // Find the negative button in the custom layout
+        Button btnGotIt = dialogView.findViewById(R.id.btn_got_it);
+        btnGotIt.setOnClickListener(v -> dialog.dismiss());
     }
 
     private final ViewSwitcher.ViewFactory textViewFactory = new ViewSwitcher.ViewFactory() {
@@ -175,6 +266,21 @@ public class MainActivity extends AppCompatActivity {
             );
             seekBarVolume.setProgress(uiState.getVolume());
         });
+    }
+
+    private void navigateToMoreFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction
+                // Animations. this has to be before fragmentTransaction.replace()
+                .setCustomAnimations(
+                        androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
+                        androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
+                        androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
+                        androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
+                )
+                .replace(R.id.fragmentContainerView, new MoreFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     private final SeekBar.OnSeekBarChangeListener sensitivitySeekBarListener = new OnSeekBarChangeListenerImpl() {

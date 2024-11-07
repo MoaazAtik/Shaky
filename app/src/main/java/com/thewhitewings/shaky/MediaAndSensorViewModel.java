@@ -1,5 +1,6 @@
 package com.thewhitewings.shaky;
 
+import static com.thewhitewings.shaky.Constants.DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY;
 import static com.thewhitewings.shaky.Constants.PREFERENCES_NAME;
 import static com.thewhitewings.shaky.Constants.SENSITIVITY_THRESHOLD_KEY;
 
@@ -7,7 +8,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.os.Build;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
@@ -136,4 +137,20 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         }
     };
 
+    public boolean getBatteryOptimizationDialogPreference() {
+        // Check if the dialog should be shown based on the preference
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return preferences.getBoolean(DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY, true);
+    }
+
+    /**
+     * Update the preference to not show the dialog again
+     */
+    public void updateBatteryOptimizationDialogPreference() {
+        boolean showDialogPreference = false;
+        SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        preferences.edit()
+                .putBoolean(DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY, showDialogPreference)
+                .apply();
+    }
 }
