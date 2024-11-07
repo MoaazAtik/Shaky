@@ -1,4 +1,4 @@
-package com.thewhitewings.shaky;
+package com.thewhitewings.shaky.ui.main;
 
 import static com.thewhitewings.shaky.Constants.DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY;
 import static com.thewhitewings.shaky.Constants.PREFERENCES_NAME;
@@ -15,8 +15,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.thewhitewings.shaky.ui.main.ActivationState;
-import com.thewhitewings.shaky.ui.main.MediaAndSensorUiState;
+import com.thewhitewings.shaky.MediaAndSensorService;
+import com.thewhitewings.shaky.MediaHandler;
+import com.thewhitewings.shaky.SensorHandler;
 
 public class MediaAndSensorViewModel extends AndroidViewModel {
 
