@@ -1,10 +1,12 @@
 package com.thewhitewings.shaky;
 
+import static com.thewhitewings.shaky.Constants.PREFERENCES_NAME;
+import static com.thewhitewings.shaky.Constants.SENSITIVITY_THRESHOLD_KEY;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,8 +17,6 @@ import androidx.lifecycle.Observer;
 public class MediaAndSensorViewModel extends AndroidViewModel {
 
     private static final String TAG = "MediaAndSensorViewModel";
-    public static final String PREFERENCES_NAME = "app_preferences";
-    public static final String SENSITIVITY_THRESHOLD_KEY = "sensitivity_threshold";
 
     private final MutableLiveData<MediaAndSensorUiState> uiState;
     private final SensorHelper sensorHelper;
@@ -32,7 +32,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         uiState = new MutableLiveData<>(new MediaAndSensorUiState(
                 ActivationState.INITIALIZATION_TO_ACTIVE,
                 getSensitivityThresholdPreference(),
-                10));
+                getVolumeMusicStream()));
 
         activate();
     }
@@ -54,12 +54,48 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
 
         sensorHelper.updateSensitivityThreshold(sensitivityThreshold);
 
+        // Update sensitivity threshold state
         uiState.setValue(
                 new MediaAndSensorUiState(
                         uiState.getValue().getActivationState(),
                         sensitivityThreshold,
-                        uiState.getValue().getVolume())
-            );
+                        uiState.getValue().getVolume()
+                )
+        );
+    }
+
+    public int getVolumeMusicStreamMax() {
+        return audioFocusHelper.getVolumeMusicStreamMax();
+    }
+
+    public int getVolumeMusicStream() {
+        return audioFocusHelper.getVolumeMusicStream();
+    }
+
+    public void adjustVolume(int direction, boolean fromDeviceVolumeKeys) {
+        audioFocusHelper.adjustVolume(direction, fromDeviceVolumeKeys);
+
+        updateVolumeState();
+    }
+
+    public void updateVolumeState() {
+        uiState.setValue(
+                new MediaAndSensorUiState(
+                        uiState.getValue().getActivationState(),
+                        uiState.getValue().getSensitivityThreshold(),
+                        getVolumeMusicStream()
+                )
+        );
+    }
+
+    private void updateActivationState(ActivationState activationState) {
+        uiState.setValue(
+                new MediaAndSensorUiState(
+                        activationState,
+                        uiState.getValue().getSensitivityThreshold(),
+                        uiState.getValue().getVolume()
+                )
+        );
     }
 
     public void activate() {
@@ -71,13 +107,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         sensorHelper.getIsShaking().observeForever(shakingObserver);
 
         if (uiState.getValue().getActivationState() != ActivationState.INITIALIZATION_TO_ACTIVE)
-            uiState.setValue(
-                new MediaAndSensorUiState(
-                        ActivationState.MANUAL_INACTIVE_TO_ACTIVE,
-                        uiState.getValue().getSensitivityThreshold(),
-                        uiState.getValue().getVolume()
-                )
-            );
+            updateActivationState(ActivationState.MANUAL_INACTIVE_TO_ACTIVE);
     }
 
     public void deactivate() {
@@ -90,13 +120,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         audioFocusHelper.stopMedia();
         audioFocusHelper.releaseAudioFocus();
 
-        uiState.setValue(
-                new MediaAndSensorUiState(
-                        ActivationState.MANUAL_ACTIVE_TO_INACTIVE,
-                        uiState.getValue().getSensitivityThreshold(),
-                        uiState.getValue().getVolume()
-                )
-        );
+        updateActivationState(ActivationState.MANUAL_ACTIVE_TO_INACTIVE);
     }
 
     private final Observer<Boolean> shakingObserver = new Observer<Boolean>() {

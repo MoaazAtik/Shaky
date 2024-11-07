@@ -11,9 +11,11 @@ import androidx.lifecycle.ViewModelProvider;
 import android.Manifest;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -57,25 +59,19 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher.setFactory(textViewFactory);
         textSwitcher.setCurrentText(getString(R.string.status_inactive));
 
-        btnOff.setEnabled(true);
-        btnOn.setOnClickListener(v -> {
-            mediaAndSensorViewModel.activate();
-        });
+        btnOn.setOnClickListener(v -> mediaAndSensorViewModel.activate());
 
-        btnOff.setOnClickListener(v -> {
-            mediaAndSensorViewModel.deactivate();
-        });
+        btnOff.setEnabled(true);
+        btnOff.setOnClickListener(v -> mediaAndSensorViewModel.deactivate());
 
         setTextGradientColor(txtSensitivity);
         setTextGradientColor(txtVolume);
 
-        seekBarSensitivity.setProgress(
-                seekBarSensitivity.getMax() -
-                        mediaAndSensorViewModel.getUiState().getValue().getSensitivityThreshold()
-        );
-        seekBarSensitivity.setOnSeekBarChangeListener(seekBarChangeListener);
+        seekBarSensitivity.setOnSeekBarChangeListener(sensitivitySeekBarListener);
 
-//        seekBarVolume.setProgress(uiState.getVolume());
+        seekBarVolume.setMax(mediaAndSensorViewModel.getVolumeMusicStreamMax());
+        seekBarVolume.setOnSeekBarChangeListener(volumeSeekBarListener);
+
         setupUiStateObserver();
 
         // Request POST_NOTIFICATIONS permission for the foreground service
@@ -109,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
             });
 
             return textView;
-    }};
+        }
+    };
 
     private void animate(ActivationState transition) {
         Animation animationIn = AnimationUtils.loadAnimation(this, R.anim.animation_in);
@@ -140,10 +137,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setTextGradientColor(TextView textView) {
-        int[] colors = { getResources().getColor(R.color.premium_white1),
+        int[] colors = {getResources().getColor(R.color.premium_white1),
                 getResources().getColor(R.color.premium_white2),
                 getResources().getColor(R.color.premium_white3),
-                getResources().getColor(R.color.premium_white4) };
+                getResources().getColor(R.color.premium_white4)};
 
         float[] positions = {0, 0.31f, 0.75f, 1};
 
@@ -161,29 +158,78 @@ public class MainActivity extends AppCompatActivity {
                 animate(newActivationState);
                 currentActivationState = newActivationState;
             }
+            seekBarSensitivity.setProgress(
+                    seekBarSensitivity.getMax() -
+                            uiState.getSensitivityThreshold()
+            );
+            seekBarVolume.setProgress(uiState.getVolume());
         });
     }
 
-    private final SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    private final SeekBar.OnSeekBarChangeListener sensitivitySeekBarListener = new OnSeekBarChangeListenerImpl() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             mediaAndSensorViewModel.updateSensitivityThreshold(
                     seekBarSensitivity.getMax() - progress
             );
         }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {}
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {}
     };
+
+    private final SeekBar.OnSeekBarChangeListener volumeSeekBarListener = new OnSeekBarChangeListenerImpl() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser)
+                if (progress > mediaAndSensorViewModel.getUiState().getValue().getVolume())
+                    mediaAndSensorViewModel.adjustVolume(
+                            AudioManager.ADJUST_RAISE,
+                            false
+                    );
+                else
+                    mediaAndSensorViewModel.adjustVolume(
+                            AudioManager.ADJUST_LOWER,
+                            false
+                    );
+        }
+    };
+
+    /*
+    Note: Implemented adjusting volume by
+     overriding onKeyDown and updating the UI state in onResume
+     instead of using a BroadcastReceiver to be less Resource-Intensive.
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            mediaAndSensorViewModel.adjustVolume(
+                    AudioManager.ADJUST_RAISE,
+                    true
+            );
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            mediaAndSensorViewModel.adjustVolume(
+                    AudioManager.ADJUST_LOWER,
+                    true
+            );
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Update the UI state with the current volume
+        /*
+        It is needed to make the volume seekbar update
+         when user adjusts volume while app is in background.
+         */
+        mediaAndSensorViewModel.updateVolumeState();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (isFinishing())
             mediaAndSensorViewModel.deactivate();
-        Log.d(TAG, "onDestroy: ");
     }
 }
