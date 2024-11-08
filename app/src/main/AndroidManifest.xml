@@ -16,29 +16,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shaky"
-        tools:targetApi="34"
-        >
+        tools:targetApi="34">
 
         <service
             android:name=".service.MediaAndSensorService"
             android:foregroundServiceType="mediaPlayback">
-
         </service>
 
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop"
-            android:exported="true"
-
-            android:screenOrientation="portrait"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
     <queries>

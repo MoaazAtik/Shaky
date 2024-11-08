@@ -35,14 +35,14 @@ public class MediaHandler {
         }
     }
 
-    public boolean requestAudioFocus() {//todo? add android 8+ implementation
+    public boolean requestAudioFocus() {
         int result = audioManager.requestAudioFocus(focusChangeListener,
                 AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
         return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
 
-    public void releaseAudioFocus() {//todo? add android 8+ implementation
+    public void releaseAudioFocus() {
         audioManager.abandonAudioFocus(focusChangeListener);
     }
 

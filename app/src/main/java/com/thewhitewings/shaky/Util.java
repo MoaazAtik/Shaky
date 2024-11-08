@@ -46,8 +46,10 @@ public class Util {
                 return "Tiramisu";
             case "14":
                 return "Upside Down Cake";
+            case "15":
+                return "Vanilla Ice Cream";
             default:
-                return "Unknown";
+                return "Unknown Android Version";
         }
     }
 
