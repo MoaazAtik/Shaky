@@ -1,13 +1,6 @@
 package com.thewhitewings.shaky.ui.main;
 
-import static com.thewhitewings.shaky.Constants.DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY;
-import static com.thewhitewings.shaky.Constants.PREFERENCES_NAME;
-import static com.thewhitewings.shaky.Constants.SENSITIVITY_THRESHOLD_KEY;
-
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,23 +8,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.thewhitewings.shaky.service.MediaAndSensorService;
 import com.thewhitewings.shaky.MediaHandler;
 import com.thewhitewings.shaky.SensorHandler;
+import com.thewhitewings.shaky.data.ShakyPreferences;
 
 public class MediaAndSensorViewModel extends AndroidViewModel {
 
     private static final String TAG = "MediaAndSensorViewModel";
 
+    private final ShakyPreferences preference;
     private final MutableLiveData<MediaAndSensorUiState> uiState;
     private final SensorHandler sensorHandler;
     private final MediaHandler mediaHandler;
     private final Application context;
 
-    public MediaAndSensorViewModel(Application application) {
+    public MediaAndSensorViewModel(Application application, ShakyPreferences preference) {
         super(application);
-//        context = application.getApplicationContext();
         context = application;
+        this.preference = preference;
         sensorHandler = new SensorHandler(context);
         mediaHandler = new MediaHandler(context);
         uiState = new MutableLiveData<>(new MediaAndSensorUiState(
@@ -47,15 +41,11 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     }
 
     private int getSensitivityThresholdPreference() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getInt(SENSITIVITY_THRESHOLD_KEY, 0);
+        return preference.getSensitivityThresholdPreference();
     }
 
     public void updateSensitivityThreshold(int sensitivityThreshold) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit()
-                .putInt(SENSITIVITY_THRESHOLD_KEY, sensitivityThreshold)
-                .apply();
+        preference.updateSensitivityThresholdPreference(sensitivityThreshold);
 
         sensorHandler.updateSensitivityThreshold(sensitivityThreshold);
 
@@ -134,18 +124,13 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
 
     public boolean getBatteryOptimizationDialogPreference() {
         // Check if the dialog should be shown based on the preference
-        SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return preferences.getBoolean(DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY, true);
+        return preference.getBatteryOptimizationDialogPreference();
     }
 
     /**
      * Update the preference to not show the dialog again
      */
     public void updateBatteryOptimizationDialogPreference() {
-        boolean showDialogPreference = false;
-        SharedPreferences preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        preferences.edit()
-                .putBoolean(DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY, showDialogPreference)
-                .apply();
+        preference.updateBatteryOptimizationDialogPreference();
     }
 }

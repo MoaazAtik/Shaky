@@ -34,12 +34,13 @@ import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.thewhitewings.shaky.service.MediaAndSensorService;
-import com.thewhitewings.shaky.ui.more.MoreFragment;
 import com.thewhitewings.shaky.OnSeekBarChangeListenerImpl;
 import com.thewhitewings.shaky.R;
+import com.thewhitewings.shaky.ShakyApplication;
 import com.thewhitewings.shaky.Util;
 import com.thewhitewings.shaky.databinding.ActivityMainBinding;
+import com.thewhitewings.shaky.service.MediaAndSensorService;
+import com.thewhitewings.shaky.ui.more.MoreFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -58,7 +59,11 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        viewModel = new ViewModelProvider(this).get(MediaAndSensorViewModel.class);
+        ShakyApplication application = (ShakyApplication) getApplication();
+        viewModel = new ViewModelProvider(
+                this,
+                new MediaAndSensorViewModelFactory(application, application.getPreferences())
+        ).get(MediaAndSensorViewModel.class);
 
         setupUiComponents();
         setupUiStateObserver();
