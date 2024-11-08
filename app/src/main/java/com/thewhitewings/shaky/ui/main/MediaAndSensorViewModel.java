@@ -1,6 +1,8 @@
 package com.thewhitewings.shaky.ui.main;
 
 import android.app.Application;
+import android.content.Context;
+import android.os.PowerManager;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,11 +17,13 @@ import com.thewhitewings.shaky.data.ShakyPreferences;
 public class MediaAndSensorViewModel extends AndroidViewModel {
 
     private static final String TAG = "MediaAndSensorViewModel";
+    public static final String WAKE_LOCK_TAG = "shaky:service_wake_lock_tag";
 
     private final ShakyPreferences preference;
     private final MutableLiveData<MediaAndSensorUiState> uiState;
     private final SensorHandler sensorHandler;
     private final MediaHandler mediaHandler;
+    private final PowerManager.WakeLock wakeLock;
     private final Application context;
 
     public MediaAndSensorViewModel(Application application, ShakyPreferences preference) {
@@ -32,6 +36,8 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
                 ActivationState.INITIALIZATION_TO_ACTIVE,
                 getSensitivityThresholdPreference(),
                 getVolumeMusicStream()));
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
 
         activate();
     }
@@ -99,6 +105,8 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     public void activate() {
         sensorHandler.activateSensor();
         sensorHandler.getIsShaking().observeForever(shakingObserver);
+        // Acquire the wake lock for 12 hours
+        wakeLock.acquire(12 * 60 * 60 * 1000L);
 
         if (uiState.getValue() == null) return;
         if (uiState.getValue().getActivationState() != ActivationState.INITIALIZATION_TO_ACTIVE)
@@ -110,6 +118,9 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         sensorHandler.getIsShaking().removeObserver(shakingObserver);
         mediaHandler.stopMedia();
         mediaHandler.releaseAudioFocus();
+        // Release the wake lock
+        if (wakeLock.isHeld())
+            wakeLock.release();
 
         updateActivationState(ActivationState.MANUAL_ACTIVE_TO_INACTIVE);
     }
