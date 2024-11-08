@@ -49,7 +49,7 @@ public class Util {
             case "15":
                 return "Vanilla Ice Cream";
             default:
-                return "Unknown Android Version";
+                return "Android Version";
         }
     }
 

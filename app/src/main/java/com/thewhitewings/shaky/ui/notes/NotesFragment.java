@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.thewhitewings.shaky.R;
+import com.thewhitewings.shaky.Util;
 
 public class NotesFragment extends Fragment {
 
@@ -104,9 +105,9 @@ public class NotesFragment extends Fragment {
         // Initialize the content text
         String contentText1 = getString(R.string.note_content_background_operation_explanation);
 
-//        String specs = MainActivity.getDeviceSpecs();
+        String specs = Util.getDeviceSpecs();
         // Replace text "specifications" with the device's specifications
-//        contentText1 = contentText1.replace("..specifications..", specs);
+        contentText1 = contentText1.replace("..specifications..", specs);
 
         // Create a SpannableStringBuilder which allows to change the markup and content of a text
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(contentText1);
@@ -157,10 +158,10 @@ public class NotesFragment extends Fragment {
 
         // Apply the larger text size to the Device's specifications part
         AbsoluteSizeSpan textSizeSpan = new AbsoluteSizeSpan(18, true);
-//        spannableStringBuilder.setSpan(textSizeSpan,
-//                contentText1.indexOf(specs),
-//                contentText1.indexOf(specs) + specs.length(),
-//                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableStringBuilder.setSpan(textSizeSpan,
+                contentText1.indexOf(specs),
+                contentText1.indexOf(specs) + specs.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the TextView with the updated SpannableStringBuilder
         content1.setText(spannableStringBuilder);

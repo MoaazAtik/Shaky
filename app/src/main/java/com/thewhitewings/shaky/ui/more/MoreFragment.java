@@ -67,8 +67,6 @@ public class MoreFragment extends Fragment {
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, rawResourceUri);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
-//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI); //to choose from external storage
-
                 // Open the ringtone picker
                 mGetContent.launch(intent);
 
@@ -120,7 +118,6 @@ public class MoreFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
 
                         // Get the Uri of the selected tone
-//                        Uri selectedToneUri = result.getData().getData();//to get tone selected from external storage
                         Uri selectedToneUri = result.getData().getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);//to get tone selected from internal storage
 
                         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -158,5 +155,4 @@ public class MoreFragment extends Fragment {
             Toast.makeText(requireActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + getString(R.string.recipient_email_address), Toast.LENGTH_LONG).show();
         }
     }//sendEmail()
-
 }
