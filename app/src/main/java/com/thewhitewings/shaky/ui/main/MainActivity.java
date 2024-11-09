@@ -39,6 +39,8 @@ import com.thewhitewings.shaky.R;
 import com.thewhitewings.shaky.ShakyApplication;
 import com.thewhitewings.shaky.Util;
 import com.thewhitewings.shaky.databinding.ActivityMainBinding;
+import com.thewhitewings.shaky.databinding.DialogBatteryOptimizationBinding;
+import com.thewhitewings.shaky.databinding.DialogMoreInformationBinding;
 import com.thewhitewings.shaky.service.MediaAndSensorService;
 import com.thewhitewings.shaky.ui.more.MoreFragment;
 
@@ -123,29 +125,26 @@ public class MainActivity extends AppCompatActivity {
         Runnable runnable = () -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            // Inflate a custom layout for the dialog content
-            View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_battery_optimization, null);
-            builder.setView(dialogView);
+            // Initialize the view binding for the dialog layout
+            DialogBatteryOptimizationBinding dialogBinding =
+                    DialogBatteryOptimizationBinding.inflate(getLayoutInflater());
+
+            // Set the custom view for the dialog using the binding's root view
+            builder.setView(dialogBinding.getRoot());
 
             Dialog dialog = builder.create();
             dialog.show();
 
-            // Find the checkbox in the custom layout
-            CheckBox dontShowAgainCheckbox = dialogView.findViewById(R.id.checkbox_dont_show_again);
-
             // Show the device's specifications
-            TextView txtSpecs = dialogView.findViewById(R.id.txt_specs);
-            txtSpecs.setText(Util.getDeviceSpecs());
+            dialogBinding.txtSpecs.setText(Util.getDeviceSpecs());
 
-            // Handle the positive button (btn_fix) in the custom layout
-            Button btnFix = dialogView.findViewById(R.id.btn_fix);
-            btnFix.setOnClickListener(v -> openBatteryOptimizationGuide1());
+            // Handle the positive button (btnFix) in the custom layout
+            dialogBinding.btnFix.setOnClickListener(v -> openBatteryOptimizationGuide1());
 
-            // Handle the negative button (btn_cancel) in the custom layout
-            Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
-            btnCancel.setOnClickListener(v -> {
+            // Handle the negative button (btnCancel) in the custom layout
+            dialogBinding.btnCancel.setOnClickListener(v -> {
                 // Check if the dialog should show again
-                if (dontShowAgainCheckbox.isChecked())
+                if (dialogBinding.checkboxDontShowAgain.isChecked())
                     viewModel.updateBatteryOptimizationDialogPreference();
 
                 dialog.dismiss();
@@ -158,9 +157,10 @@ public class MainActivity extends AppCompatActivity {
              Eventually showMoreInformationDialog() is called in all situations
               even if btnFix is clicked.
              */
-            dialog.setOnDismissListener(dialog2 -> showMoreInformationDialog());
+            dialog.setOnDismissListener(dismissedDialog -> showMoreInformationDialog());
         };
 
+        // Show the dialog after a delay of 5 seconds for better UX
         new Handler(Looper.getMainLooper()).postDelayed(
                 runnable,
                 5000);
@@ -169,16 +169,16 @@ public class MainActivity extends AppCompatActivity {
     private void showMoreInformationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // Inflate a custom layout for the dialog content
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_more_information, null);
-        builder.setView(dialogView);
+        DialogMoreInformationBinding dialogBinding =
+                DialogMoreInformationBinding.inflate(getLayoutInflater());
+
+        builder.setView(dialogBinding.getRoot());
 
         Dialog dialog = builder.create();
         dialog.show();
 
-        // Find the negative button in the custom layout
-        Button btnGotIt = dialogView.findViewById(R.id.btn_got_it);
-        btnGotIt.setOnClickListener(v -> dialog.dismiss());
+        // Handle the negative button (btnGotIt) in the custom layout
+        dialogBinding.btnGotIt.setOnClickListener(v -> dialog.dismiss());
     }
 
     private final ViewSwitcher.ViewFactory textViewFactory = new ViewSwitcher.ViewFactory() {
