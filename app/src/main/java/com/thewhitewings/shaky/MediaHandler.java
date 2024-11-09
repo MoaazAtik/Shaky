@@ -8,9 +8,12 @@ import static com.thewhitewings.shaky.Constants.PREFERENCES_NAME;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -20,30 +23,43 @@ public class MediaHandler {
     private MediaPlayer mediaPlayer;
     private final Context context;
     private final AudioManager audioManager;
+    private AudioFocusRequest focusRequest;
     private final AudioManager.OnAudioFocusChangeListener focusChangeListener;
     private float volumeBeforeDucking;
 
     public MediaHandler(Context context) {
+        this.context = context;
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         focusChangeListener = this::onAudioFocusChange;
-        this.context = context;
     }
 
     public void triggerAlarm() {
-        if (requestAudioFocus()) {
+        if (requestAudioFocus())
             playMedia();
-        }
     }
 
     public boolean requestAudioFocus() {
-        int result = audioManager.requestAudioFocus(focusChangeListener,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN);
+        int result;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (focusRequest == null)
+                focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                        .setOnAudioFocusChangeListener(focusChangeListener)
+                        .build();
+            result = audioManager.requestAudioFocus(focusRequest);
+        } else {
+            result = audioManager.requestAudioFocus(focusChangeListener,
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN);
+        }
         return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
 
     public void releaseAudioFocus() {
-        audioManager.abandonAudioFocus(focusChangeListener);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            audioManager.abandonAudioFocusRequest(focusRequest);
+        else
+            audioManager.abandonAudioFocus(focusChangeListener);
     }
 
     private void onAudioFocusChange(int focusChange) {
@@ -56,18 +72,29 @@ public class MediaHandler {
                 mediaPlayer.setVolume(0.1f, 0.1f); // Reduce volume to 10%
                 break;
             case AudioManager.AUDIOFOCUS_GAIN:
-                mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
+                if (mediaPlayer != null)
+                    mediaPlayer.setVolume(volumeBeforeDucking, volumeBeforeDucking);
                 break;
         }
     }
 
     public void playMedia() {
         if (mediaPlayer != null) return;
+        int alarmDuration = 10000;
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build();
+
         mediaPlayer = MediaPlayer.create(context, getPreferredTone());
+        mediaPlayer.setAudioAttributes(audioAttributes);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
         new Handler(Looper.getMainLooper())
-                .postDelayed(this::stopMedia, 10000);
+                .postDelayed(
+                        this::stopMedia,
+                        alarmDuration
+                );
     }
 
     public void stopMedia() {

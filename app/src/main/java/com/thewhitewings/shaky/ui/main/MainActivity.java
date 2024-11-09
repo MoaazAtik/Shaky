@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         requestPermissions();
         showBatteryOptimizationDialog();
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     private void setupUiComponents() {

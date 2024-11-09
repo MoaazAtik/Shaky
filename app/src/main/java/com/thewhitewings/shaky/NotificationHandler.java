@@ -37,7 +37,11 @@ public class NotificationHandler {
     public Notification buildNotification() {
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+                context,
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_IMMUTABLE
+        );
 
         return new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(context.getString(R.string.alarm_notification_title))
