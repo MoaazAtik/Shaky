@@ -56,7 +56,8 @@ public class MediaHandler {
     }
 
     public void releaseAudioFocus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                && focusRequest != null)
             audioManager.abandonAudioFocusRequest(focusRequest);
         else
             audioManager.abandonAudioFocus(focusChangeListener);

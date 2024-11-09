@@ -12,12 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextSwitcher;
@@ -28,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.motion.widget.TransitionAdapter;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
@@ -78,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupUiComponents() {
         textSwitcher = binding.textSwitcher;
         motionLayout = binding.motionLayout;
+        motionLayout.setTransitionListener(transitionListener);
 
         textSwitcher.setFactory(textViewFactory);
         textSwitcher.setCurrentText(getString(R.string.status_inactive));
@@ -236,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void setTextGradientColor(TextView textView) {
         int[] colors = {getResources().getColor(R.color.premium_white1),
                 getResources().getColor(R.color.premium_white2),
@@ -305,6 +303,22 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
     }
+
+    private final MotionLayout.TransitionListener transitionListener = new TransitionAdapter() {
+        @Override
+        public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
+            binding.btnMore.setEnabled(false);
+            binding.btnOff.setEnabled(false);
+            binding.btnOn.setEnabled(false);
+        }
+
+        @Override
+        public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
+            binding.btnMore.setEnabled(true);
+            binding.btnOff.setEnabled(true);
+            binding.btnOn.setEnabled(true);
+        }
+    };
 
     private final SeekBar.OnSeekBarChangeListener sensitivitySeekBarListener = new OnSeekBarChangeListenerImpl() {
         @Override
