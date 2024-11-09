@@ -1,4 +1,4 @@
-package com.thewhitewings.shaky;
+package com.thewhitewings.shaky.ui.util;
 
 import android.widget.SeekBar;
 
