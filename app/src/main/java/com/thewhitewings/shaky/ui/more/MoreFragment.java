@@ -2,9 +2,7 @@ package com.thewhitewings.shaky.ui.more;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,8 +21,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.thewhitewings.shaky.Constants;
 import com.thewhitewings.shaky.R;
+import com.thewhitewings.shaky.ShakyApplication;
+import com.thewhitewings.shaky.data.ShakyPreferences;
 import com.thewhitewings.shaky.databinding.FragmentMoreBinding;
 import com.thewhitewings.shaky.ui.notes.NotesFragment;
 
@@ -33,6 +32,9 @@ public class MoreFragment extends Fragment {
     private static final String TAG = "MoreFragment";
 
     private FragmentMoreBinding binding;
+
+    // defaultToneResource
+    private String rawResourceString;
 
     @Nullable
     @Override
@@ -54,12 +56,12 @@ public class MoreFragment extends Fragment {
     }
 
     private void pickTone() {
-        // Get the Uri of the default tone
         int rawResourceId = R.raw.soft;
-        String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+        rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 getResources().getResourcePackageName(rawResourceId) + '/' +
                 getResources().getResourceTypeName(rawResourceId) + '/' +
                 getResources().getResourceEntryName(rawResourceId);
+        // Get the Uri of the default tone
         Uri rawResourceUri = Uri.parse(rawResourceString);
 
         // Create an intent to open the ringtone picker to change the alarm tone of the app
@@ -97,24 +99,15 @@ public class MoreFragment extends Fragment {
             Uri selectedToneUri =
                     result.getData().getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
-            SharedPreferences preferences = requireActivity().getSharedPreferences(
-                    Constants.PREFERENCES_NAME,
-                    Context.MODE_PRIVATE
-            );
+            ShakyPreferences preferences = ((ShakyApplication) requireActivity().getApplicationContext())
+                    .getPreferences();
             // If a tone is picked, save it to the preferences
             if (selectedToneUri != null) {
-                preferences.edit()
-                        .putString(Constants.ALARM_TONE_KEY, selectedToneUri.toString())
-                        .apply();
+                preferences.updateAlarmTonePreference(selectedToneUri.toString());
             } else {
-                // If no tone is picked, save the previously selected tone with the ALARM_TONE_KEY if one exists;
-                // otherwise save null (which results in playing the default tone
-                // after being handled by MediaHandler.getPreferredTone())
-                String previousToneStr = preferences
-                        .getString(Constants.ALARM_TONE_KEY, null);
-                preferences.edit()
-                        .putString(Constants.ALARM_TONE_KEY, previousToneStr)
-                        .apply();
+                // If no tone is picked, save the previously selected tone with the ALARM_TONE_KEY if one exists
+                String previousToneStr = preferences.getAlarmTonePreference(rawResourceString);
+                preferences.updateAlarmTonePreference(previousToneStr);
             }
         }
     };

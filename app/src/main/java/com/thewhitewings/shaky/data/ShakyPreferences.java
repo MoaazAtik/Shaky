@@ -1,5 +1,6 @@
 package com.thewhitewings.shaky.data;
 
+import static com.thewhitewings.shaky.Constants.ALARM_TONE_KEY;
 import static com.thewhitewings.shaky.Constants.DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY;
 import static com.thewhitewings.shaky.Constants.SENSITIVITY_THRESHOLD_KEY;
 
@@ -31,6 +32,16 @@ public class ShakyPreferences {
         boolean showDialogPreference = false;
         preferences.edit()
                 .putBoolean(DISPLAY_BATTERY_OPTIMIZATION_DIALOG_KEY, showDialogPreference)
+                .apply();
+    }
+
+    public String getAlarmTonePreference(String defaultToneResource) {
+        return preferences.getString(ALARM_TONE_KEY, defaultToneResource);
+    }
+
+    public void updateAlarmTonePreference(String tone) {
+        preferences.edit()
+                .putString(ALARM_TONE_KEY, tone)
                 .apply();
     }
 }

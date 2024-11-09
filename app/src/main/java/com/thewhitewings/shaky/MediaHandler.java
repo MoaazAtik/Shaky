@@ -1,13 +1,7 @@
 package com.thewhitewings.shaky;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import static com.thewhitewings.shaky.Constants.ALARM_TONE_KEY;
-import static com.thewhitewings.shaky.Constants.PREFERENCES_NAME;
-
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -16,6 +10,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+
+import com.thewhitewings.shaky.data.ShakyPreferences;
 
 public class MediaHandler {
 
@@ -113,9 +109,10 @@ public class MediaHandler {
                 context.getResources().getResourceTypeName(rawResourceId) + '/' +
                 context.getResources().getResourceEntryName(rawResourceId);
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
-
-        return Uri.parse(sharedPreferences.getString(ALARM_TONE_KEY, rawResourceString));
+        ShakyPreferences preferences = ((ShakyApplication) context).getPreferences();
+        return Uri.parse(
+                preferences.getAlarmTonePreference(rawResourceString)
+        );
     }
 
     public int getVolumeMusicStreamMax() {
