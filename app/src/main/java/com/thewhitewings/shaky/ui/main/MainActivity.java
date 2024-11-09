@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -286,7 +287,11 @@ public class MainActivity extends AppCompatActivity {
         Uri uri = Util.getBatteryOptimizationGuideUri1();
 
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.e(TAG, "Opening guide website 1 failed: ", e);
+        }
     }
 
     private void navigateToMoreFragment() {

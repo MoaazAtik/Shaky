@@ -55,7 +55,7 @@ public class Util {
 
     public static Uri getBatteryOptimizationGuideUri1() {
         // Get the manufacturer of the device to be added to the Url
-        String manufacturer = android.os.Build.MANUFACTURER.toLowerCase();
+        String manufacturer = Build.MANUFACTURER.toLowerCase();
 
         // Replace the special letter 'ı' with 'i'
         // The uppercase 'I' is interpreted in the Turkish language as 'ı' not 'i',
@@ -65,6 +65,11 @@ public class Util {
         // Direct to the guide that is specified to the user's device
         String websiteUrl = "https://dontkillmyapp.com/" + manufacturer;
 
+        return Uri.parse(websiteUrl);
+    }
+
+    public static Uri getBatteryOptimizationGuideUri2() {
+        String websiteUrl = "https://support.bark.us/hc/en-us/articles/11484413158669#find-your-kid-s-android-version-0";
         return Uri.parse(websiteUrl);
     }
 }
