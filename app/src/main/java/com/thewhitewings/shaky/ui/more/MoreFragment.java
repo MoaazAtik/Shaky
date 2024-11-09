@@ -33,9 +33,6 @@ public class MoreFragment extends Fragment {
 
     private FragmentMoreBinding binding;
 
-    // defaultToneResource
-    private String rawResourceString;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +54,8 @@ public class MoreFragment extends Fragment {
 
     private void pickTone() {
         int rawResourceId = R.raw.soft;
-        rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+        // defaultToneResource
+        String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 getResources().getResourcePackageName(rawResourceId) + '/' +
                 getResources().getResourceTypeName(rawResourceId) + '/' +
                 getResources().getResourceEntryName(rawResourceId);
@@ -99,15 +97,12 @@ public class MoreFragment extends Fragment {
             Uri selectedToneUri =
                     result.getData().getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
-            ShakyPreferences preferences = ((ShakyApplication) requireActivity().getApplicationContext())
-                    .getPreferences();
             // If a tone is picked, save it to the preferences
             if (selectedToneUri != null) {
+                ShakyPreferences preferences =
+                        ((ShakyApplication) requireActivity().getApplicationContext())
+                                .getPreferences();
                 preferences.updateAlarmTonePreference(selectedToneUri.toString());
-            } else {
-                // If no tone is picked, save the previously selected tone with the ALARM_TONE_KEY if one exists
-                String previousToneStr = preferences.getAlarmTonePreference(rawResourceString);
-                preferences.updateAlarmTonePreference(previousToneStr);
             }
         }
     };
