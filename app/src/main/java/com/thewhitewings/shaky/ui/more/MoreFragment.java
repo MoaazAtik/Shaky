@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -24,117 +23,108 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.thewhitewings.shaky.ui.notes.NotesFragment;
+import com.thewhitewings.shaky.Constants;
 import com.thewhitewings.shaky.R;
+import com.thewhitewings.shaky.databinding.FragmentMoreBinding;
+import com.thewhitewings.shaky.ui.notes.NotesFragment;
 
 public class MoreFragment extends Fragment {
 
     private static final String TAG = "MoreFragment";
-    private Button btnTone;
-    private Button btnFeedback;
-    private Button btnNotes;
 
+    private FragmentMoreBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentMoreBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        // Inflate a custom layout for the fragment
-        View view = inflater.inflate(R.layout.fragment_more, container, false);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupUiComponents();
+    }
 
-        // Initialize the UI elements
-        btnTone = (Button) view.findViewById(R.id.btn_tone);
-        btnFeedback = (Button) view.findViewById(R.id.btn_feedback);
-        btnNotes = (Button) view.findViewById(R.id.btn_notes);
+    private void setupUiComponents() {
+        binding.btnTone.setOnClickListener(v -> pickTone());
+        binding.btnFeedback.setOnClickListener(v -> sendEmail());
+        binding.btnNotes.setOnClickListener(v -> navigateToNotesFragment());
+    }
 
-        //btnTone
-        btnTone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void pickTone() {
+        // Get the Uri of the default tone
+        int rawResourceId = R.raw.soft;
+        String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                getResources().getResourcePackageName(rawResourceId) + '/' +
+                getResources().getResourceTypeName(rawResourceId) + '/' +
+                getResources().getResourceEntryName(rawResourceId);
+        Uri rawResourceUri = Uri.parse(rawResourceString);
 
-                // Get the Uri of the default tone
-                int rawResourceId = R.raw.soft;
-                String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                        getResources().getResourcePackageName(rawResourceId) + '/' +
-                        getResources().getResourceTypeName(rawResourceId) + '/' +
-                        getResources().getResourceEntryName(rawResourceId);
-                Uri rawResourceUri = Uri.parse(rawResourceString);
+        // Create an intent to open the ringtone picker to change the alarm tone of the app
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);//to choose from internal (ringtones) storage
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, rawResourceUri);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
-                // Create an intent to open the ringtone picker to change the alarm tone of the app
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);//to choose from internal (ringtones) storage
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, rawResourceUri);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+        // Open the ringtone picker
+        tonePickerActivityResultLauncher.launch(intent);
+    }
 
-                // Open the ringtone picker
-                mGetContent.launch(intent);
+    private void navigateToNotesFragment() {
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            }//onClick
-        });//onClickListener
+        // Animations. this has to be before fragmentTransaction.replace()
+        fragmentTransaction.setCustomAnimations(
+                androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
+                androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
+                androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
+                androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
+        );
 
-        //btnFeedback
-        btnFeedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendEmail();
-            }//onClick
-        });//btnFeedback OnClickListener
+        fragmentTransaction.replace(R.id.fragment_container_notes, new NotesFragment());
+        fragmentTransaction.addToBackStack(null); // Optional, for back navigation
 
-        //btnNotes
-        btnNotes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Direct to NotesFragment
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.commit();
+    }
 
-                // Animations. this has to be before fragmentTransaction.replace()
-                fragmentTransaction.setCustomAnimations(
-                        androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
-                        androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
-                        androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
-                        androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
-                );
+    private final ActivityResultCallback<ActivityResult> tonePickerCallback = result -> {
+        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+            // Get the Uri of the selected tone
+            Uri selectedToneUri =
+                    result.getData().getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
-                fragmentTransaction.replace(R.id.fragment_container_notes, new NotesFragment());
-                fragmentTransaction.addToBackStack(null); // Optional, for back navigation
-
-                fragmentTransaction.commit();
+            SharedPreferences preferences = requireActivity().getSharedPreferences(
+                    Constants.PREFERENCES_NAME,
+                    Context.MODE_PRIVATE
+            );
+            // If a tone is picked, save it to the preferences
+            if (selectedToneUri != null) {
+                preferences.edit()
+                        .putString(Constants.ALARM_TONE_KEY, selectedToneUri.toString())
+                        .apply();
+            } else {
+                // If no tone is picked, save the previously selected tone with the ALARM_TONE_KEY if one exists;
+                // otherwise save null (which results in playing the default tone
+                // after being handled by MediaHandler.getPreferredTone())
+                String previousToneStr = preferences
+                        .getString(Constants.ALARM_TONE_KEY, null);
+                preferences.edit()
+                        .putString(Constants.ALARM_TONE_KEY, previousToneStr)
+                        .apply();
             }
-        });//btnNotes OnClickListener
+        }
+    };
 
-        return view;
-    }//onCreateView
+    private final ActivityResultLauncher<Intent> tonePickerActivityResultLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    tonePickerCallback
+            );
 
-
-    // ActivityResultLauncher mGetContent
-    // Start the ringtone picker activity, and handle the picked tone
-    private final ActivityResultLauncher<Intent> mGetContent = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-
-                        // Get the Uri of the selected tone
-                        Uri selectedToneUri = result.getData().getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);//to get tone selected from internal storage
-
-                        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                        // If a tone is picked, save it to the preferences under "alarm_tone"
-                        if (selectedToneUri != null) {
-                            sharedPreferences.edit().putString("alarm_tone", selectedToneUri.toString()).apply();
-                        } else {
-                            // If no tone is picked, save the previously selected tone under "alarm_tone" if one exists;
-                            // otherwise save null (which results in playing the default tone after being handled by MediaAndSensorService.selectedTone())
-                            String previousToneStr = sharedPreferences.getString("alarm_tone", null);
-                            sharedPreferences.edit().putString("alarm_tone", previousToneStr).apply();
-                        }
-                    }
-                }//onActivityResult
-            });//mGetContent
-
-    // sendEmail
     private void sendEmail() {
         // Create an intent with recipientEmail, emailSubject, and emailBody to send feedback via an email app
         String recipientEmail = getString(R.string.recipient_email_address);
@@ -152,7 +142,15 @@ public class MoreFragment extends Fragment {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_feedback_email_app_chooser)));
         } else {
             Toast.makeText(requireContext(), R.string.no_email_app_found, Toast.LENGTH_SHORT).show();
-            Toast.makeText(requireActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" + getString(R.string.recipient_email_address), Toast.LENGTH_LONG).show();
+            Toast.makeText(requireActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" +
+                            getString(R.string.recipient_email_address), Toast.LENGTH_LONG)
+                    .show();
         }
-    }//sendEmail()
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
