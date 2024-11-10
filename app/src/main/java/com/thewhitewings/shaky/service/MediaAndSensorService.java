@@ -37,6 +37,7 @@ public class MediaAndSensorService extends Service {
         return null;
     }
 
+
     public enum Action {
         ACTIVATE, DEACTIVATE
     }

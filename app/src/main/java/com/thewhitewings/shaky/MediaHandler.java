@@ -16,17 +16,28 @@ import com.thewhitewings.shaky.data.ShakyPreferences;
 public class MediaHandler {
 
     private static final String TAG = "MediaHandler";
-    private MediaPlayer mediaPlayer;
+
     private final Context context;
+    private MediaPlayer mediaPlayer;
     private final AudioManager audioManager;
-    private AudioFocusRequest focusRequest;
     private final AudioManager.OnAudioFocusChangeListener focusChangeListener;
+    private AudioFocusRequest focusRequest;
+
     private float volumeBeforeDucking;
 
     public MediaHandler(Context context) {
         this.context = context;
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         focusChangeListener = this::onAudioFocusChange;
+    }
+
+
+    public int getVolumeMusicStreamMax() {
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    }
+
+    public int getVolumeMusicStream() {
+        return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
     public void triggerAlarm() {
@@ -113,14 +124,6 @@ public class MediaHandler {
         return Uri.parse(
                 preferences.getAlarmTonePreference(rawResourceString)
         );
-    }
-
-    public int getVolumeMusicStreamMax() {
-        return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-    }
-
-    public int getVolumeMusicStream() {
-        return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
     public void adjustVolume(int direction, boolean fromDeviceVolumeKeys) {

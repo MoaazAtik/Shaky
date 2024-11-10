@@ -52,6 +52,7 @@ public class MoreFragment extends Fragment {
         binding.btnNotes.setOnClickListener(v -> navigateToNotesFragment());
     }
 
+
     private void pickTone() {
         int rawResourceId = R.raw.soft;
         // defaultToneResource
@@ -71,24 +72,6 @@ public class MoreFragment extends Fragment {
 
         // Open the ringtone picker
         tonePickerActivityResultLauncher.launch(intent);
-    }
-
-    private void navigateToNotesFragment() {
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        // Animations. this has to be before fragmentTransaction.replace()
-        fragmentTransaction.setCustomAnimations(
-                androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
-                androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
-                androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
-                androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
-        );
-
-        fragmentTransaction.replace(R.id.fragment_container_notes, new NotesFragment());
-        fragmentTransaction.addToBackStack(null); // Optional, for back navigation
-
-        fragmentTransaction.commit();
     }
 
     private final ActivityResultCallback<ActivityResult> tonePickerCallback = result -> {
@@ -134,6 +117,24 @@ public class MoreFragment extends Fragment {
                             getString(R.string.recipient_email_address), Toast.LENGTH_LONG)
                     .show();
         }
+    }
+
+    private void navigateToNotesFragment() {
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // Animations. this has to be before fragmentTransaction.replace()
+        fragmentTransaction.setCustomAnimations(
+                androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
+                androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
+                androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
+                androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
+        );
+
+        fragmentTransaction.replace(R.id.fragment_container_notes, new NotesFragment());
+        fragmentTransaction.addToBackStack(null); // Optional, for back navigation
+
+        fragmentTransaction.commit();
     }
 
     @Override

@@ -50,7 +50,6 @@ public class NotesFragment extends Fragment {
 
         // Make some edits to the content of the first note
         editContent1();
-
         // Add a hyperlink to the content of the sixth note
         editContent6();
     }
@@ -64,6 +63,7 @@ public class NotesFragment extends Fragment {
         binding.titleView5.setOnClickListener(v -> toggleExpand(binding.content5, binding.icon5));
         binding.titleView6.setOnClickListener(v -> toggleExpand(binding.content6, binding.icon6));
     }
+
 
     private void toggleExpand(TextView content, ImageView icon) {
         if (content.getVisibility() == View.VISIBLE) { // collapsed note

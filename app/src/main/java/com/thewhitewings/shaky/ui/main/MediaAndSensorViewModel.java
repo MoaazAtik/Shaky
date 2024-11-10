@@ -19,17 +19,17 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
     private static final String TAG = "MediaAndSensorViewModel";
     public static final String WAKE_LOCK_TAG = "shaky:service_wake_lock_tag";
 
-    private final ShakyPreferences preference;
     private final MutableLiveData<MediaAndSensorUiState> uiState;
+    private final Application context;
+    private final ShakyPreferences preferences;
     private final SensorHandler sensorHandler;
     private final MediaHandler mediaHandler;
     private final PowerManager.WakeLock wakeLock;
-    private final Application context;
 
-    public MediaAndSensorViewModel(Application application, ShakyPreferences preference) {
+    public MediaAndSensorViewModel(Application application, ShakyPreferences preferences) {
         super(application);
         context = application;
-        this.preference = preference;
+        this.preferences = preferences;
         sensorHandler = new SensorHandler(context);
         mediaHandler = new MediaHandler(context);
         uiState = new MutableLiveData<>(new MediaAndSensorUiState(
@@ -42,16 +42,51 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         activate();
     }
 
+
     public LiveData<MediaAndSensorUiState> getUiState() {
         return uiState;
     }
 
+    private void updateActivationState(ActivationState activationState) {
+        if (uiState.getValue() == null) return;
+        uiState.setValue(
+                new MediaAndSensorUiState(
+                        activationState,
+                        uiState.getValue().getSensitivityThreshold(),
+                        uiState.getValue().getVolume()
+                )
+        );
+    }
+
+    public void updateVolumeState() {
+        if (uiState.getValue() == null) return;
+        uiState.setValue(
+                new MediaAndSensorUiState(
+                        uiState.getValue().getActivationState(),
+                        uiState.getValue().getSensitivityThreshold(),
+                        getVolumeMusicStream()
+                )
+        );
+    }
+
+    public boolean getBatteryOptimizationDialogPreference() {
+        // Check if the dialog should be shown based on the preferences
+        return preferences.getBatteryOptimizationDialogPreference();
+    }
+
+    /**
+     * Update the preferences to not show the dialog again
+     */
+    public void updateBatteryOptimizationDialogPreference() {
+        preferences.updateBatteryOptimizationDialogPreference();
+    }
+
     private int getSensitivityThresholdPreference() {
-        return preference.getSensitivityThresholdPreference();
+        return preferences.getSensitivityThresholdPreference();
     }
 
     public void updateSensitivityThreshold(int sensitivityThreshold) {
-        preference.updateSensitivityThresholdPreference(sensitivityThreshold);
+        preferences.updateSensitivityThresholdPreference(sensitivityThreshold);
 
         sensorHandler.updateSensitivityThreshold(sensitivityThreshold);
 
@@ -76,30 +111,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
 
     public void adjustVolume(int direction, boolean fromDeviceVolumeKeys) {
         mediaHandler.adjustVolume(direction, fromDeviceVolumeKeys);
-
         updateVolumeState();
-    }
-
-    public void updateVolumeState() {
-        if (uiState.getValue() == null) return;
-        uiState.setValue(
-                new MediaAndSensorUiState(
-                        uiState.getValue().getActivationState(),
-                        uiState.getValue().getSensitivityThreshold(),
-                        getVolumeMusicStream()
-                )
-        );
-    }
-
-    private void updateActivationState(ActivationState activationState) {
-        if (uiState.getValue() == null) return;
-        uiState.setValue(
-                new MediaAndSensorUiState(
-                        activationState,
-                        uiState.getValue().getSensitivityThreshold(),
-                        uiState.getValue().getVolume()
-                )
-        );
     }
 
     public void activate() {
@@ -125,6 +137,7 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
         updateActivationState(ActivationState.MANUAL_ACTIVE_TO_INACTIVE);
     }
 
+
     private final Observer<Boolean> shakingObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(@Nullable final Boolean isShaking) {
@@ -132,16 +145,4 @@ public class MediaAndSensorViewModel extends AndroidViewModel {
                 mediaHandler.triggerAlarm();
         }
     };
-
-    public boolean getBatteryOptimizationDialogPreference() {
-        // Check if the dialog should be shown based on the preference
-        return preference.getBatteryOptimizationDialogPreference();
-    }
-
-    /**
-     * Update the preference to not show the dialog again
-     */
-    public void updateBatteryOptimizationDialogPreference() {
-        preference.updateBatteryOptimizationDialogPreference();
-    }
 }

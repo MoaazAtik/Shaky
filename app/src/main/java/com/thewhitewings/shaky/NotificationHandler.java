@@ -19,8 +19,10 @@ public class NotificationHandler {
 
     public NotificationHandler(Context context) {
         this.context = context;
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
+
 
     public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

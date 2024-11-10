@@ -17,17 +17,18 @@ public class SensorHandler {
     private final Sensor accelerometer;
     private final SensorEventListener sensorEventListener;
 
+    private final MutableLiveData<Boolean> isShaking = new MutableLiveData<>();
     private int currentAcceleration;
     private int lastAcceleration;
     private int magnitudeOfAcceleration;
     private int sensitivityThreshold = 0;
-    private final MutableLiveData<Boolean> isShaking = new MutableLiveData<>();
 
     public SensorHandler(Context context) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorEventListener = createSensorEventListener();
     }
+
 
     private SensorEventListener createSensorEventListener() {
         return new SensorEventListener() {
@@ -42,6 +43,14 @@ public class SensorHandler {
         };
     }
 
+    public LiveData<Boolean> getIsShaking() {
+        return isShaking;
+    }
+
+    public void updateSensitivityThreshold(int sensitivityThreshold) {
+        this.sensitivityThreshold = sensitivityThreshold;
+    }
+
     public void activateSensor() {
         sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
@@ -49,11 +58,6 @@ public class SensorHandler {
     public void deactivateSensor() {
         sensorManager.unregisterListener(sensorEventListener);
     }
-
-    public void updateSensitivityThreshold(int sensitivityThreshold) {
-        this.sensitivityThreshold = sensitivityThreshold;
-    }
-
 
     private void calculateChange(SensorEvent event) {
         double x = event.values[0];
@@ -73,9 +77,5 @@ public class SensorHandler {
             // to the observer after the observer re-connects to the live data.
             isShaking.setValue(null);
         }
-    }
-
-    public LiveData<Boolean> getIsShaking() {
-        return isShaking;
     }
 }

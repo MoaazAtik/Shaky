@@ -77,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
     private void setupUiComponents() {
         textSwitcher = binding.textSwitcher;
         motionLayout = binding.motionLayout;
-        motionLayout.setTransitionListener(transitionListener);
 
         textSwitcher.setFactory(textViewFactory);
         textSwitcher.setCurrentText(getString(R.string.status_inactive));
+        motionLayout.setTransitionListener(transitionListener);
 
         binding.btnOn.setOnClickListener(v -> viewModel.activate());
 
@@ -98,13 +98,25 @@ public class MainActivity extends AppCompatActivity {
         binding.btnMore.setOnClickListener(v -> navigateToMoreFragment());
     }
 
-    /**
-     * Enable {@link ActivityMainBinding#btnOff} after The initial transition ends
-     */
-    private void enableBtnOff() {
-        new Handler(Looper.getMainLooper()).postDelayed(
-                () -> binding.btnOff.setEnabled(true),
-                3000);
+    private void setupUiStateObserver() {
+        viewModel.getUiState().observe(this, uiState -> {
+
+            ActivationState newActivationState = uiState.getActivationState();
+            if (newActivationState != currentActivationState) {
+                animate(newActivationState);
+                currentActivationState = newActivationState;
+                if (newActivationState == ActivationState.MANUAL_ACTIVE_TO_INACTIVE)
+                    stopService();
+                else
+                    startService();
+            }
+
+            binding.seekBarSensitivity.setProgress(
+                    binding.seekBarSensitivity.getMax() - uiState.getSensitivityThreshold()
+            );
+
+            binding.seekBarVolume.setProgress(uiState.getVolume());
+        });
     }
 
     private void requestPermissions() {
@@ -181,33 +193,14 @@ public class MainActivity extends AppCompatActivity {
         dialogBinding.btnGotIt.setOnClickListener(v -> dialog.dismiss());
     }
 
-    private final ViewSwitcher.ViewFactory textViewFactory = new ViewSwitcher.ViewFactory() {
-        @Override
-        public View makeView() {
-            // Specify TextView attributes
-            AppCompatTextView textView = new AppCompatTextView(MainActivity.this);
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            textView.setTypeface(ResourcesCompat.getFont(MainActivity.this, R.font.montserrat_semi_bold));
-
-            textView.setAllCaps(true);
-            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
-                    textView, 10, 120, 1,
-                    TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
-            );
-            textView.setLayoutParams(new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
-            ));
-
-            textView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-                @Override
-                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                    setTextGradientColor(textView);
-                }
-            });
-
-            return textView;
-        }
-    };
+    /**
+     * Enable {@link ActivityMainBinding#btnOff} after The initial transition ends
+     */
+    private void enableBtnOff() {
+        new Handler(Looper.getMainLooper()).postDelayed(
+                () -> binding.btnOff.setEnabled(true),
+                3000);
+    }
 
     private void animate(ActivationState transition) {
         Animation animationIn = AnimationUtils.loadAnimation(this, R.anim.animation_in);
@@ -250,26 +243,6 @@ public class MainActivity extends AppCompatActivity {
         textView.setTextColor(getResources().getColor(R.color.white)); //sets the color of the text initially or if the shader failed to render
     }
 
-    private void setupUiStateObserver() {
-        viewModel.getUiState().observe(this, uiState -> {
-
-            ActivationState newActivationState = uiState.getActivationState();
-            if (newActivationState != currentActivationState) {
-                animate(newActivationState);
-                currentActivationState = newActivationState;
-                if (newActivationState == ActivationState.MANUAL_ACTIVE_TO_INACTIVE)
-                    stopService();
-                else
-                    startService();
-            }
-
-            binding.seekBarSensitivity.setProgress(
-                    binding.seekBarSensitivity.getMax() - uiState.getSensitivityThreshold()
-            );
-
-            binding.seekBarVolume.setProgress(uiState.getVolume());
-        });
-    }
 
     private void startService() {
         Intent intent = new Intent(this, MediaAndSensorService.class);
@@ -309,19 +282,32 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private final MotionLayout.TransitionListener transitionListener = new TransitionAdapter() {
-        @Override
-        public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
-            binding.btnMore.setEnabled(false);
-            binding.btnOff.setEnabled(false);
-            binding.btnOn.setEnabled(false);
-        }
 
+    private final ViewSwitcher.ViewFactory textViewFactory = new ViewSwitcher.ViewFactory() {
         @Override
-        public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
-            binding.btnMore.setEnabled(true);
-            binding.btnOff.setEnabled(true);
-            binding.btnOn.setEnabled(true);
+        public View makeView() {
+            // Specify TextView attributes
+            AppCompatTextView textView = new AppCompatTextView(MainActivity.this);
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            textView.setTypeface(ResourcesCompat.getFont(MainActivity.this, R.font.montserrat_semi_bold));
+
+            textView.setAllCaps(true);
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                    textView, 10, 120, 1,
+                    TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM
+            );
+            textView.setLayoutParams(new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+            ));
+
+            textView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    setTextGradientColor(textView);
+                }
+            });
+
+            return textView;
         }
     };
 
@@ -352,6 +338,23 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private final MotionLayout.TransitionListener transitionListener = new TransitionAdapter() {
+        @Override
+        public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
+            binding.btnMore.setEnabled(false);
+            binding.btnOff.setEnabled(false);
+            binding.btnOn.setEnabled(false);
+        }
+
+        @Override
+        public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
+            binding.btnMore.setEnabled(true);
+            binding.btnOff.setEnabled(true);
+            binding.btnOn.setEnabled(true);
+        }
+    };
+
 
     /*
     Note: Implemented adjusting volume by
