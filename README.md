@@ -93,24 +93,36 @@ Click the image below to watch the full app demo on YouTube ⬇️
 ## Utilized Technologies 🔧
 - **Programming Language:** Java
 
+- **UI**: Android Views with XML
+
 - **Frameworks/Libraries:**
+  - **Foreground Service**: For consistent vibration monitoring.
+  - **Wake Lock**: For increased vibration monitoring reliability by surviving App Stanby States and Doze Mode.
   - **Accelerometer**: For vibrations detection.
   - **Motion Layout**: For creating smooth animations.
+  - **Media Player**: For playing the triggered alarm.
+  - **View Binding**: For better interactions with the Android Views.
   - **SharedPreferences**: For storing and retrieving user's preferred detector sensitivity, and alarm tone.
- - **Development Tools:** Figma, Lottie Animations, Git, and Android Studio.
+
+- **Development Tools:** Figma, Lottie Animations, Git, and Android Studio
 
 <br>
 
 ## Core Files 📁
-- [MainActivity.java](app/src/main/java/com/thewhitewings/shaky/MainActivity.java)
+- [MainActivity.java](app/src/main/java/com/thewhitewings/shaky/ui/main/MainActivity.java)
+- [MediaAndSensorViewModel.java](app/src/main/java/com/thewhitewings/shaky/ui/main/MediaAndSensorViewModel.java)
 - [activity_main.xml](app/src/main/res/layout/activity_main.xml)
 - [activity_main_scene.xml](app/src/main/res/xml/activity_main_scene.xml)<br><br>
-- [MediaAndSensorService.java](app/src/main/java/com/thewhitewings/shaky/MediaAndSensorService.java)
+- [MediaAndSensorService.java](app/src/main/java/com/thewhitewings/shaky/service/MediaAndSensorService.java)
+- [SensorHandler.java](app/src/main/java/com/thewhitewings/shaky/SensorHandler.java)
+- [MediaHandler.java](app/src/main/java/com/thewhitewings/shaky/MediaHandler.java)
+- [NotificationHandler.java](app/src/main/java/com/thewhitewings/shaky/NotificationHandler.java)
 - [AndroidManifest.xml](app/src/main/AndroidManifest.xml)<br><br>
-- [MoreFragment.java](app/src/main/java/com/thewhitewings/shaky/MoreFragment.java)
-- [NotesFragment.java](app/src/main/java/com/thewhitewings/shaky/NotesFragment.java)
-- [fragment_more.xml](app/src/main/res/layout/fragment_more.xml)
-- [fragment_notes.xml](app/src/main/res/layout/fragment_notes.xml)
+- [MoreFragment.java](app/src/main/java/com/thewhitewings/shaky/ui/more/MoreFragment.java)
+- [NotesFragment.java](app/src/main/java/com/thewhitewings/shaky/ui/notes/NotesFragment.java)<br><br>
+- [ShakyApplication.java](app/src/main/java/com/thewhitewings/shaky/ShakyApplication.java)
+- [ShakyPreferences.java](app/src/main/java/com/thewhitewings/shaky/data/ShakyPreferences.java)
+- [Util.java](app/src/main/java/com/thewhitewings/shaky/Util.java)
 
 <br>
 
