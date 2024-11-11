@@ -8,6 +8,9 @@ import androidx.annotation.Nullable;
 
 import com.thewhitewings.shaky.NotificationHandler;
 
+/**
+ * Foreground service for Media and Sensor
+ */
 public class MediaAndSensorService extends Service {
 
     private static final String TAG = "MediaAndSensorService";
@@ -38,6 +41,9 @@ public class MediaAndSensorService extends Service {
     }
 
 
+    /**
+     * Actions to interact with MediaAndSensorService
+     */
     public enum Action {
         ACTIVATE, DEACTIVATE
     }

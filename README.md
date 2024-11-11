@@ -44,8 +44,8 @@ Choose a volume that ensures you'll wake up or be alerted during vibrations.
 
 ## Usage 📱
 - **Multilingual support:** Available in **English**, **Arabic**, and **Turkish**.<br>
-It correspondes to your device language.
-- **Monitoring Vibrations:** After openning Shaky, it will start monitoring vibrations **automatically**.<br>
+It corresponds to your device language.
+- **Monitoring Vibrations:** After opening Shaky, it will start monitoring vibrations **automatically**.<br>
 Keep the app running in the background, and it will continuously detect any vibrations.
 - You can **return** to Shaky effortlessly through its **Notification**.
 
@@ -70,7 +70,7 @@ Accessing Additional Features:
  
 On the Notes Screen:
 - You will find essential notes about using the app. Here, you'll discover instructions on overcoming **common obstacles** you may face, such as background operation disruptions.
-- Additiaonally you'll find a reference to the app's **Privacy Policy**.
+- Additionally you'll find a reference to the app's **Privacy Policy**.
 
 <br>
 

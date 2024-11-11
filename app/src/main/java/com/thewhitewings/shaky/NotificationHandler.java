@@ -11,12 +11,21 @@ import androidx.core.app.NotificationCompat;
 
 import com.thewhitewings.shaky.ui.main.MainActivity;
 
+/**
+ * Class that handles the notifications for the app
+ */
 public class NotificationHandler {
 
+    /**
+     * The id of the notification channel
+     */
     private static final String CHANNEL_ID = "media_and_sensor_service_channel";
     private final Context context;
     private final NotificationManager notificationManager;
 
+    /**
+     * Constructor
+     */
     public NotificationHandler(Context context) {
         this.context = context;
         notificationManager = (NotificationManager)
@@ -24,6 +33,9 @@ public class NotificationHandler {
     }
 
 
+    /**
+     * Create a notification channel for the foreground service of the app
+     */
     public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -36,6 +48,9 @@ public class NotificationHandler {
         }
     }
 
+    /**
+     * Build the notification for the foreground service of the app
+     */
     public Notification buildNotification() {
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(

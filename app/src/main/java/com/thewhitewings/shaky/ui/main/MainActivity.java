@@ -43,7 +43,10 @@ import com.thewhitewings.shaky.databinding.DialogMoreInformationBinding;
 import com.thewhitewings.shaky.service.MediaAndSensorService;
 import com.thewhitewings.shaky.ui.more.MoreFragment;
 
-
+/**
+ * The main activity of the app.
+ * It represents the main screen of the app.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -74,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
+    /**
+     * Initialize and set up UI components
+     */
     private void setupUiComponents() {
         textSwitcher = binding.textSwitcher;
         motionLayout = binding.motionLayout;
@@ -83,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
         motionLayout.setTransitionListener(transitionListener);
 
         binding.btnOn.setOnClickListener(v -> viewModel.activate());
-
-        enableBtnOff();
         binding.btnOff.setOnClickListener(v -> viewModel.deactivate());
 
         setTextGradientColor(binding.txtSensitivity);
@@ -98,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
         binding.btnMore.setOnClickListener(v -> navigateToMoreFragment());
     }
 
+    /**
+     * Set up the UI state observer
+     */
     private void setupUiStateObserver() {
         viewModel.getUiState().observe(this, uiState -> {
 
@@ -119,8 +126,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Request {@link Manifest.permission#POST_NOTIFICATIONS POST_NOTIFICATIONS} permission
+     * for the foreground service for Android API 33+
+     */
     private void requestPermissions() {
-        // Request POST_NOTIFICATIONS permission for the foreground service
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.requestPermissions(
                     this,
@@ -130,6 +140,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Show the dialog with information about the battery optimization if the user has not opted out.
+     * It shows the device's specifications and directs the user to a step-by-step guide to follow
+     * the instructions that are specific to their device to overcome app restrictions
+     * that may be caused by the system's battery optimization configurations.
+     * Those instructions in the guide can be implemented only manually by the user.
+     */
     private void showBatteryOptimizationDialog() {
         if (!viewModel.getBatteryOptimizationDialogPreference())
             return;
@@ -162,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             });
 
-            // set OnDismissListener for the dialog
             /*
              onDismiss will be called when btnCancel, device's back button,
               or outside the dialog box is clicked.
@@ -178,6 +194,10 @@ public class MainActivity extends AppCompatActivity {
                 5000);
     }
 
+    /**
+     * Show the dialog to direct the user to the notes section in the app for more information
+     * about the battery optimization, its impact on the app, and guides on how to overcome it.
+     */
     private void showMoreInformationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -194,14 +214,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Enable {@link ActivityMainBinding#btnOff} after The initial transition ends
+     * Animate and modify the UI components based on the activation state change of the app service.
+     *
+     * @param transition The {@link ActivationState} change of the app.
      */
-    private void enableBtnOff() {
-        new Handler(Looper.getMainLooper()).postDelayed(
-                () -> binding.btnOff.setEnabled(true),
-                3000);
-    }
-
     private void animate(ActivationState transition) {
         Animation animationIn = AnimationUtils.loadAnimation(this, R.anim.animation_in);
         Animation animationOut = AnimationUtils.loadAnimation(this, R.anim.animation_out);
@@ -209,17 +225,19 @@ public class MainActivity extends AppCompatActivity {
         textSwitcher.setInAnimation(animationIn);
         textSwitcher.setOutAnimation(animationOut);
 
-        if (transition == ActivationState.INITIALIZATION_TO_ACTIVE) { //app initiation (initial to active state)
-
+        // App initiation to active state
+        if (transition == ActivationState.INITIALIZATION_TO_ACTIVE) {
             textSwitcher.setText(getString(R.string.status_active));
 
-        } else if (transition == ActivationState.MANUAL_INACTIVE_TO_ACTIVE) { //to active state (inactive to active state)
+            // Manual state change from inactive to active state
+        } else if (transition == ActivationState.MANUAL_INACTIVE_TO_ACTIVE) {
             motionLayout.setTransition(R.id.inactive, R.id.active);
             motionLayout.transitionToEnd();
 
             textSwitcher.setText(getString(R.string.status_active));
 
-        } else if (transition == ActivationState.MANUAL_ACTIVE_TO_INACTIVE) { //to inactive state (active to inactive state)
+            // Manual state change from active to inactive state
+        } else if (transition == ActivationState.MANUAL_ACTIVE_TO_INACTIVE) {
             motionLayout.setTransition(R.id.active, R.id.inactive);
             motionLayout.transitionToEnd();
 
@@ -229,6 +247,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set the text gradient color for the text of the given TextView.
+     *
+     * @param textView The TextView whose text gradient color is to be set.
+     */
     private void setTextGradientColor(TextView textView) {
         int[] colors = {getResources().getColor(R.color.premium_white1),
                 getResources().getColor(R.color.premium_white2),
@@ -239,23 +262,38 @@ public class MainActivity extends AppCompatActivity {
 
         Shader shader = new LinearGradient(0, textView.getTextSize(), 0, 0, colors, positions, Shader.TileMode.CLAMP);
 
-        textView.getPaint().setShader(shader); //sets the shader (color) of the text
-        textView.setTextColor(getResources().getColor(R.color.white)); //sets the color of the text initially or if the shader failed to render
+        // Apply the shader (color) to the text
+        textView.getPaint().setShader(shader);
+
+        // Set the text color initially or if the shader failed to render
+        textView.setTextColor(getResources().getColor(R.color.white));
     }
 
 
+    /**
+     * Start the {@link MediaAndSensorService}
+     */
     private void startService() {
         Intent intent = new Intent(this, MediaAndSensorService.class);
         intent.setAction(MediaAndSensorService.Action.ACTIVATE.name());
         startService(intent);
     }
 
+    /**
+     * Stop the {@link MediaAndSensorService}
+     */
     private void stopService() {
         Intent intent = new Intent(this, MediaAndSensorService.class);
         intent.setAction(MediaAndSensorService.Action.DEACTIVATE.name());
         startService(intent);
     }
 
+    /**
+     * Open the website of the first guide of handling app restrictions
+     * caused by system's battery optimization.
+     *
+     * @see #showBatteryOptimizationDialog()
+     */
     private void openBatteryOptimizationGuide1() {
         Uri uri = Util.getBatteryOptimizationGuideUri1();
 
@@ -267,6 +305,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Navigate to the {@link MoreFragment} for more actions and information about the app
+     */
     private void navigateToMoreFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction
@@ -283,6 +324,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * A {@link ViewSwitcher.ViewFactory} for the {@link TextSwitcher}
+     * to handle and customize its TextView.
+     */
     private final ViewSwitcher.ViewFactory textViewFactory = new ViewSwitcher.ViewFactory() {
         @Override
         public View makeView() {
@@ -311,6 +356,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * A {@link SeekBar.OnSeekBarChangeListener} for the sensitivity seekbar.
+     */
     private final SeekBar.OnSeekBarChangeListener sensitivitySeekBarListener = new OnSeekBarChangeListenerImpl() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -320,6 +368,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * A {@link SeekBar.OnSeekBarChangeListener} for the volume seekbar.
+     */
     private final SeekBar.OnSeekBarChangeListener volumeSeekBarListener = new OnSeekBarChangeListenerImpl() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -339,6 +390,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * A {@link MotionLayout.TransitionListener} for the {@link MotionLayout}.
+     */
     private final MotionLayout.TransitionListener transitionListener = new TransitionAdapter() {
         @Override
         public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {
@@ -361,6 +415,8 @@ public class MainActivity extends AppCompatActivity {
      overriding onKeyDown and updating the UI state in onResume
      instead of using a BroadcastReceiver to be less Resource-Intensive.
      */
+    // Handle hardware volume-up and volume-down buttons
+    // to adjust volume and volume seekbar accordingly
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
@@ -393,6 +449,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // Deactivate the app service when the activity is destroyed by closing the app
         if (isFinishing())
             viewModel.deactivate();
     }

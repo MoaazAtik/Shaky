@@ -8,6 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.thewhitewings.shaky.data.ShakyPreferences;
 
+/**
+ * Factory class for creating instances of {@link MediaAndSensorViewModel}
+ */
 public class MediaAndSensorViewModelFactory implements ViewModelProvider.Factory {
 
     private final Application application;

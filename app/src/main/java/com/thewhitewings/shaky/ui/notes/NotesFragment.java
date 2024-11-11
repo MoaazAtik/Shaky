@@ -25,10 +25,14 @@ import com.thewhitewings.shaky.R;
 import com.thewhitewings.shaky.Util;
 import com.thewhitewings.shaky.databinding.FragmentNotesBinding;
 
+/**
+ * Fragment that displays important notes about the app
+ */
 public class NotesFragment extends Fragment {
 
     private static final String TAG = "NotesFragment";
 
+    // Binding object instance corresponding to the fragment_notes.xml layout
     private FragmentNotesBinding binding;
 
     @Nullable
@@ -54,6 +58,9 @@ public class NotesFragment extends Fragment {
         editContent6();
     }
 
+    /**
+     * Set up the UI components
+     */
     private void setupUiComponents() {
         // Call toggleExpand() when the notes' titles are clicked
         binding.titleView1.setOnClickListener(v -> toggleExpand(binding.content1, binding.icon1));
@@ -65,26 +72,40 @@ public class NotesFragment extends Fragment {
     }
 
 
+    /**
+     * Toggle the visibility of the content of the note
+     *
+     * @param content The content of the note to be toggled
+     * @param icon    The expand icon of the note to be animated
+     */
     private void toggleExpand(TextView content, ImageView icon) {
-        if (content.getVisibility() == View.VISIBLE) { // collapsed note
-            // dismiss the note
+        // If the note is expanded
+        if (content.getVisibility() == View.VISIBLE) {
+            // Dismiss the note
             content.setVisibility(View.GONE);
             // Rotate the expand icon
             icon.animate().rotation(0).start();
-        } else { // expanded note
-            // show the note
+
+            // If the note is dismissed
+        } else {
+            // Show the note
             content.setVisibility(View.VISIBLE);
             // Rotate the expand icon
             icon.animate().rotation(180).start();
         }
     }
 
-    // Edit the content of the first note
-    // Show the device specifications and increase their font size, and hyperlink the web links by adding clickable spans to them
+    /**
+     * Edit the content of the first note.
+     * <br>
+     * Show the device specifications and increase their font size,
+     * and hyperlink the web links by adding clickable spans to them
+     */
     private void editContent1() {
-        // Initialize the content text
+        // Get the content text
         String contentText1 = getString(R.string.note_content_background_operation_explanation);
 
+        // Get the device's specifications
         String specs = Util.getDeviceSpecs();
         // Replace text "specifications" with the device's specifications
         contentText1 = contentText1.replace("..specifications..", specs);
@@ -93,94 +114,113 @@ public class NotesFragment extends Fragment {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(contentText1);
 
 
-        // - Create a ClickableSpan for the first link
+        // - Create a ClickableSpan for the first link to open the guide website when clicked
         ClickableSpan linkClickableSpan1 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
+                // Get the URI of the first guide
                 Uri uri = Util.getBatteryOptimizationGuideUri1();
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 try {
+                    // Open the link in a browser
                     startActivity(intent);
                 } catch (Exception e) {
                     Log.e(TAG, "Opening guide website 1 failed: ", e);
                 }
             }
         };
-        String guideTextString1 = "Dontkillmyapp.com";
         // Apply the ClickableSpan to the first link part
-        spannableStringBuilder.setSpan(linkClickableSpan1,
+        String guideTextString1 = "Dontkillmyapp.com";
+        spannableStringBuilder.setSpan(
+                linkClickableSpan1,
                 contentText1.indexOf(guideTextString1),
                 contentText1.indexOf(guideTextString1) + guideTextString1.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
 
 
-        // - Create a ClickableSpan for the second link
+        // - Create a ClickableSpan for the second link to open the guide website when clicked
         ClickableSpan linkClickableSpan2 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
+                // Get the URI of the second guide
                 Uri uri = Util.getBatteryOptimizationGuideUri2();
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 try {
+                    // Open the link in a browser
                     startActivity(intent);
                 } catch (Exception e) {
                     Log.e(TAG, "Opening guide website 2 failed: ", e);
                 }
             }
         };
-        String guideTextString2 = "Bark.us";
         // Apply the ClickableSpan to the second link part
-        spannableStringBuilder.setSpan(linkClickableSpan2,
+        String guideTextString2 = "Bark.us";
+        spannableStringBuilder.setSpan(
+                linkClickableSpan2,
                 contentText1.indexOf(guideTextString2),
                 contentText1.indexOf(guideTextString2) + guideTextString2.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
 
 
-        // - Apply the larger text size to the Device's specifications part
+        // - Apply larger text size to the Device's specifications part
         AbsoluteSizeSpan textSizeSpan = new AbsoluteSizeSpan(18, true);
-        spannableStringBuilder.setSpan(textSizeSpan,
+        spannableStringBuilder.setSpan(
+                textSizeSpan,
                 contentText1.indexOf(specs),
                 contentText1.indexOf(specs) + specs.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
 
 
         // Update the TextView with the updated SpannableStringBuilder
         binding.content1.setText(spannableStringBuilder);
+        // Enable the movement method to detect the clickable links
+        // for handling arrow key movement for this TextView
         binding.content1.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    // Edit the content of the sixth note
-    // Show the device specifications and increase their font size, and hyperlink the web links by adding clickable spans to them
+    /**
+     * Edit the content of the sixth note.
+     * <br>
+     * Hyperlink the web link by adding clickable spans to it.
+     */
     private void editContent6() {
-        // Initialize the content text
+        // Get the content text
         String contentText6 = getString(R.string.note_content_privacy_policy);
 
         // Create a SpannableString which allows to change the markup of a text
         SpannableString spannableString = new SpannableString(contentText6);
 
-        // Create a ClickableSpan for the link
+        // - Create a ClickableSpan for the link to open the privacy policy website when clicked
         ClickableSpan linkClickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                // Handle the link click
                 String websiteUrl = "https://sites.google.com/view/shaky-privacy-policy";
                 Uri uri = Uri.parse(websiteUrl);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 try {
+                    // Open the link in a browser
                     startActivity(intent);
                 } catch (Exception e) {
                     Log.e(TAG, "Opening privacy policy website failed: ", e);
                 }
             }
         };
-        String privacyPolicyTextString = "shaky-privacy-policy";
         // Apply the ClickableSpan to the link part
-        spannableString.setSpan(linkClickableSpan,
+        String privacyPolicyTextString = "shaky-privacy-policy";
+        spannableString.setSpan(
+                linkClickableSpan,
                 contentText6.indexOf(privacyPolicyTextString),
                 contentText6.indexOf(privacyPolicyTextString) + privacyPolicyTextString.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
 
         // Update the TextView with the updated SpannableString
         binding.content6.setText(spannableString);
+        // Enable the movement method to detect the clickable links
+        // for handling arrow key movement for this TextView
         binding.content6.setMovementMethod(LinkMovementMethod.getInstance());
     }
 

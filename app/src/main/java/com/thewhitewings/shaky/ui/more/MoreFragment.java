@@ -27,10 +27,14 @@ import com.thewhitewings.shaky.data.ShakyPreferences;
 import com.thewhitewings.shaky.databinding.FragmentMoreBinding;
 import com.thewhitewings.shaky.ui.notes.NotesFragment;
 
+/**
+ * Fragment that displays more actions and information about the app
+ */
 public class MoreFragment extends Fragment {
 
     private static final String TAG = "MoreFragment";
 
+    // Binding object instance corresponding to the fragment_more.xml layout
     private FragmentMoreBinding binding;
 
     @Nullable
@@ -46,6 +50,9 @@ public class MoreFragment extends Fragment {
         setupUiComponents();
     }
 
+    /**
+     * Set up the UI components
+     */
     private void setupUiComponents() {
         binding.btnTone.setOnClickListener(v -> pickTone());
         binding.btnFeedback.setOnClickListener(v -> sendEmail());
@@ -53,27 +60,37 @@ public class MoreFragment extends Fragment {
     }
 
 
+    /**
+     * Open the ringtone picker to change the alarm tone
+     */
     private void pickTone() {
+        // The raw resource of the default alarm tone
         int rawResourceId = R.raw.soft;
-        // defaultToneResource
         String rawResourceString = ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 getResources().getResourcePackageName(rawResourceId) + '/' +
                 getResources().getResourceTypeName(rawResourceId) + '/' +
                 getResources().getResourceEntryName(rawResourceId);
-        // Get the Uri of the default tone
         Uri rawResourceUri = Uri.parse(rawResourceString);
 
-        // Create an intent to open the ringtone picker to change the alarm tone of the app
-        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);//to choose from internal (ringtones) storage
+        // Create an intent to open the ringtone picker to choose from internal (ringtones) storage
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.tone_picker_title));
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, rawResourceUri);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
-        // Open the ringtone picker
+        // Open the ringtone picker activity and handle tone selection result
         tonePickerActivityResultLauncher.launch(intent);
     }
 
+    /**
+     * Callback for handling the result of the ringtone picker activity.
+     * <br>
+     * It updates the alarm tone preference if a tone is selected.
+     * <br>
+     * It is an implementation of {@link ActivityResultCallback}
+     * that is used for the implementation of {@link ActivityResultLauncher}.
+     */
     private final ActivityResultCallback<ActivityResult> tonePickerCallback = result -> {
         if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
             // Get the Uri of the selected tone
@@ -90,14 +107,20 @@ public class MoreFragment extends Fragment {
         }
     };
 
+    /**
+     * Launcher for the ringtone picker activity with a callback to handle the result
+     */
     private final ActivityResultLauncher<Intent> tonePickerActivityResultLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     tonePickerCallback
             );
 
+    /**
+     * Send feedback email
+     */
     private void sendEmail() {
-        // Create an intent with recipientEmail, emailSubject, and emailBody to send feedback via an email app
+        // Create an intent with pre-filled values for recipient email, subject, and body
         String recipientEmail = getString(R.string.recipient_email_address);
         String emailSubject = getString(R.string.email_subject);
         String emailBody = getString(R.string.email_body);
@@ -111,6 +134,8 @@ public class MoreFragment extends Fragment {
         // If there are email apps on the device, open a chooser to select one
         if (emailIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
             startActivity(Intent.createChooser(emailIntent, getString(R.string.send_feedback_email_app_chooser)));
+
+            // If there are no email apps on the device, show a toast message with followup instructions
         } else {
             Toast.makeText(requireContext(), R.string.no_email_app_found, Toast.LENGTH_SHORT).show();
             Toast.makeText(requireActivity(), getString(R.string.your_feedback_is_welcome_at) + "\n" +
@@ -119,22 +144,24 @@ public class MoreFragment extends Fragment {
         }
     }
 
+    /**
+     * Navigate to the {@link NotesFragment} for displaying important notes about the app
+     */
     private void navigateToNotesFragment() {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        // Animations. this has to be before fragmentTransaction.replace()
-        fragmentTransaction.setCustomAnimations(
-                androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
-                androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
-                androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
-                androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
-        );
-
-        fragmentTransaction.replace(R.id.fragment_container_notes, new NotesFragment());
-        fragmentTransaction.addToBackStack(null); // Optional, for back navigation
-
-        fragmentTransaction.commit();
+        fragmentTransaction
+                // Animations. this has to be before fragmentTransaction.replace()
+                .setCustomAnimations(
+                        androidx.fragment.R.animator.fragment_fade_enter, // Enter animation
+                        androidx.fragment.R.animator.fragment_fade_exit, // Exit animation
+                        androidx.fragment.R.animator.fragment_close_enter, // Pop enter animation (when navigating back)
+                        androidx.fragment.R.animator.fragment_fade_exit // Pop exit animation (when navigating back)
+                )
+                .replace(R.id.fragment_container_notes, new NotesFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

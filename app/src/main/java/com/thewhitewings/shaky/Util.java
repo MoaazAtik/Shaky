@@ -3,19 +3,26 @@ package com.thewhitewings.shaky;
 import android.net.Uri;
 import android.os.Build;
 
+/**
+ * Utility class containing methods used throughout the app
+ */
 public class Util {
 
+    /**
+     * Get the specifications of the device that is running the app
+     *
+     * @return the device's manufacturer, version name, and release number
+     */
     public static String getDeviceSpecs() {
-        // Get device's manufacturer
         String manufacturer = android.os.Build.MANUFACTURER.toUpperCase();
-        // Get device's version name
         String versionName = getVersionName();
-        // Get device's version release number
         String versionRelease = Build.VERSION.RELEASE;
-        // Return device's manufacturer, version name, and release
         return manufacturer + " • Android " + versionName + " " + versionRelease;
     }
 
+    /**
+     * Get the version name that corresponds to the version release number of the device
+     */
     private static String getVersionName() {
         String versionRelease = Build.VERSION.RELEASE;
 
@@ -53,6 +60,12 @@ public class Util {
         }
     }
 
+    /**
+     * Get the website of the first guide
+     * of handling app restrictions caused by system's battery optimization.
+     *
+     * @return the URI of the first guide
+     */
     public static Uri getBatteryOptimizationGuideUri1() {
         // Get the manufacturer of the device to be added to the Url
         String manufacturer = Build.MANUFACTURER.toLowerCase();
@@ -68,6 +81,12 @@ public class Util {
         return Uri.parse(websiteUrl);
     }
 
+    /**
+     * Get the website of the second guide
+     * of handling app restrictions caused by system's battery optimization.
+     *
+     * @return the URI of the second guide
+     */
     public static Uri getBatteryOptimizationGuideUri2() {
         String websiteUrl = "https://support.bark.us/hc/en-us/articles/11484413158669#find-your-kid-s-android-version-0";
         return Uri.parse(websiteUrl);

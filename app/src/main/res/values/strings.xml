@@ -7,6 +7,7 @@
     <string name="sensitivity">Sensitivity</string>
     <string name="volume">Volume</string>
 
+    <!-- Feedback email -->
     <string name="recipient_email_address" translatable="false">info.thewhitewings@gmail.com</string>
     <string name="email_subject">Feedback and Suggestions for Shaky</string>
     <string name="email_body">
@@ -14,6 +15,7 @@
     </string>
 
     <string name="change_alarm_tone">Change alarm tone</string>
+    <string name="tone_picker_title">Select Tone</string>
     <string name="send_us_feedback">Send us feedback</string>
     <string name="no_email_app_found">No email app found</string>
     <string name="your_feedback_is_welcome_at">Your feedback is welcome at</string>
