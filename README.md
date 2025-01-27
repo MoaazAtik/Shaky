@@ -8,6 +8,22 @@ Supported by **The White Wings**🪽. Play Store [link](https://play.google.com/
 
 <br>
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/8b999548-bfb3-4735-b578-735884d2389f" alt="Home Screen" width="220"/>
+  <img src="https://github.com/user-attachments/assets/ed77a3f3-751a-4574-b709-d387a33bfc6f" alt="Battery Optimization Dialog" width="220"/>
+  <img src="https://github.com/user-attachments/assets/d3a0f097-9905-46c9-99f7-797db5bd7449" alt="More Actions Screen" width="220"/>
+</div>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/3c2abcec-3f77-4084-90de-559570d70253" alt="Info Screen" width="220"/>
+  <img src="https://github.com/user-attachments/assets/1f79fa80-d486-4eba-a5b7-8da3a34d1eb9" alt="Feedback" width="220"/>
+</div>
+
+<div align="center">
+  Screenshots
+</div>
+
+<br>
+
 ## Navigate Your Journey of exploring Shaky 🗺️
 1. [Inspiration & Goal - The Story Behind Shaky](#inspiration--goal---the-story-behind-shaky-)
 2. [Quick Start](#quick-start-)
