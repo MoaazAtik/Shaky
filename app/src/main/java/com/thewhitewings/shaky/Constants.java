@@ -25,4 +25,6 @@ public class Constants {
      * Key for the alarm tone preference in the SharedPreferences
      */
     public static final String ALARM_TONE_KEY = "alarm_tone";
+
+    public static final String NOTIFICATION_INTENT_ACTION_TRAIL = ".ACTION_OPEN_MAIN_FROM_NOTIFICATION";
 }

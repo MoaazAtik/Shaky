@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.thewhitewings.shaky.data.ShakyPreferences;
 
@@ -144,7 +145,20 @@ public class MediaHandler {
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
 
-        mediaPlayer = MediaPlayer.create(context, getPreferredTone());
+        /*
+        This fixes 'attributionTag  not declared in manifest' error.
+        The attribution used here is related to 'R.strings.attr_media_play_label'.
+        */
+        Context mediaContext = context;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                mediaContext = context.createAttributionContext("mediaPlay");
+            } catch (Exception e) {
+                Log.e(TAG, "Creating media context with attribution failed: ", e);
+            }
+        }
+
+        mediaPlayer = MediaPlayer.create(mediaContext, getPreferredTone());
         mediaPlayer.setAudioAttributes(audioAttributes);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();

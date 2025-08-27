@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace 'com.thewhitewings.shaky'
-    compileSdk 34
+    compileSdkVersion 35
 
     defaultConfig {
         applicationId "com.thewhitewings.shaky"
         minSdk 21
-        targetSdk 34
-        versionCode 5
-        versionName "1.4"
+        targetSdk 35
+        versionCode 6
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

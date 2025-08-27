@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 
 import com.thewhitewings.shaky.ui.main.MainActivity;
@@ -22,6 +24,7 @@ public class NotificationHandler {
     private static final String CHANNEL_ID = "media_and_sensor_service_channel";
     private final Context context;
     private final NotificationManager notificationManager;
+    private static final String TAG = "NotificationHandler";
 
     /**
      * Constructor
@@ -53,6 +56,17 @@ public class NotificationHandler {
      */
     public Notification buildNotification() {
         Intent notificationIntent = new Intent(context, MainActivity.class);
+
+        // Set an action so the Intent is valid under Android 15+ safer-intents rules.
+        /*
+        Use a package-qualified action to avoid collisions.
+        */
+        notificationIntent.setAction(context.getPackageName() +
+                Constants.NOTIFICATION_INTENT_ACTION_TRAIL);
+
+        // Control how the Activity is launched / reused (Optional)
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
                 0,

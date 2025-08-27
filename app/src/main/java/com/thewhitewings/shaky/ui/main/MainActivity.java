@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -62,6 +63,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Get detailed logs about Intent usage violations
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectUnsafeIntentLaunch()
+                    .penaltyLog()
+                    .build());
+        }
 
         ShakyApplication application = (ShakyApplication) getApplication();
         viewModel = new ViewModelProvider(
