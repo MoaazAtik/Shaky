@@ -57,6 +57,8 @@ public class Util {
                 return "Vanilla Ice Cream";
             case "16":
                 return "Baklava";
+            case "17":
+                return "Cinnamon Bun";
             default:
                 return "Android Version";
         }

@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shaky"
-        tools:targetApi="35">
+        tools:targetApi="37">
 
         <service
             android:name=".service.MediaAndSensorService"
